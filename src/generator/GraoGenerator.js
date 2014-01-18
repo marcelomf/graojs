@@ -54,14 +54,20 @@ var GraoGenerator = function () {
   }
 
   this.generate = function (args, force, callback) {
+
     console.log("\n" + ( 'Loading from: ' + this.skelFilename ).green + "\n");
+
     args = this.prepareArgs(args, this.skelPath);
+
     var tpls = this.prepareTplPaths(this.config, this.skelPath, args);
+
     self.writeTpls(tpls, args, force, callback);
+
   };
 
 
   this.prepareArgs = function (args, sourcePath) {
+
     var newargs = {};
 
     Object.keys(this.defaults).forEach(function (key) {
@@ -76,17 +82,21 @@ var GraoGenerator = function () {
 
     newargs['sourcePath'] = sourcePath;
     return newargs;
+
   }
 
   this.prepareTplPaths = function (config, sourcePath, args) {
+
     var sourceFiles = walk(sourcePath);
     var tpls = {};
 
     for (var i in sourceFiles) {
+
       if (fs.statSync(sourceFiles[i]).isFile()) {
+
         if (
           !this.checkIgnore(config.ignores, sourceFiles[i], sourcePath)
-              && this.checkConditions(config.conditions, sourceFiles[i], args)
+              && this.checkConditions(config.conditions, sourceFiles[i], sourcePath, args)
         ) {
 
           var file = this.rewrite(config.rewrites, sourceFiles[i], sourcePath);
@@ -95,99 +105,134 @@ var GraoGenerator = function () {
             path.join(config.target, file.replace(sourcePath, '/')),
             args
           );
+
         }
+
       }
+
     }
+
     return tpls;
   }
 
   this.writeTpls = function (tpls, args, force, callback) {
 
     var skelPath = this.skelPath;
+
     Object.keys(tpls).forEach(function (tpl) {
 
       var dist = tpls[tpl];
       var distDir = path.dirname(dist);
 
       if (fs.statSync(tpl).isFile()) {
+
         fs.mkdirsSync(distDir);
         fs.exists(process.cwd() + '/' + dist, function (exists) {
+
           if (!exists || force) {
-            if(tpl.search(/\.png$|\.jpg$|\.ttf$|\.woff/) >= 0)
-              fs.writeFileSync(dist, fs.readFileSync(tpl, 'binary'), 'binary');
-            else
-              fs.writeFileSync(dist, self.swigRender(fs.readFileSync(tpl, 'utf-8'), args), 'utf-8');
+            fs.writeFileSync(dist, self.swigRender(fs.readFileSync(tpl, 'utf-8'), args));
             console.log(( '+ ' + './' + dist).green);
           } else {
             console.log(( '! ' + './' + dist ).red);
           }
+
         });
+
       } else {
           this.writeDir(distDir, tpl, dist);
       }
     });
 
-    if (callback && typeof( callback ) === "function")
+    if (callback && typeof( callback ) === "function") {
+
       callback(path.join(process.cwd(), args['name']), force);
+    }
+
   };
 
   this.writeDir = function (distDir, tpl, dist) {
+
     fs.mkdirsSync(distDir);
     fs.copySync(tpl, dist);
+
     walk(dist).forEach(function (file) {
+
       file = path.join(dist, file);
       fs.writeFileSync(file, swig.render(fs.readFileSync(file, 'utf-8'), swig_result), 'utf-8');
+
     });
   };
 
   this.swigRender = function (content, args) {
+
     Object.keys(args).forEach(function (arg) {
       self.argsSwig[ arg.replace('-', '_') ] = args[arg];
     });
+
     var locals = { locals: this.argsSwig };
+
     return swig.render(content, locals);
   }
 
   this.checkIgnore = function (ignores, file, sourcePath) {
+
     file = file.replace(sourcePath + '/', '');
+
     for (var i in ignores) {
+
       var pattern = "^" + ignores[i].replace(/\//g, "\\/").replace(/\./g, "\\.") + ".*";
       var regex = RegExp(pattern);
+
       if (file.match(regex)) {
           return true;
       }
+
     }
+
     return false;
+
   }
 
   this.rewrite = function (rewrites, file, sourcePath) {
+
     file = file.replace(sourcePath + '/', '');
+
     if (rewrites.hasOwnProperty(file)) {
         return rewrites[ file ];
     } else {
         return file;
     }
+
   }
 
-  this.checkConditions = function (conditions, file, args) {
+  this.checkConditions = function (conditions, file, sourcePath, args) {
+
     for (var i in conditions) {
+
       var condition = conditions[i];
+
       for (var j in condition.matches) {
-        var pattern = "^" + condition.matches[j].replace(/\//g, "\\/").replace(/\./g, "\\.") + ".*";
+
+        var pattern = "^" + sourcePath + "/" + condition.matches[j].replace(/\//g, "\\/").replace(/\./g, "\\.") + ".*";
         var regex = RegExp(pattern);
         if (file.match(regex)) {
+
           var rule = true;
+
           for (var j in condition.rules) {
+
             var rl = condition.rules[j];
             if (rl.value !== args[ rl.arg ]) {
               rule = false;
               break;
             }
+
           }
           return rule;
         }
       }
     }
+
     return true;
   }
 }

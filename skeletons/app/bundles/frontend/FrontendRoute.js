@@ -1,13 +1,16 @@
 var FrontendRoute = function (di) {
-	di.graoExpress.get('/', function(req, res) {
+
+  di.graoExpress.get('/', function(req, res) {
+
     {% if template_engine == 'jade' %}
-		res.render('frontend/view/index');
-    {% if template_engine == 'swig' %}
+      res.render('frontend/view/index');
+    {% elseif template_engine == 'swig' %}
       res.render('frontend/view/index.html');
     {% else %}
       // TODO Error
     {% endif %}
-	});
+
+  });
 
   di.graoExpress.get('/events/pull', function(req, res){
     res.jsonp(di.event.listener.push());
