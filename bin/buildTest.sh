@@ -8,11 +8,17 @@ cd ../../demo
 ./../graojs/bin/grao generate:schema --schema user --force
 cp ./../graojs/bin/UserSchemaFull.js gen/UserSchema.js
 ./../graojs/bin/grao generate:schemabundle --schema user --force
-cat ./bundles/user/view/form.jade
-# Group
-./../graojs/bin/grao generate:schema --schema group --force
-cp ./../graojs/bin/GroupSchema.js gen/GroupSchema.js
-./../graojs/bin/grao generate:schemabundle --schema group --force
-cat ./bundles/group/view/form.jade
+cat ./bundles/user/view/form_fields.jade
+# ActivitySchema
+./../graojs/bin/grao generate:schema --schema activity --force
+cp ./../graojs/bin/ActivitySchema.js gen/ActivitySchema.js
+./../graojs/bin/grao generate:schemabundle --schema activity --force
+cat ./bundles/activity/view/form_fields.jade
+# PersonSchema
+./../graojs/bin/grao generate:schema --schema person --force
+cp ./../graojs/bin/PersonSchema.js gen/PersonSchema.js
+./../graojs/bin/grao generate:schemabundle --schema person --force
+cat ./bundles/person/view/form_fields.jade
+
 
 node index.js

@@ -4,25 +4,24 @@ var UserSchema = function(di) {
 
   this.json = {
     id : di.mongoose.Schema.ObjectId,
-    groups: [{ 
+    person: { 
       type: di.mongoose.Schema.Types.ObjectId, 
-      ref: 'Group',
+      ref: 'Person',
       graoui: {
-        label: "Groups",
+        label: "Person",
+        type: "embedded"
+      },
+    },
+    activitys: [{ 
+      type: di.mongoose.Schema.Types.ObjectId, 
+      ref: 'Activity',
+      graoui: {
+        label: "Activitys",
         fieldRefLabel: "name",
         type: "select",
         attr: { multiple: true }
       }
     }],
-    name : {
-      type : String,
-      required : false,
-      trim : true,
-      graoui: {
-        label: "Name",
-        type: 'input'
-      }
-    },
     username : {
       type : String,
       required : false,
@@ -38,61 +37,6 @@ var UserSchema = function(di) {
       graoui: {
         label: "Password",
         type: 'password'
-      }
-    },
-    email : {
-      type : String,
-      lowercase : true,
-      required : false,
-      index : true,
-      unique : false,
-      trim : true,
-      validate : validate('isEmail'),
-      graoui: {
-        label: "Email",
-        type: 'email'
-      }
-    },
-    blog : {
-      type : String,
-      lowercase : true,
-      required : false,
-      trim : true,
-      validate : validate('isUrl'),
-      graoui: {
-        label: "Blog",
-        type: 'url'
-      }
-    },
-    born : {
-      type: Number,
-      graoui: {
-        label: "Born",
-        type: 'date'
-      }
-    },
-    kids : {
-      type: Number,
-      graoui: {
-        label: "Kids",
-        type: 'number'
-      }
-    },
-    sex : {
-      type: String,
-      graoui: {
-        label: "Sex",
-        type: 'radio',
-        options: { "M": "Masculine", "F": "Feminine" }
-      }
-    },
-    news : {
-      type: Boolean,
-      graoui: {
-        label: "Do you want to receive news ?",
-        type: 'checkbox',
-        value: "IS_NEWS",
-        attr: { checked: true }
       }
     },
     languages : {
@@ -111,21 +55,6 @@ var UserSchema = function(di) {
         type: 'select', // https://github.com/localytics/angular-chosen ? https://github.com/angular-ui/ui-select2 ?
         options: [ "Ubuntu", "Fedora", "Debian", "Mint", "Slackware", "Gentoo" ],
         attr: { multiple: true }
-      }
-    },
-    address : {
-      type: String,
-      graoui: {
-        label: "Address",
-        type: 'textarea',
-        attr: { placeholder: "Your Address" }
-      }
-    },
-    money : {
-      type: Number,
-      graoui: {
-        label: "Money",
-        type: 'currency'
       }
     },
     likes: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],

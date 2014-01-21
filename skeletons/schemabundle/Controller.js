@@ -1,9 +1,5 @@
 // Glocal Scope :)
-var models, 
-  controllers,
-  event,
-  {{ schema | lower }}, // object
-  {{ schema | capitalize }}; // object/class
+var models, controllers, event, {{ schema | lower }}, {{ schema | capitalize }};
 
 var service = {
 
@@ -45,8 +41,7 @@ var service = {
       if (err) {
         event.newEvent(err).error().present().log('error');
         res.end();
-      }
-      else {
+      } else {
         res.jsonp({{ schema | lower }});
         res.end();
       }
@@ -76,15 +71,16 @@ var service = {
 
   create : function(req, res) {
     {{ schema | lower }} = new {{ schema | capitalize }}(req.body);
-    {{ schema | lower }}.save(function(err) {
+    {{ schema | lower }}.save(function(err, {{ schema | lower }}) {
       if (err) {
         event.newEvent(err).error().present().log('error');
+        res.end();
       } else {
         event.newEvent('created').success().present().log('info');
+        res.jsonp({{ schema | lower }});
+        res.end();
       }
     });
-    
-    res.end();
   },
 
   update : function(req, res) {
@@ -92,11 +88,13 @@ var service = {
     {{ schema | capitalize }}.findOneAndUpdate({_id : req.params.id }, req.body, { upsert : true }, function(err, {{ schema | lower }}) {
       if (err) {
         event.newEvent(err).error().present().log('error');
+        res.end();
       } else {
         event.newEvent('updated').success().present().log('info');
+        res.jsonp({{ schema | lower }});
+        res.end();
       }
     });
-    res.end();
   },
 
   destroy : function(req, res) {  

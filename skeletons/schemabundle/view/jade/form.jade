@@ -1,61 +1,9 @@
-doctype html
-h3 {{ schema | capitalize }}
-  small {{ ' {{' }} {{ schema | lower }}._id }}
-form.form-horizontal(role='form', ng-submit='createOrUpdate(); query(); count(); clear(); showWindow("query");')
-{%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field) }} {%- endfor %}  
-  .form-group
-    button.btn.btn.btn-success(type='submit') Save
-    | 
-    button.btn.btn.btn-warning(type='button', ng-click='createOrUpdate(); clear(); showWindow("createOrUpdate");') Save and continue
-    | 
-    button.btn.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); query(); count(); clear(); showWindow("query");') Remove
-    | 
-    button.btn.btn.btn-default(type='button', ng-click='clear(); showWindow("query")') Cancel
-{%- macro render_field(schema, fieldName, field) %}
-    {%- set inputtypes = ['text', 'email', 'url', 'date', 'number', 'password' ] %}
-    {%- if inputtypes.indexOf(field.type) !== -1 %}
-        {{ input(field.type, schema, fieldName, field) }}
-    {%- elseif field.type == 'checkbox' %}
-        {{ input_checkbox(schema, fieldName, field) }}
-    {%- elseif field.type == 'radio' %}
-        {{ input_radio(schema, fieldName, field) }}
-    {%- elseif field.type == 'textarea' %}
-        {{ textarea(schema, fieldName, field) }}
-    {%- elseif field.type == 'select' %}
-        {{ select(schema, fieldName, field) }}
-    {%- else %}
-        {{ input('text', schema, fieldName, field) }}
-    {%- endif %}
-{%- endmacro %}
-{%- macro input(type, schema, fieldName, field) %}
-  .form-group
-    input.form-control(type='{{ type }}', ng-model='{{ schema }}.{{ fieldName }}', placeholder='{{ field.label }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
-{%- endmacro %} 
-{%- macro input_checkbox(schema, fieldName, field) %}
-  .form-group
-    label.checkbox-inline
-      input.form-control(type='checkbox', ng-model='{{ schema }}.{{ fieldName }}' value="{{ field.value }}"{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
-      | {{ field.label }}
-{%- endmacro %}
-{%- macro input_radio(schema, fieldName, field) %}
-  .form-group
-{%- for option in field.options %}
-    label.radio-inline
-      input.form-control(type='radio', ng-model='{{ schema }}.{{ fieldName }}' value="{{ loop.key }}"{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
-      | {{ option }}{%- endfor %}
-{%- endmacro %}
-{%- macro select(schema, fieldName, field) %}
-  .form-group
-    select.form-control(ui-select2, ng-model='{{ schema }}.{{ fieldName }}', data-placeholder='{{ field.label }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
-{%- if field.options %}
-  {%- for option in field.options %}
-      option.form-control(value='{{ loop.key }}') {{ option }}
-  {%- endfor %}
-{%- elseif field.ref %}
-      option.form-control(value="{{ '{{'' }}{{ field.ref | lower }}._id }}", ng-repeat="{{ field.ref | lower }} in {{ field.ref | lower }}s") {{ '{{' }} {{ field.ref | lower }}.{% if field.fieldRefLabel %}{{ field.fieldRefLabel }}{% else %}{{ '_id' }}{% endif %} }}
-{%- endif %}
-{%- endmacro %}
-{%- macro textarea(schema, fieldName, field) %}
-  .form-group
-    textarea.form-control(ng-model='{{ schema }}.{{ fieldName }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}="{{ attr }}"{% endfor %}{% endif %})
-{%- endmacro %}
+mixin form_{{ schema | lower }}(includeActions)
+  doctype html
+  h3 {{ schema | capitalize }}
+    small {{ ' {{' }} {{ schema | lower }}._id }}
+  form.form-horizontal(role='form')
+  include form_fields
+  +form_fields_{{ schema | lower }}()
+  if includeActions
+    include form_actions

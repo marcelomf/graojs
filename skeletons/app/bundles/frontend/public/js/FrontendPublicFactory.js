@@ -11,6 +11,10 @@ graoJS.factory('share', ['config', '$timeout', '$http', function(config, $timeou
             },5000);
           }
          });
+      },
+      selectWindow: "",
+      window: function(windowName){
+        this.selectWindow = windowName;
       }
   };
   return share;

@@ -1,7 +1,7 @@
 .row
   .col-md-8
     .table-responsive
-      table.table.table-striped(data-ng-init="query(); count();")
+      table.table.table-striped(ng-init="query(count());")
         thead
           tr
 {%- for fieldName, field in fields %}
@@ -9,12 +9,12 @@
 {%- endfor %}
             th Actions         
         tbody
-          tr(ng-repeat="item in items")
+          tr(ng-repeat="{{ schema | lower }} in {{ schema | lower }}s")
 {%- for fieldName, field in fields %}
-            td {{ '{{' }} item.{{ loop.key }} }}
+            td {{ '{{' }} {{ schema | lower }}.{{ loop.key }} }}
 {%- endfor %}
             td 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); showWindow("createOrUpdate");') 
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");') 
               | 
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
           tr

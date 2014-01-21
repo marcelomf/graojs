@@ -1,15 +1,35 @@
 extends ../../frontend/theme/layout
 block content
-  .container(ng-controller='{{ schema | capitalize }}PublicController', ng-init="clear(); selectWindow='query';")
+  .container(ng-controller='{{ schema | capitalize }}PublicController', ng-init='clear(); share.window("query");')
     h2 {{ schema | capitalize }}s
     .row
       .col-md-12
         include dashboard_actions
-    .row(ng-switch="selectWindow")
+    .row(ng-switch='share.selectWindow')
       .col-md-12(ng-switch-when="query")
         include grid
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
         include form
-    include dashboard_actions
-  script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
-  script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicController.js', type='text/javascript', charset='utf-8').
+        +form_{{ schema | lower }}(true)
+{%- for fieldName, field in fields %}
+{%- if field.ref %}
+{%- if field.type == 'select' %}
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ fieldName | capitalize }}")
+        h3 {{ fieldName | capitalize }}
+          small {{ ' {{' }} ref.{{ fieldName | lower }}._id }}
+        form.form-horizontal(role='form')
+        include ../../{{ field.ref | lower }}/view/form_fields
+        +form_fields_{{ field.ref | lower }}('ref.{{ fieldName | lower }}')
+        .form-horizontal
+          .form-group
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}(); query{{ fieldName | capitalize }}(); share.window("createOrUpdate");') Save and back
+            | 
+            button.btn.btn.btn-default(type='button', ng-click='clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");') Cancel
+{%- endif %}
+      script(src='/js/{{ field.ref | lower }}/{{ field.ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
+{%- endif %}
+{%- endfor %}
+      .col-md-12
+        include dashboard_actions
+      script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
+      script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicController.js', type='text/javascript', charset='utf-8').

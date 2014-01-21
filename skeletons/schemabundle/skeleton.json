@@ -29,6 +29,8 @@
   "rewrites": {
     "view/jade/dashboard.jade": "bundles/{{schema}}/view/dashboard.jade",
     "view/jade/dashboard_actions.jade": "bundles/{{schema}}/view/dashboard_actions.jade",
+    "view/jade/form_fields.jade": "bundles/{{schema}}/view/form_fields.jade",
+    "view/jade/form_actions.jade": "bundles/{{schema}}/view/form_actions.jade",
     "view/jade/grid.jade": "bundles/{{schema}}/view/grid.jade",
     "view/jade/form.jade": "bundles/{{schema}}/view/form.jade",
     "Controller.js": "bundles/{{schema}}/{{schema | capitalize}}Controller.js",
