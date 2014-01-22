@@ -37,7 +37,7 @@ var service = {
   },
 
   get : function(req, res) {
-      {{ schema | capitalize }}.findOne({_id : req.params.id}, function(err, {{ schema | lower }}) {
+      {{ schema | capitalize }}.findOne({_id : req.params.id}){%- for fieldName, field in fields %}{%- if field.ref %}.populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.exec(function(err, {{ schema | lower }}) {
       if (err) {
         event.newEvent(err).error().present().log('error');
         res.end();
@@ -58,7 +58,7 @@ var service = {
     if(req.query.skip != null)
       skip = req.query.skip;
 
-    {{ schema | capitalize }}.find(filter).sort('field -_id').skip(skip).limit(10).populate('{{ schema | lower }}').exec(function(err, {{ schema | lower }}s) {
+    {{ schema | capitalize }}.find(filter).sort('field -_id').skip(skip).limit(10).populate('{{ schema | lower }}'){%- for fieldName, field in fields %}{%- if field.ref %}.populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.exec(function(err, {{ schema | lower }}s) {
       if (err) {
         event.newEvent(err).error().present().log('error');
         res.end();

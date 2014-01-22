@@ -84,8 +84,9 @@ var GraoGeneratorCommands = function (di) {
             var schemaPath = 'gen/' + schemaCapitalized + 'Schema.js';
             fs.exists(path.join(process.cwd(), schemaPath), function (exists) {
                 if (exists) {
-                    var schemaFields = self.prepareSchemaFields(result['schema'], path.join(process.cwd(), schemaPath));
-                    result['fields'] = schemaFields;
+                    var resultSchemaFields = self.prepareSchemaFields(result['schema'], path.join(process.cwd(), schemaPath));
+                    result['fields'] = resultSchemaFields.fields;
+                    result['hasUnion'] = resultSchemaFields.hasUnion;
                     /** 
                     * @FIXME
                     * Dead code ?
@@ -138,23 +139,27 @@ var GraoGeneratorCommands = function (di) {
             validators: validators
         }
         var modelSchema = new (require(schemaPath))(diSchema);
-        var fields = {};
+        var result = { fields: {}, hasUnion: false };
         Object.keys(modelSchema.json).forEach(function (fieldName) {
             if (modelSchema.json[fieldName].graoui != undefined) {
-                fields[fieldName] = modelSchema.json[fieldName].graoui;
+                if(modelSchema.json[fieldName].graoui.type == 'union')
+                    result.hasUnion = true;
+                result.fields[fieldName] = modelSchema.json[fieldName].graoui;
+                result.fields[fieldName].isArray = false;
                 if(modelSchema.json[fieldName].ref != null) {
-                    fields[fieldName].ref = modelSchema.json[fieldName].ref;
+                    result.fields[fieldName].ref = modelSchema.json[fieldName].ref;
                 }
             } else if (modelSchema.json[fieldName][0] != null && modelSchema.json[fieldName][0].graoui != null) {
-                fields[fieldName] = modelSchema.json[fieldName][0].graoui;
+                if(modelSchema.json[fieldName][0].graoui.type == 'union')
+                    result.hasUnion = true;
+                result.fields[fieldName] = modelSchema.json[fieldName][0].graoui;
+                result.fields[fieldName].isArray = true;
                 if(modelSchema.json[fieldName][0].ref != null){
-                    fields[fieldName].ref = modelSchema.json[fieldName][0].ref;
+                    result.fields[fieldName].ref = modelSchema.json[fieldName][0].ref;
                 } 
             }
         });
-        console.log("SCHEMA: "+schema);
-        console.log("FIELDS: %j", fields);
-        return fields;
+        return result;
     }
 
     this.copyGraoDeps = function (appPath, force) {

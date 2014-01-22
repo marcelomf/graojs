@@ -14,8 +14,8 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
           {{ textarea(schema, fieldName, field) }}
       {%- elseif field.type == 'select' %}
           {{ select(schema, fieldName, field) }}
-      {%- elseif field.type == 'embedded' %}
-          {{ embedded(schema, fieldName, field) }}
+      {%- elseif field.type == 'union' %}
+          {{ union(schema, fieldName, field) }}
       {%- else %}
           {{ input('text', schema, fieldName, field) }}
       {%- endif %}
@@ -53,11 +53,11 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
     {%- endfor %}
   {%- endif %}{%- endif %}
   {%- endmacro %}
-  {%- macro embedded(schema, fieldName, field) %}
+  {%- macro union(schema, fieldName, field) %}
   {%- if field.ref %}
   .form-group
     include ../../{{ field.ref | lower }}/view/form_fields
-    +form_fields_{{ field.ref | lower }}('ref.{{ fieldName | lower }}')
+    +form_fields_{{ field.ref | lower }}('{{ schema | lower }}.{{ fieldName | lower }}')
   {%- endif %}
   {%- endmacro %}
   {%- macro textarea(schema, fieldName, field) %}

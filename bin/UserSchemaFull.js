@@ -9,7 +9,7 @@ var UserSchema = function(di) {
       ref: 'Person',
       graoui: {
         label: "Person",
-        type: "embedded"
+        type: "union"
       },
     },
     activitys: [{ 

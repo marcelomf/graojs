@@ -19,10 +19,10 @@ block content
           small {{ ' {{' }} ref.{{ fieldName | lower }}._id }}
         form.form-horizontal(role='form')
         include ../../{{ field.ref | lower }}/view/form_fields
-        +form_fields_{{ field.ref | lower }}('ref.{{ fieldName | lower }}')
+        +form_fields_{{ field.ref | lower }}('new{{ fieldName | capitalize }}')
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}(); query{{ fieldName | capitalize }}(); share.window("createOrUpdate");') Save and back
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");') Save and back
             | 
             button.btn.btn.btn-default(type='button', ng-click='clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");') Cancel
 {%- endif %}

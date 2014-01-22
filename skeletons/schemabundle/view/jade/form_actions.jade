@@ -1,7 +1,7 @@
 .form-group
-  button.btn.btn-success(type='button', ng-click='createOrUpdate(); query(); count(); clear(); share.window("query");') Save
+  button.btn.btn-success(type='button', ng-click='createOrUpdate(); share.window("query");') Save
   | 
-  button.btn.btn-warning(type='button', ng-click='createOrUpdate(); clear(); share.window("createOrUpdate");') Save and continue
+  button.btn.btn-warning(type='button', ng-click='createOrUpdate(); share.window("createOrUpdate");') Save and continue
   | 
   button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); query(); count(); clear(); share.window("query");') Remove
   | 
