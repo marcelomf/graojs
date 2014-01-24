@@ -13,10 +13,10 @@
 {%- for fieldName, field in fields %}
             td {{ '{{' }} {{ schema | lower }}.{{ loop.key }} }}
 {%- endfor %}
-            td 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
+            td
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
               | 
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
           tr
             td.text-right(colspan="0")=__('Listing {{ '{{' }} statusData.listing }} {{ schema | lower }}s of {{ '{{' }} statusData.filtered }} filtered on {{ '{{' }} statusData.totality }} totality')
           tr

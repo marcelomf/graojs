@@ -4,33 +4,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   $scope.filter{{ schema | capitalize }} = {};
   $scope.statusData = { totality: 0, filtered: 0, listing: 0 };
 
-{%- for fieldName, field in fields %}{%- if field.isSubDoc == true %}
-{%- if field.isArray == true %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-  $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
-
-  $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
-    if($scope.{{ schema | lower }}.{{ fieldName | lower }} == null)
-      $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-    $scope.{{ schema | lower }}.{{ fieldName | lower }}.push($scope.{{ schema | lower }}.new{{ fieldName|capitalize }});
-  };
-
-  $scope.clear{{ fieldName | capitalize }} = function() {
-    delete $scope.{{ schema | lower }}.new{{ fieldName | capitalize }};
-    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
-  };
-
-  $scope.select{{ fieldName | capitalize }} = function(index) {
-    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = $scope.{{ schema | lower }}.{{ fieldName | lower }}[index];
-  };
-
-  $scope.destroy{{ fieldName | capitalize }}ByIndex = function (index) {
-    $scope.{{ schema | lower }}.{{ fieldName | lower }}.splice(index, 1);
-  }
-{%- else %}
-$scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
-{%- endif %}
-{%- elseif field.ref %}
+{%- for fieldName, field in fields %}
+{%- if field.ref %}
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
 {%- if field.type == "select" %}
   $scope.new{{ fieldName | capitalize }} = {};
@@ -63,8 +38,9 @@ $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
     delete $scope.{{ schema | lower }}.{{ fieldName | lower }};
     $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
   };
-
-{%- endif %}{%- endif %}{%- endfor %}
+{%- endif %}
+{{ render_subDoc(schema, fieldName, field) }}
+{%- endif %}{%- endfor %}
 
   $scope.createOrUpdate = function() {
     function save() {
@@ -184,3 +160,36 @@ $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
 }
 
 {{ schema | capitalize }}PublicController.$inject = ['$scope', '$http', '$q', 'share', '{{ schema | lower }}'{%- for fieldName, field in fields %}{%- if field.ref %}, '{{ field.ref | lower }}'{%- endif %}{%- endfor %}];
+
+{%- macro render_subDoc(schema, fieldName, field) %}{%- if field.isSubDoc == true %}{%- if field.isArray == true %}
+
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
+  $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
+
+  $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
+    if($scope.{{ schema | lower }}.{{ fieldName | lower }} == null)
+      $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
+    $scope.{{ schema | lower }}.{{ fieldName | lower }}.push($scope.{{ schema | lower }}.new{{ fieldName|capitalize }});
+  };
+
+  $scope.clear{{ fieldName | capitalize }} = function() {
+    delete $scope.{{ schema | lower }}.new{{ fieldName | capitalize }};
+    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
+  };
+
+  $scope.select{{ fieldName | capitalize }} = function(index) {
+    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = $scope.{{ schema | lower }}.{{ fieldName | lower }}[index];
+  };
+
+  $scope.destroy{{ fieldName | capitalize }}ByIndex = function (index) {
+    $scope.{{ schema | lower }}.{{ fieldName | lower }}.splice(index, 1);
+  }
+{%- else %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
+{%- endif %}
+{%- elseif field.hasSubDoc == true %}
+{%- for subFieldName, subField in field.fields %}
+{{ render_subDoc(schema+'.'+fieldName, subFieldName, subField) }}
+{%- endfor %}
+{%- endif %}
+{%- endmacro %}

@@ -215,7 +215,6 @@ var GraoGeneratorCommands = function (di) {
         }
       }
     }
-    console.log(result);
     return result;
   }
 
