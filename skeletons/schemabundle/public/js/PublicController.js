@@ -1,19 +1,42 @@
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | lower }}{%- for fieldName, field in fields %}{%- if field.ref %}, {{ field.ref | lower }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
   $scope.{{ schema | lower }} = {};
-  $scope.filterData = {};
+  $scope.filter{{ schema | capitalize }} = {};
   $scope.statusData = { totality: 0, filtered: 0, listing: 0 };
 
-{%- for fieldName, field in fields %}{%- if field.ref %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
+{%- for fieldName, field in fields %}{%- if field.isSubDoc == true %}
+{%- if field.isArray == true %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
+  $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
 
+  $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
+    if($scope.{{ schema | lower }}.{{ fieldName | lower }} == null)
+      $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
+    $scope.{{ schema | lower }}.{{ fieldName | lower }}.push($scope.{{ schema | lower }}.new{{ fieldName|capitalize }});
+  };
+
+  $scope.clear{{ fieldName | capitalize }} = function() {
+    delete $scope.{{ schema | lower }}.new{{ fieldName | capitalize }};
+    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
+  };
+
+  $scope.select{{ fieldName | capitalize }} = function(index) {
+    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = $scope.{{ schema | lower }}.{{ fieldName | lower }}[index];
+  };
+
+  $scope.destroy{{ fieldName | capitalize }}ByIndex = function (index) {
+    $scope.{{ schema | lower }}.{{ fieldName | lower }}.splice(index, 1);
+  }
+{%- else %}
+$scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
+{%- endif %}
+{%- elseif field.ref %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
 {%- if field.type == "select" %}
   $scope.new{{ fieldName | capitalize }} = {};
-
   $scope.query{{ fieldName | capitalize }} = function(){
     $scope.{{ fieldName | lower }} = {{ field.ref | lower }}.query();
   };
-
   $scope.query{{ fieldName | capitalize }}();
 
   $scope.createOrUpdate{{ fieldName | capitalize }} = function() {
@@ -99,15 +122,15 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   };
   
   $scope.filterNormalize = function() {
-    for(var k in $scope.filterData) {
-      if($scope.filterData[k] == null || $scope.filterData[k] == "")
-        delete $scope.filterData[k];
+    for(var k in $scope.filter{{ schema | capitalize }}) {
+      if($scope.filter{{ schema | capitalize }}[k] == null || $scope.filter{{ schema | capitalize }}[k] == "")
+        delete $scope.filter{{ schema | capitalize }}[k];
     }
   }
 
   $scope.filter = function() {
     $scope.filterNormalize();
-    $scope.{{ schema | lower }}s = {{ schema | lower }}.query({filter: JSON.stringify($scope.filterData)});
+    $scope.{{ schema | lower }}s = {{ schema | lower }}.query({filter: JSON.stringify($scope.filter{{ schema | capitalize }})});
   }
 
   $scope.query = function(cb) {
@@ -118,7 +141,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
   $scope.count = function() {
     $scope.filterNormalize();
-    $http.get("/{{ schema | lower }}/count", {params: {filter: JSON.stringify($scope.filterData)}})
+    $http.get("/{{ schema | lower }}/count", {params: {filter: JSON.stringify($scope.filter{{ schema | capitalize }})}})
       .success(function (data, status, headers, config){
         $scope.statusData.totality = data.totality;
         $scope.statusData.filtered = data.filtered;
@@ -129,7 +152,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
   $scope.queryMore = function() {
     $scope.filterNormalize();
-    var more{{ schema | capitalize }}s = {{ schema | lower }}.query({skip: $scope.{{ schema | lower }}s.length, filter: JSON.stringify($scope.filterData)}, function(){
+    var more{{ schema | capitalize }}s = {{ schema | lower }}.query({skip: $scope.{{ schema | lower }}s.length, filter: JSON.stringify($scope.filter{{ schema | capitalize }})}, function(){
       angular.forEach(more{{ schema | capitalize }}s, function({{ schema | lower }}){
         $scope.{{ schema | lower }}s.push({{ schema | lower }});  
       });
@@ -154,7 +177,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     delete $scope.{{ schema | lower }};
     $scope.{{ schema | lower }} = {};
 {%- for fieldName, field in fields %} 
-  {%- if field.ref %}
+  {%- if field.ref || (field.isSubDoc == true && field.isArray == true) %}
     $scope.clear{{ fieldName | capitalize }}();
 {%- endif %}{%- endfor %}
   };

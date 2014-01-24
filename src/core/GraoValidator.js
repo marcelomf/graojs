@@ -1,11 +1,7 @@
 var GraoValidator = function(di) {
-	di.event.newEvent('Instance created').success().present().log('info');
-
-	loads = di.loader.loading('validator');
-	for(loadIndex in loads)
-	{
-		this[loadIndex] = new (require(loads[loadIndex]))(di);
-	}
+  di.event.newEvent('Instance created').success().present().log('info');
+  di.validators = this;
+  di.validators = di.loader.tryLoad(di.loader.loading('validator'), di, 'validators');
 };
 
 module.exports = exports = GraoValidator;

@@ -1,6 +1,6 @@
 mixin form_{{ schema | lower }}(includeActions)
   doctype html
-  h3 {{ schema | capitalize }}
+  h3=__('{{ schema | capitalize }}')
     small {{ ' {{' }} {{ schema | lower }}._id }}
   form.form-horizontal(role='form')
   include form_fields

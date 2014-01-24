@@ -145,7 +145,7 @@ var GraoGenerator = function () {
       self.argsSwig[ arg.replace('-', '_') ] = args[arg];
     });
     var locals = { locals: this.argsSwig };
-    return swig.render(content, locals);
+    return swig.render(content, locals).replace(/^(?:[\t ]*(?:\r?\n|\r))+/gm, "\r\n"); // remove blank lines
   }
 
   this.checkIgnore = function (ignores, file, sourcePath) {

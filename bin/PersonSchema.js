@@ -1,6 +1,8 @@
 var PersonSchema = function(di) {
-  validate = di.validate;
-  validator = di.validators.person;
+  var validate = di.validate;
+  var validator = di.validators.person;
+
+  var phoneSchema = new di.mongoose.Schema();
 
   this.json = {
     id : di.mongoose.Schema.ObjectId,
@@ -68,14 +70,8 @@ var PersonSchema = function(di) {
         attr: { checked: true }
       }
     },
-    address : {
-      type: String,
-      graoui: {
-        label: "Address",
-        type: 'textarea',
-        attr: { placeholder: "Your Address" }
-      }
-    },
+    address : (di.schemas.address != null) ? di.schemas.address.json : (new (require('./AddressSchema'))(di)).json,
+    phones : [(di.schemas.phone != null) ? di.schemas.phone.json : (new (require('./PhoneSchema'))(di)).json],
     money : {
       type: Number,
       graoui: {

@@ -4,21 +4,27 @@ rm -rf demo ../../demo
 ls -laht demo/node_modules/graojs/
 mv demo ../../
 cd ../../demo
+cp ./../graojs/bin/PhoneSchema.js gen/PhoneSchema.js
+cp ./../graojs/bin/AddressSchema.js gen/AddressSchema.js
+cp ./../graojs/bin/UserSchemaFull.js gen/UserSchema.js
+cp ./../graojs/bin/ActivitySchema.js gen/ActivitySchema.js
+cp ./../graojs/bin/PersonSchema.js gen/PersonSchema.js
+# PhoneSchema
+./../graojs/bin/grao generate:schema --schema phone --force
+./../graojs/bin/grao generate:schemabundle --schema phone --force
+# AddressSchema
+./../graojs/bin/grao generate:schema --schema address --force
+./../graojs/bin/grao generate:schemabundle --schema address --force
 # User
 ./../graojs/bin/grao generate:schema --schema user --force
-cp ./../graojs/bin/UserSchemaFull.js gen/UserSchema.js
 ./../graojs/bin/grao generate:schemabundle --schema user --force
 cat ./bundles/user/view/form_fields.jade
 # ActivitySchema
 ./../graojs/bin/grao generate:schema --schema activity --force
-cp ./../graojs/bin/ActivitySchema.js gen/ActivitySchema.js
 ./../graojs/bin/grao generate:schemabundle --schema activity --force
 cat ./bundles/activity/view/form_fields.jade
 # PersonSchema
 ./../graojs/bin/grao generate:schema --schema person --force
-cp ./../graojs/bin/PersonSchema.js gen/PersonSchema.js
 ./../graojs/bin/grao generate:schemabundle --schema person --force
 cat ./bundles/person/view/form_fields.jade
-
-
 node index.js
