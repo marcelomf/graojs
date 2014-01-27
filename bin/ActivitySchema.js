@@ -17,7 +17,9 @@ var ActivitySchema = function(di) {
       unique : true,
       graoui: {
         label: "Name",
-        type: 'input'
+        type: 'input',
+        isList: true,
+        isFilter: true
       }
     },
     tag : {
@@ -38,7 +40,9 @@ var ActivitySchema = function(di) {
         label: "Context(Sub Activitys)",
         fieldRefLabel: "name",
         type: "select",
-        attr: { multiple: true }
+        attr: { multiple: true },
+        isList: true,
+        isFilter: true
       }
     }],
     description : {

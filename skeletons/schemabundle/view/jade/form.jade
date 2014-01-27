@@ -3,7 +3,7 @@ mixin form_{{ schema | lower }}(includeActions)
   h3=__('{{ schema | capitalize }}')
     small {{ ' {{' }} {{ schema | lower }}._id }}
   form.form-horizontal(role='form')
-  include form_fields
+  include fields
   +form_fields_{{ schema | lower }}()
   if includeActions
     include form_actions

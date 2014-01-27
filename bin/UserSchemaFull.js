@@ -15,7 +15,9 @@ var UserSchema = function(di) {
       ref: 'Person',
       graoui: {
         label: "Person",
-        type: "union"
+        type: "union",
+        isList: true,
+        isFilter: true
       },
     },
     activitys: [{ 
@@ -25,7 +27,9 @@ var UserSchema = function(di) {
         label: "Activitys",
         fieldRefLabel: "name",
         type: "select",
-        attr: { multiple: true }
+        attr: { multiple: true },
+        isList: true,
+        isFilter: true
       }
     }],
     username : {
@@ -34,7 +38,9 @@ var UserSchema = function(di) {
       trim : true,
       graoui: {
         label: "User Name",
-        type: 'input'
+        type: 'input',
+        isList: true,
+        isFilter: true
       }
     },
     password : {
@@ -51,7 +57,9 @@ var UserSchema = function(di) {
         label: "Languages",
         type: 'select',
         options: { "PHP": "PHP Language", "JAVA": "Java Language", "JAVASCRIPT": "Javascript Language", "PYTHON": "Python Language", "RUBY": "Ruby Language" },
-        attr: { multiple: true }
+        attr: { multiple: true },
+        isList: true,
+        isFilter: true
       }
     },
     distros : {

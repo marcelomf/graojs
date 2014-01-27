@@ -9,16 +9,16 @@
       table.table.table-striped(ng-init="query(count());")
         thead
           tr
-      {%- for fieldName, field in fields %}
+      {%- for fieldName, field in fields %}{%- if field.isList %}
             th=__('{{ field.label }}')
-      {%- endfor %}
+      {%- endif %}{%- endfor %}
             th=__('Actions')
         tbody
           tr(ng-repeat="{{ schema | lower }} in {{ schema | lower }}s")
-      {%- for fieldName, field in fields %}
+      {%- for fieldName, field in fields %}{%- if field.isList %}
             td {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
               span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}") {{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
-      {%- endfor %}
+      {%- endif %}{%- endfor %}
             td
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
               | 

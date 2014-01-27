@@ -18,7 +18,9 @@ var PersonSchema = function(di) {
       trim : true,
       graoui: {
         label: "Name",
-        type: 'input'
+        type: 'input',
+        isList: true,
+        isFilter: true
       }
     },
     email : {
@@ -31,7 +33,9 @@ var PersonSchema = function(di) {
       validate : validate('isEmail'),
       graoui: {
         label: "Email",
-        type: 'email'
+        type: 'email',
+        isList: true,
+        isFilter: true
       }
     },
     blog : {

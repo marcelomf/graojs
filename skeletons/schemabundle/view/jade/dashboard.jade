@@ -18,7 +18,7 @@ block content
         h3=__('{{ fieldName | capitalize }}')
           small {{ ' {{' }} ref.{{ fieldName | lower }}._id }}
         form.form-horizontal(role='form')
-          include ../../{{ field.ref | lower }}/view/form_fields
+          include ../../{{ field.ref | lower }}/view/fields
           +form_fields_{{ field.ref | lower }}('new{{ fieldName | capitalize }}')
         .form-horizontal
           .form-group

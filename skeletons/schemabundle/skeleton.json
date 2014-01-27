@@ -32,7 +32,7 @@
     "view/jade/filter.jade": "bundles/{{schema}}/view/filter.jade",
     "view/jade/list.jade": "bundles/{{schema}}/view/list.jade",
     "view/jade/form.jade": "bundles/{{schema}}/view/form.jade",
-    "view/jade/form_fields.jade": "bundles/{{schema}}/view/form_fields.jade",
+    "view/jade/fields.jade": "bundles/{{schema}}/view/fields.jade",
     "view/jade/form_actions.jade": "bundles/{{schema}}/view/form_actions.jade",
     "Controller.js": "bundles/{{schema}}/{{schema | capitalize}}Controller.js",
     "public/js/PublicController.js": "bundles/{{schema}}/public/js/{{schema | capitalize}}PublicController.js",
