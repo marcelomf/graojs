@@ -2,6 +2,12 @@ var UserSchema = function(di) {
   validate = di.validate;
   validator = di.validators.user;
 
+  this.graoui = {
+    label: "Users",
+    description: "Users of the system",
+    refLabel: 'username'
+  };
+
   this.json = {
     id : di.mongoose.Schema.ObjectId,
     person: { 
@@ -52,7 +58,7 @@ var UserSchema = function(di) {
       type: Array,
       graoui: {
         label: "Distributions",
-        type: 'select', // https://github.com/localytics/angular-chosen ? https://github.com/angular-ui/ui-select2 ?
+        type: 'select',
         options: [ "Ubuntu", "Fedora", "Debian", "Mint", "Slackware", "Gentoo" ],
         attr: { multiple: true }
       }

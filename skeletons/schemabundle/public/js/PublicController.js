@@ -38,9 +38,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     delete $scope.{{ schema | lower }}.{{ fieldName | lower }};
     $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
   };
-{%- endif %}
+{%- endif %}{%- endif %}
 {{ render_subDoc(schema, fieldName, field) }}
-{%- endif %}{%- endfor %}
+{%- endfor %}
 
   $scope.createOrUpdate = function() {
     function save() {

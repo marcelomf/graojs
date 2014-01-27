@@ -4,6 +4,12 @@ var PersonSchema = function(di) {
 
   var phoneSchema = new di.mongoose.Schema();
 
+  this.graoui = {
+    label: "Persons",
+    description: "All people",
+    refLabel: 'name'
+  };
+
   this.json = {
     id : di.mongoose.Schema.ObjectId,
     name : {

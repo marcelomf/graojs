@@ -11,7 +11,8 @@
         tbody
           tr(ng-repeat="{{ schema | lower }} in {{ schema | lower }}s")
 {%- for fieldName, field in fields %}
-            td {{ '{{' }} {{ schema | lower }}.{{ loop.key }} }}
+            td {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
+              span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}") {{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
 {%- endfor %}
             td
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 

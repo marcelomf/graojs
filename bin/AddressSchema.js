@@ -2,6 +2,12 @@ var AddressSchema = function(di) {
   validate = di.validate;
   validator = di.validators.address;
 
+  this.graoui = {
+    label: "Address",
+    description: "Address of people",
+    refLabel: ['country','state','city','zip_code','sector','street','number']
+  };
+
   this.json = {
     country : {
       type : String,
@@ -39,15 +45,6 @@ var AddressSchema = function(di) {
           type: 'input'
         }
     },
-    details : {
-        type : String,
-        required : false,
-        trim : true,
-        graoui: {
-          label: "Details",
-          type: 'textarea'
-        }
-    },
     sector : {
       type : String,
       required : false,
@@ -57,12 +54,30 @@ var AddressSchema = function(di) {
         type: 'input'
       }
     },
+    street : {
+      type : String,
+      required : false,
+      trim : true,
+      graoui: {
+        label: "Street",
+        type: 'input'
+      }
+    },
     number : {
       type: Number,
       graoui: {
         label: "Number",
         type: 'number'
       }
+    },
+    details : {
+        type : String,
+        required : false,
+        trim : true,
+        graoui: {
+          label: "Details",
+          type: 'textarea'
+        }
     }
   };
 

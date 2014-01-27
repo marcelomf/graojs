@@ -1,6 +1,12 @@
 var PhoneSchema = function(di) {
   validate = di.validate;
   validator = di.validators.phone;
+  
+  this.graoui = {
+    label: "Phones",
+    description: "Phones",
+    refLabel: ['ddi', 'ddd', 'number']
+  };
 
   this.json = {
     type : {
@@ -23,7 +29,7 @@ var PhoneSchema = function(di) {
       type : Number,
       required : false,
       graoui: {
-        label: "City",
+        label: "Ddd",
         type: 'input'
       }
     },

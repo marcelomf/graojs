@@ -61,7 +61,7 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
   {%- if field.ref %}
   .form-group
     include ../../{{ field.ref | lower }}/view/form_fields
-    +form_fields_{{ field.ref | lower }}('{{ schema | lower }}.{{ fieldName | lower }}')
+    +form_fields_{{ field.ref | lower }}(ngModelName+'.{{ fieldName | lower }}')
   {%- endif %}
   {%- endmacro %}
   {%- macro subDoc(schema, fieldName, field) %}
@@ -82,8 +82,8 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
             td {{ '{{' }} {{ fieldName | lower }}.{{ subFieldName }} }}{%- endfor %}
             td  
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ fieldName | capitalize }}ByIndex($index);')
-              | 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ fieldName | capitalize }}($index);')
+              //| 
+              //button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ fieldName | capitalize }}($index);')
   {%- else %}
   {%- for subFieldName, subField in field.fields %}
   {{ render_field(schema, fieldName+'.'+subFieldName, subField) }}

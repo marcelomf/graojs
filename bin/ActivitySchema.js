@@ -2,6 +2,12 @@ var ActivitySchema = function(di) {
   validate = di.validate;
   validator = di.validators.activity;
 
+  this.graoui = {
+    label: "Activitys",
+    description: "Activitys of users",
+    refLabel: 'name'
+  };
+
   this.json = {
     id : di.mongoose.Schema.ObjectId,
     name : {
