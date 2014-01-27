@@ -1,6 +1,7 @@
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | lower }}{%- for fieldName, field in fields %}{%- if field.ref %}, {{ field.ref | lower }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
   $scope.{{ schema | lower }} = {};
+  $scope.notFilter = true;
   $scope.filter{{ schema | capitalize }} = {};
   $scope.statusData = { totality: 0, filtered: 0, listing: 0 };
 

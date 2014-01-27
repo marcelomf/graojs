@@ -1,33 +1,34 @@
-.navbar.navbar-inverse.navbar-fixed-top(ng-controller='TopbarPublicController')
-	.container
-		a.navbar-brand(href='/')
-			| graoJS
-		// button.btn.btn-navbar(type='button', data-toggle='collapse', ng-init='isCollapsed = true', ng-click='isCollapsed = !isCollapsed', data-target='.navbar-collapse')
-		// span.icon-bar
-		// span.icon-bar
-		// span.icon-bar 
-		.navbar-collapse.collapse.navbar-responsive-collapse(collapse='isCollapsed')
-			ul.nav.navbar-nav
-				li
-					a(href='/') 
-						i.icon-home 
-						| Home 
-				li.dropdown
-					a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
-					ul.dropdown-menu
-						include adminmenu
-				li
-					a
-						i.icon-info(type='button',
-										popover-popup-delay=1000,
-										popover-is-auto-open='{{ '{{' }}share.notify.isAutoOpen}}', 
-										popover-trigger='click',  
-										popover-title='{{ '{{' }}share.notify.title}}', 
-										popover='{{ '{{' }}share.notify.content}}', 
-										popover-placement='bottom') {{ '{{' }}share.notify.btn}}
-			| 
-			img(src='/img/flag/pt-br.png',
-										popover-trigger='mouseenter',  
-										popover-title='Locales...', 
-										popover='...', 
-										popover-placement='bottom')
+.navbar.navbar-inverse.navbar-fixed-top(ng-controller='TopbarPublicController', role="navigation")
+  .container
+    .navbar-header
+      button.navbar-toggle(type="button", ng-init="isCollapsed = true", ng-click="isCollapsed = !isCollapsed")
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href='/') graoJS
+    .navbar-collapse.collapse.navbar-responsive-collapse(collapse="isCollapsed")
+      ul.nav.navbar-nav
+        li
+          a(href='/') 
+            i.icon-home 
+            | Home 
+        li.dropdown
+          a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+          ul.dropdown-menu
+            include adminmenu
+        li
+          a
+            i.icon-info(type='button',
+                    popover-popup-delay=1000,
+                    popover-is-auto-open='{{share.notify.isAutoOpen}}', 
+                    popover-trigger='click',  
+                    popover-title='{{share.notify.title}}', 
+                    popover='{{share.notify.content}}', 
+                    popover-placement='bottom')
+        li
+          a
+            img(src='/img/flag/pt-br.png',
+                    popover-trigger='mouseenter',  
+                    popover-title='Locales...', 
+                    popover='...', 
+                    popover-placement='bottom')

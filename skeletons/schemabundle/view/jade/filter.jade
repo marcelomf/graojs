@@ -1,7 +1,7 @@
 h3=__('Filters')
-form.form-horizontal(role='form')
-include form_fields
-+form_fields_{{ schema | lower }}('filter{{ schema | capitalize }}')
-button.btn.btn-info(type='button', ng-click='filter(); count();')=__('Filter')
-| 
-button.btn.btn-danger(type='button', ng-click='query(); count();')=__('Reset')
+form.form-inline(role='form')
+  include form_fields
+  +form_fields_{{ schema | lower }}('filter{{ schema | capitalize }}')
+  button.btn.btn-info(type='button', ng-click='filter(); count();')=__('Filter')
+  | 
+  button.btn.btn-danger(type='button', ng-click='query(); count();')=__('Reset')
