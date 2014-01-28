@@ -12,25 +12,22 @@ var service = {
     {{ schema | capitalize }}.count({}, function(err, totality) {
       if (err) {
         di.event.newEvent(err).error().present().log('error');
-        res.jsonp({});
         res.end();
         return;
       } 
 
       if(filter == null) {
-          res.jsonp({totality: totality, filtered: 0});
-          res.end();
+          res.json({totality: totality, filtered: 0});
           return;
       }
 
       {{ schema | capitalize }}.count(filter, function(err, filtered) {
         if (err) {
           di.event.newEvent(err).error().present().log('error');
-          res.jsonp({});
+          res.end();
         } else {
-          res.jsonp({totality: totality, filtered: filtered});
+          res.json({totality: totality, filtered: filtered});
         }
-        res.end();
         return;
       });
     });
@@ -42,8 +39,7 @@ var service = {
         event.newEvent(err).error().present().log('error');
         res.end();
       } else {
-        res.jsonp({{ schema | lower }});
-        res.end();
+        res.json({{ schema | lower }});
       }
     });
   },
@@ -63,8 +59,7 @@ var service = {
         event.newEvent(err).error().present().log('error');
         res.end();
       } else {
-        res.jsonp({{ schema | lower }}s);
-        res.end();
+        res.json({{ schema | lower }}s);
       }
     });
   },
@@ -77,8 +72,7 @@ var service = {
         res.end();
       } else {
         event.newEvent('created').success().present().log('info');
-        res.jsonp({{ schema | lower }});
-        res.end();
+        res.json({{ schema | lower }});
       }
     });
   },
@@ -91,8 +85,7 @@ var service = {
         res.end();
       } else {
         event.newEvent('updated').success().present().log('info');
-        res.jsonp({{ schema | lower }});
-        res.end();
+        res.json({{ schema | lower }});
       }
     });
   },

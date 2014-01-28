@@ -1,6 +1,7 @@
 var http = require('http'),
   passport = require('passport'),
   express = require('express'),
+  MongoStore = require('connect-mongo')(express),
   graoExpress = express(),
   kernel = new (require('./src/core/GraoKernel'))({
             config: require('./../../config/prod'), 
@@ -25,13 +26,21 @@ var graoJS = function() {
     graoExpress.set('view engine', 'jade');
     graoExpress.enable('jsonp callback');
     graoExpress.use(express.methodOverride());
+    graoExpress.use(i18n.init);
+    graoExpress.use(express.favicon());
+    graoExpress.use(express.logger('dev'));
+    graoExpress.use(express.json());
+    graoExpress.use(express.urlencoded());
     graoExpress.use(express.cookieParser());
     graoExpress.use(express.bodyParser());
-    graoExpress.use(express.session({secret: 'FIXME CHANGE IT IN COMPILE TIME!'}));
+    graoExpress.use(express.session({
+      secret: 'FIXME AND RAND THIS',
+      store: new MongoStore({ db: 'grao' })
+    }));
     graoExpress.use(passport.initialize());
     graoExpress.use(passport.session());
-    graoExpress.use(i18n.init);
     //graoExpress.use(express.compress());
+
     kernel.publics.enable({
       express: express, 
       graoExpress: graoExpress, 
@@ -43,6 +52,12 @@ var graoJS = function() {
     graoExpress.use(graoExpress.router);
   });
 
+// development only
+/*if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+*/
+
   kernel.routes();
   
   this.kernel = kernel;
@@ -52,16 +67,16 @@ var graoJS = function() {
     kernel.logger.info('graoJS Starting...');
     kernel.logger.info('Open in your browser:');
 
-      if (process.env.PORT != undefined) {
+    if (process.env.PORT != undefined) {
       servers.push(graoExpress.listen(process.env.PORT));
       kernel.logger.info('http://localhost:' + process.env.PORT);
-      } else {
+    } else {
       for(portIndex in kernel.config.ports)
       {
         servers.push(graoExpress.listen(kernel.config.ports[portIndex]));
         kernel.logger.info('http://localhost:' + kernel.config.ports[portIndex]);
       }
-      }
+    }
   };
   
   this.stop = function() {
