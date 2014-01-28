@@ -19,7 +19,7 @@
   "readme" : "README.md",
   "dependencies": [
     "winston", "express", "mongodb", "mongoose", "mongoose-validator", "mongoose-rbac", "i18n", "underscore",
-    "jade", "swig", "fs-extra", "stack-trace", "prompt", "optimist", "string", "q"
+    "jade", "swig", "fs-extra", "stack-trace", "prompt", "optimist", "string", "q", "passport", "passport-local"
   ],
   "keywords": [
     "framework", "mvc", "grao", "graojs", "restful", "rad", "app", "api", "ria", "generator", "builder"

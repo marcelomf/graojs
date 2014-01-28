@@ -89,7 +89,7 @@ var GraoGeneratorCommands = function (di) {
           {
             result[uiName] = uiSchema[uiName];
           }
-          console.log(result);
+          //console.log(result);
           /** 
           * @FIXME
           * Dead code ?

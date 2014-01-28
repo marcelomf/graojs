@@ -29,9 +29,9 @@
       "default": "8015,8016,8017,8018,8019,8020,8021,8022"
     },
     "template-engine": {
-      "description": "Template Engine (swig or jade)",
-      "pattern": "^swig|jade$",
-      "message": "Must be swig or jade",
+      "description": "Template Engine (jade)",
+      "pattern": "^jade$",
+      "message": "Must be jade",
       "required": true,
       "default": "jade"
     },
@@ -58,8 +58,6 @@
     "skeleton.json"
   ],
   "rewrites": {
-    "bundles/frontend/theme/swig/nav.html": "bundles/frontend/theme/nav.html",
-    "bundles/frontend/theme/swig/layout.html": "bundles/frontend/theme/layout.html",
     "bundles/frontend/view/jade/home.jade": "bundles/frontend/view/home.jade",
     "bundles/frontend/view/jade/index.jade": "bundles/frontend/view/index.jade",
     "bundles/frontend/view/jade/explore.jade": "bundles/frontend/view/explore.jade",

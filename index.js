@@ -1,8 +1,10 @@
 var http = require('http'),
+  passport = require('passport'),
   express = require('express'),
   graoExpress = express(),
   kernel = new (require('./src/core/GraoKernel'))({
             config: require('./../../config/prod'), 
+            passport: passport,
             graoExpress: graoExpress, 
             express: express}),
   servers = new Array(),
@@ -22,12 +24,14 @@ var graoJS = function() {
     graoExpress.set('views', kernel.config.bundles);
     graoExpress.set('view engine', 'jade');
     graoExpress.enable('jsonp callback');
-
     graoExpress.use(express.methodOverride());
     graoExpress.use(express.cookieParser());
     graoExpress.use(express.bodyParser());
+    graoExpress.use(express.session({secret: 'FIXME CHANGE IT IN COMPILE TIME!'}));
+    graoExpress.use(passport.initialize());
+    graoExpress.use(passport.session());
     graoExpress.use(i18n.init);
-
+    //graoExpress.use(express.compress());
     kernel.publics.enable({
       express: express, 
       graoExpress: graoExpress, 

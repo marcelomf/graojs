@@ -22,9 +22,7 @@ cat ./bundles/user/view/form_fields.jade
 # ActivitySchema
 ./../graojs/bin/grao generate:schema --schema activity --force
 ./../graojs/bin/grao generate:schemabundle --schema activity --force
-cat ./bundles/activity/view/form_fields.jade
 # PersonSchema
 ./../graojs/bin/grao generate:schema --schema person --force
 ./../graojs/bin/grao generate:schemabundle --schema person --force
-cat ./bundles/person/view/form_fields.jade
 node index.js
