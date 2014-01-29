@@ -25,11 +25,12 @@ block content
             button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");')=__('Save and back')
             | 
             button.btn.btn.btn-default(type='button', ng-click='clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");')=__('Cancel')
-  {%- endif %}
-    script(src='/js/{{ field.ref | lower }}/{{ field.ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
-  {%- endif %}{%- endfor %}
+  {%- endif %}{%- endif %}{%- endfor %}
     .row
       .col-xs-18.col-sm-9.col-md-12
         include dashboard_actions
+  {%- for fieldName, field in fields %}{%- if field.ref %}
+    script(src='/js/{{ field.ref | lower }}/{{ field.ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
+  {%- endif %}{%- endfor %}
     script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
     script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicController.js', type='text/javascript', charset='utf-8').

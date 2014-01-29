@@ -104,7 +104,7 @@ var service = {
 
 var admin = {
   dashboard : function(req, res) {
-    res.render('{{ schema | lower }}/view/dashboard');
+    res.render('{{ schema | lower }}/view/dashboard', {isAuth: req.isAuthenticated()});
   }
 };
 

@@ -1,6 +1,6 @@
 var FrontendRoute = function (di) {
 	di.graoExpress.get('/', function(req, res) {
-		res.render('frontend/view/index');
+		res.render('frontend/view/index', {isAuth: req.isAuthenticated()});
 	});
 
   di.graoExpress.get('/events/pull', function(req, res){
@@ -14,6 +14,8 @@ var FrontendRoute = function (di) {
   });
 
   di.graoExpress.post('/login', di.graoPassport.postLogin);
+
+  di.graoExpress.get('/logout', di.graoPassport.logout);
 
 };
 

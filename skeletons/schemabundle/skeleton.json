@@ -31,6 +31,7 @@
     "view/jade/dashboard_actions.jade": "bundles/{{schema}}/view/dashboard_actions.jade",
     "view/jade/filter.jade": "bundles/{{schema}}/view/filter.jade",
     "view/jade/list.jade": "bundles/{{schema}}/view/list.jade",
+    "view/jade/list_thumbnail.jade": "bundles/{{schema}}/view/list_thumbnail.jade",
     "view/jade/form.jade": "bundles/{{schema}}/view/form.jade",
     "view/jade/fields.jade": "bundles/{{schema}}/view/fields.jade",
     "view/jade/form_actions.jade": "bundles/{{schema}}/view/form_actions.jade",

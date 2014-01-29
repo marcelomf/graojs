@@ -32,9 +32,14 @@
                     popover-title='Locales...', 
                     popover='...', 
                     popover-placement='bottom')
-      form.navbar-form.navbar-right(role='form')
-        .form-group
-          input.form-control(type='text', placeholder=__('Username'), ng-model='username')
-        .form-group
-          input.form-control(type='password', placeholder=__('Password'), ng-model='password')
-        button.btn.btn-success(ng-click="login()")=__('Login')
+        if isAuth == true
+          li
+            a(ng-click="logout()")=__('Logout')
+
+      if isAuth == false
+        form.navbar-form.navbar-right(role='form')
+          .form-group
+            input.form-control(type='text', placeholder=__('Username'), ng-model='username')
+          .form-group
+            input.form-control(type='password', placeholder=__('Password'), ng-model='password')
+          button.btn.btn-success(ng-click="login()")=__('Login')
