@@ -21,7 +21,10 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     }
   }
 
-  function validate(errorObject, reponseData){
+  function validate(errorObject, reponseData, pathsIgnore){
+    if(!pathsIgnore)
+      pathsIgnore = new Array();
+
     function jumpPath(errorObject, paths, value) {
       var newPath = paths[0];
       paths.shift();
@@ -33,9 +36,19 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       else
         jumpPath(errorObject[newPath], paths, value);
     }
+
     clear(errorObject);
+    var errors = reponseData.data;
+    for(var iField in errors){
+      if(pathsIgnore.indexOf(errors[iField].path) >= 0)
+        delete errors[iField];
+    }
+    var count = 0;
+    for(var iField in errors) count++;
+    if(count <= 0) return true;
+
     if(reponseData.event && reponseData.event.status == false) {
-      var errors = reponseData.data;
+      
       for(var iField in errors){
         if(errors[iField].path.indexOf('.') != -1)
           jumpPath(errorObject, errors[iField].path.split('.'), errors[iField].message);
@@ -114,7 +127,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     }
 {%- if hasUnion == true %}
     var {{ schema | lower }}ValidDef = $q.defer();
-    {{ schema | lower }}.validate($scope.{{ schema | lower }}, function(data){ if(validate($scope.errors.{{ schema | lower }}, data)) { {{ schema | lower }}ValidDef.resolve(data); }});
+    var ignorePaths = [{%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}"{{ fieldName | lower }}",{%- endif %}{%- endfor %}];
+    {{ schema | lower }}.validate($scope.{{ schema | lower }}, function(data){ if(validate($scope.errors.{{ schema | lower }}, data, ignorePaths)) { {{ schema | lower }}ValidDef.resolve(data); }});
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
     var {{ fieldName | lower }}ValidDef = $q.defer();
     {{ field.ref | lower }}.validate($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(data){ if(validate($scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, data)) { {{ fieldName | lower }}ValidDef.resolve(data); }});
