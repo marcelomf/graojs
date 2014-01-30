@@ -1,7 +1,7 @@
 var LocalStrategy = require('passport-local').Strategy;
 
 var GraoPassport = function(di) {
-  di.event.newEvent('Passport....').success().present().log('info');
+  di.event.new('Passport....').success().present().log('info');
 
   di.passport.serializeUser(function(user, done) {
     console.log('serializa');

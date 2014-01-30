@@ -13,6 +13,7 @@ var UserSchema = function(di) {
     person: { 
       type: di.mongoose.Schema.Types.ObjectId, 
       ref: 'Person',
+      required : true,
       graoui: {
         label: "Person",
         type: "union",
@@ -34,7 +35,7 @@ var UserSchema = function(di) {
     }],
     username : {
       type : String,
-      required : false,
+      required : true,
       trim : true,
       graoui: {
         label: "User Name",
@@ -45,7 +46,7 @@ var UserSchema = function(di) {
     },
     password : {
       type : String,
-      required : false,
+      required : true,
       graoui: {
         label: "Password",
         type: 'password'

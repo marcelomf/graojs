@@ -11,7 +11,7 @@ var AddressSchema = function(di) {
   this.json = {
     country : {
       type : String,
-      required : false,
+      required : true,
       trim : true,
       graoui: {
         label: "Country",

@@ -1,6 +1,6 @@
 var GraoPublicRoute = {
 	enable : function(di) {
-		di.event.newEvent('Setting routes of public static content....').success().present().log('info');
+		di.event.new('Setting routes of public static content....').success().present().log('info');
 		
 		var dynamicPublicRoutes = di.loader.loading('publicRoute');
 		

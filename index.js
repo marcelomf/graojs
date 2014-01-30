@@ -28,7 +28,7 @@ var graoJS = function() {
     graoExpress.use(express.methodOverride());
     graoExpress.use(i18n.init);
     graoExpress.use(express.favicon());
-    graoExpress.use(express.logger('dev'));
+    //graoExpress.use(express.logger('dev'));
     graoExpress.use(express.json());
     graoExpress.use(express.urlencoded());
     graoExpress.use(express.cookieParser());

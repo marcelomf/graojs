@@ -14,7 +14,7 @@ var PersonSchema = function(di) {
     id : di.mongoose.Schema.ObjectId,
     name : {
       type : String,
-      required : false,
+      required : true,
       trim : true,
       graoui: {
         label: "Name",

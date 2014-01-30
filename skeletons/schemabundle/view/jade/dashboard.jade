@@ -22,7 +22,7 @@ block content
           +form_fields_{{ field.ref | lower }}('new{{ fieldName | capitalize }}')
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}("createOrUpdate");')=__('Save and back')
             | 
             button.btn.btn.btn-default(type='button', ng-click='clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");')=__('Cancel')
   {%- endif %}{%- endif %}{%- endfor %}
