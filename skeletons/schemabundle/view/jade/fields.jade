@@ -57,9 +57,9 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}"){%- if field.ref %}
     .input-group
       select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
-        option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ fieldName | lower }}') {{ '{{' }} {{ field.ref | lower }}.{% if field.fieldRefLabel %}{{ field.fieldRefLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter %}
+        option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ field.ref | lower }}s') {{ '{{' }} {{ field.ref | lower }}.{% if field.fieldRefLabel %}{{ field.fieldRefLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter %}
       span.input-group-btn
-        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".{{ fieldName | lower }}}", ng-click='clear{{ fieldName | capitalize }}(); share.window("createOrUpdate{{ fieldName | capitalize }}");') + {%- endif %}{%- else %}  
+        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".{{ fieldName | lower }}}", ng-click='clear{{ schema | capitalize }}{{ fieldName | capitalize }}(); share.window("createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }}");') + {%- endif %}{%- else %}  
     select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
       option.form-control(value=''){%- if field.options %}{%- for option in field.options %}
       option.form-control(value='{{ loop.key }}')=__('{{ option }}'){%- endfor %}{%- endif %}{%- endif %}

@@ -5,7 +5,7 @@
     button.btn.btn-default.btn-block.btn-xs(ng-click="notFilter = !notFilter")=__('FILTER')
 .row
   .col-xs-18.col-sm-9.col-md-12
-    .row(ng-init="query(count());")
+    .row(ng-init="query{{ schema | capitalize }}(count());")
       .col-xs-4.col-sm-2.col-md-3(ng-repeat="{{ schema | lower }} in {{ schema | lower }}s")
         .thumbnail
           .caption
@@ -15,7 +15,7 @@
       {%- endif %}{%- endfor %}
             button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')=__('Edit')
             | 
-            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')=__('Remove')
+            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query{{ schema | capitalize }}(); count();')=__('Remove')
 .row
   .col-xs-18.col-sm-9.col-md-12.text-right
     p=__('Listing {{ '{{' }} statusData.listing }} {{ schema | lower }}s of {{ '{{' }} statusData.filtered }} filtered on {{ '{{' }} statusData.totality }} totality')

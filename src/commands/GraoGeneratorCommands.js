@@ -85,11 +85,10 @@ var GraoGeneratorCommands = function (di) {
       fs.exists(path.join(process.cwd(), schemaPath), function (exists) {
         if (exists) {
           var uiSchema = self.prepareSchemaUi(schemaCapitalized, self.prepareSchema(result['schema'], path.join(process.cwd(), schemaPath)));
-          for(var uiName in uiSchema)
-          {
+          for(var uiName in uiSchema) {
             result[uiName] = uiSchema[uiName];
           }
-          //console.log(result);
+          console.log(result);
           /** 
           * @FIXME
           * Dead code ?
@@ -155,10 +154,12 @@ var GraoGeneratorCommands = function (di) {
     generator.init(type, skeleton);
   }
 
-  this.prepareSchemaUi = function (schemaName, schemaObj) {
+  this.prepareSchemaUi = function (schemaName, schemaObj, schemaRoot) {
     var rootGraoui = (schemaObj.graoui != null) ? schemaObj.graoui : {};
     var resultUi;
     var autoRefsFieldName = new Array();
+    var allRefs = new Array();
+    var allRefsFieldName = new Array();
 
     function prepareFields(jsonFields){
       var result = {  name: schemaName, 
@@ -180,14 +181,23 @@ var GraoGeneratorCommands = function (di) {
           if(jsonFields[fieldName].ref != null) {
             result.hasRef = true;
             result.fields[fieldName].ref = jsonFields[fieldName].ref;
-            if(result.fields[fieldName].ref == result.name) {
+            allRefs.push(result.fields[fieldName].ref);
+            allRefsFieldName.push(fieldName);
+            if(result.fields[fieldName].ref == result.name || result.fields[fieldName].ref == schemaRoot) {
               autoRefsFieldName.push(fieldName);
             } else {
               var schemaRef = self.prepareSchemaUi(jsonFields[fieldName].ref, self.prepareSchema(jsonFields[fieldName].ref, 
-                                        path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(jsonFields[fieldName].ref)))));
+                                        path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(jsonFields[fieldName].ref)))), schemaName);
+              for(var i in schemaRef.allRefs) {
+                allRefs.push(schemaRef.allRefs[i]);
+              }
+              for(var i in schemaRef.allRefsFieldName) {
+                allRefsFieldName.push(schemaRef.allRefsFieldName[i]);
+              }
               for(var nameObj in schemaRef) {
                 result.fields[fieldName][nameObj] = schemaRef[nameObj];
               }
+
             }
           }
         } else if (jsonFields[fieldName] instanceof Array && jsonFields[fieldName][0] != null && 
@@ -199,15 +209,23 @@ var GraoGeneratorCommands = function (di) {
           if(jsonFields[fieldName][0].ref != null) {
             result.hasRef = true;
             result.fields[fieldName].ref = jsonFields[fieldName][0].ref;
-            if(result.fields[fieldName].ref == result.name) {
+            allRefs.push(result.fields[fieldName].ref);
+            allRefsFieldName.push(fieldName);
+            if(result.fields[fieldName].ref == result.name || result.fields[fieldName].ref == schemaRoot) {
               autoRefsFieldName.push(fieldName);
             } else {
               var schemaRef = self.prepareSchemaUi(jsonFields[fieldName][0].ref, self.prepareSchema(jsonFields[fieldName][0].ref, 
-                                          path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(jsonFields[fieldName][0].ref)))));
+                                          path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(jsonFields[fieldName][0].ref)))), schemaName);
+              for(var i in schemaRef.allRefs) {
+                allRefs.push(schemaRef.allRefs[i]);
+              }
+              for(var i in schemaRef.allRefsFieldName) {
+                allRefsFieldName.push(schemaRef.allRefsFieldName[i]);
+              }
               for(var nameObj in schemaRef) {
                 result.fields[fieldName][nameObj] = schemaRef[nameObj];
               }
-            } 
+            };  
           }
         } else if(self.hasGraoui(jsonFields[fieldName]) || 
           (jsonFields[fieldName] instanceof Array && 
@@ -229,13 +247,17 @@ var GraoGeneratorCommands = function (di) {
     }
 
     resultUi = prepareFields(schemaObj.json);
+    resultUi.allRefs = allRefs;
+    resultUi.allRefsFieldName = allRefsFieldName;
 
     if(autoRefsFieldName.length > 0) {
       for(var i in autoRefsFieldName) {
         for(var nameObj in resultUi) {
-          resultUi.fields[autoRefsFieldName[i]][nameObj] = resultUi[nameObj]; // Circular
+          if(resultUi.fields[autoRefsFieldName[i]] != null && resultUi.fields[autoRefsFieldName[i]][nameObj] != null)
+            resultUi.fields[autoRefsFieldName[i]][nameObj] = resultUi[nameObj]; // Circular
         }
       }
+      autoRefsFieldName = new Array();
     }
     return resultUi;
   }

@@ -1,4 +1,4 @@
-function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | lower }}{%- for fieldName, field in fields %}{%- if field.ref %}, {{ field.ref | lower }}{%- endif %}{%- endfor %}) {
+function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | lower }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | lower }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
   $scope.{{ schema | lower }} = {};
   $scope.errors = {};
@@ -62,53 +62,6 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     return true;
   }
 
-{%- for fieldName, field in fields %}
-{%- if field.ref %}
-{%- if field.type == "select" %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-  $scope.new{{ fieldName | capitalize }} = {};
-  $scope.errors.new{{ fieldName | capitalize }} = {};
-  $scope.query{{ fieldName | capitalize }} = function(){
-    $scope.{{ fieldName | lower }} = {{ field.ref | lower }}.query();
-  };
-  $scope.query{{ fieldName | capitalize }}();
-
-  $scope.createOrUpdate{{ fieldName | capitalize }} = function(windowCallBack) {
-    function save({{ fieldName | lower }}Response) {
-      if(validate($scope.errors.new{{ fieldName | capitalize }}, {{ fieldName | lower }}Response)) {
-        $scope.{{ fieldName | lower }}.push({{ fieldName | lower }}Response);
-        {%- if field.isArray == true %}
-        if(!($scope.{{ schema | lower }}.{{ fieldName | lower }} instanceof Array))
-          $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-        $scope.{{ schema | lower }}.{{ fieldName | lower }}.push({{ fieldName | lower }}Response._id);
-        {%- else %}
-        $scope.{{ schema | lower }}.{{ fieldName | lower }} = {{ fieldName | lower }}Response._id;
-        {%- endif %}
-        $scope.clear{{ fieldName | capitalize }}();
-        share.window(windowCallBack);
-      }
-    }
-    if($scope.new{{ fieldName | capitalize }}._id != null)
-      {{ field.ref | lower }}.update($scope.new{{ fieldName | capitalize }}, save);
-    else
-      {{ field.ref | lower }}.save($scope.new{{ fieldName | capitalize }}, save);
-  }
-
-  $scope.clear{{ fieldName | capitalize }} = function() {
-    delete $scope.new{{ fieldName | capitalize }};
-    $scope.new{{ fieldName | capitalize }} = {};
-  }
-{%- else %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
-  $scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = {};
-  $scope.clear{{ fieldName | capitalize }} = function() {
-    delete $scope.{{ schema | lower }}.{{ fieldName | lower }};
-    $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
-  }
-{%- endif %}{%- endif %}
-{{ render_subDoc(schema, fieldName, field) }}
-{%- endfor %}
-
   $scope.createOrUpdate = function(windowCallBack) {
     function save() {
       var {{ schema | lower }}Json = $scope.{{ schema | lower }};
@@ -126,9 +79,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}
 {%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
-        {{ schema | lower }}.update({{ schema | lower }}Json, function(data){ if(validate($scope.errors.{{ schema | lower }}, data)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | lower }}.update({{ schema | lower }}Json, function(data){ if(validate($scope.errors.{{ schema | lower }}, data)){ $scope.query{{ schema | capitalize }}(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
       else
-        {{ schema | lower }}.save({{ schema | lower }}Json, function(data){ if(validate($scope.errors.{{ schema | lower }}, data)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | lower }}.save({{ schema | lower }}Json, function(data){ if(validate($scope.errors.{{ schema | lower }}, data)){ $scope.query{{ schema | capitalize }}(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
     }
 {%- if hasUnion == true %}
     var {{ schema | lower }}ValidDef = $q.defer();
@@ -193,7 +146,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     $scope.{{ schema | lower }}s = {{ schema | lower }}.query({filter: JSON.stringify($scope.filter{{ schema | capitalize }})});
   }
 
-  $scope.query = function() {
+  $scope.query{{ schema | capitalize }} = function() {
       $scope.{{ schema | lower }}s = {{ schema | lower }}.query(function () { 
         $scope.statusData.listing = $scope.{{ schema | lower }}s.length;
       });
@@ -237,14 +190,71 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   $scope.clear = function() {
     delete $scope.{{ schema | lower }};
     $scope.{{ schema | lower }} = {};
-{%- for fieldName, field in fields %} 
-  {%- if field.ref || (field.isSubDoc == true && field.isArray == true) %}
-    $scope.clear{{ fieldName | capitalize }}();
-{%- endif %}{%- endfor %}
+{%- for fieldName, field in fields %}{%- if field.ref && field.type == "select" %}
+    $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }}();{%- elseif field.isSubDoc == true && field.isArray == true %}
+    $scope.clear{{ fieldName | capitalize }}();{%- endif %}{%- endfor %}
   }
+
+{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}
+  $scope.query{{ ref | capitalize }} = function(){
+    $scope.{{ ref | lower }}s = {{ ref | lower }}.query();
+  };
+  $scope.query{{ ref | capitalize }}();
+{%- endif %}{%- endfor %}
+
+{{ render_refSelect(schema, fields) }}
+
+{%- for fieldName, field in fields %}{%- if field.ref && field.type != "select" %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
+  $scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = {};
+  $scope.clear{{ fieldName | capitalize }} = function() {
+    delete $scope.{{ schema | lower }}.{{ fieldName | lower }};
+    $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
+  }
+{%- endif %}
+{{ render_subDoc(schema, fieldName, field) }}
+{%- endfor %}
+
 }
 
-{{ schema | capitalize }}PublicController.$inject = ['$scope', '$http', '$q', 'share', '{{ schema | lower }}'{%- for fieldName, field in fields %}{%- if field.ref %}, '{{ field.ref | lower }}'{%- endif %}{%- endfor %}];
+{{ schema | capitalize }}PublicController.$inject = ['$scope', '$http', '$q', 'share', '{{ schema | lower }}'{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, '{{ ref | lower }}'{%- endif %}{%- endfor %}];
+
+{%- macro render_refSelect(schema, fields) %}
+{%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
+  $scope.new{{ schema | capitalize }}{{ fieldName | capitalize }} = {};
+  $scope.errors.new{{ schema | capitalize }}{{ fieldName | capitalize }} = {};
+
+  $scope.createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }} = function() {
+    function save(dataResponse) {
+      if(validate($scope.errors.new{{ schema | capitalize }}{{ fieldName | capitalize }}, dataResponse)) {
+        $scope.{{ field.ref | lower }}s.push(dataResponse);
+        {%- if field.isArray == true %}
+        if(!($scope.{{ schema | lower }}.{{ fieldName | lower }} instanceof Array))
+          $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
+        $scope.{{ schema | lower }}.{{ fieldName | lower }}.push(dataResponse._id);
+        {%- else %}
+        $scope.{{ schema | lower }}.{{ fieldName | lower }} = dataResponse._id;
+        {%- endif %}
+        $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }}();
+        share.windowBack();
+      }
+    }
+    if($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}._id != null)
+      {{ field.ref | lower }}.update($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
+    else
+      {{ field.ref | lower }}.save($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
+  }
+
+  $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }} = function() {
+    delete $scope.new{{ schema | capitalize }}{{ fieldName | capitalize }};
+    $scope.new{{ schema | capitalize }}{{ fieldName | capitalize }} = {};
+  }
+{%- endif %}
+{%- if field.hasRef && field.fields %}
+$scope.{{ field.ref | lower }} = {};
+{{ render_refSelect(field.ref, field.fields) }}
+{%- endif %}{%- endfor %}{%- endmacro %}
 
 {%- macro render_subDoc(schema, fieldName, field) %}
 {%- if field.isSubDoc == true %}
@@ -252,7 +262,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
   $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
-  $scope.errors.{{ schema | lower }}.new{{ fieldName | capitalize }} = false;
+  //$scope.errors.{{ schema | lower }}.new{{ fieldName | capitalize }} = false;
 
   $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
     if($scope.{{ schema | lower }}.{{ fieldName | lower }} == null)
@@ -274,7 +284,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   }
   {%- else %}
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
-  $scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = false;
+  //$scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = false;
   {%- endif %}
 {%- elseif field.hasSubDoc == true %}
 {%- for subFieldName, subField in field.fields %}

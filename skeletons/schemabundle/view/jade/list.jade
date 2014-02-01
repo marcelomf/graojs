@@ -6,7 +6,7 @@
 .row
   .col-xs-18.col-sm-9.col-md-12
     .table-responsive
-      table.table.table-striped(ng-init="query(count());")
+      table.table.table-striped(ng-init="query{{ schema | capitalize }}(count());")
         thead
           tr
       {%- for fieldName, field in fields %}{%- if field.isList %}
@@ -20,7 +20,7 @@
               span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}") {{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
       {%- endif %}{%- endfor %}
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query{{ schema | capitalize }}(); count();') 
               | 
               button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
 .row

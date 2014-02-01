@@ -2,67 +2,80 @@ var UserSchema = function(di) {
   validate = di.validate;
   validator = di.validators.user;
 
+  this.graoui = {
+    label: "Users",
+    description: "Users of the system",
+    refLabel: 'username'
+  };
+
   this.json = {
     id : di.mongoose.Schema.ObjectId,
-    name : {
-      type : String,
-      required : false,
-      trim : true,
+    person: { 
+      type: di.mongoose.Schema.Types.ObjectId, 
+      ref: 'Person',
+      required : true,
       graoui: {
-        label: "Name",
-        type: 'input'
-      }
+        label: "Person",
+        type: "union",
+        isList: true,
+        isFilter: true
+      },
     },
+    activitys: [{ 
+      type: di.mongoose.Schema.Types.ObjectId, 
+      ref: 'Activity',
+      graoui: {
+        label: "Activitys",
+        fieldRefLabel: "name",
+        type: "select",
+        attr: { multiple: true },
+        isList: true,
+        isFilter: true
+      }
+    }],
     username : {
       type : String,
-      required : false,
+      required : true,
       trim : true,
       graoui: {
         label: "User Name",
-        type: 'input'
+        type: 'input',
+        isList: true,
+        isFilter: true
       }
     },
     password : {
       type : String,
-      required : false,
+      required : true,
       graoui: {
         label: "Password",
         type: 'password'
       }
     },
-    email : {
-      type : String,
-      lowercase : true,
-      required : false,
-      index : true,
-      unique : false,
-      trim : true,
-      validate : validate('isEmail'),
+    languages : {
+      type: Array,
       graoui: {
-        label: "Email",
-        type: 'email'
+        label: "Languages",
+        type: 'select',
+        options: { "PHP": "PHP Language", "JAVA": "Java Language", "JAVASCRIPT": "Javascript Language", "PYTHON": "Python Language", "RUBY": "Ruby Language" },
+        attr: { multiple: true },
+        isList: true,
+        isFilter: true
       }
     },
-    blog : {
-      type : String,
-      lowercase : true,
-      required : false,
-      trim : true,
-      validate : validate('isUrl'),
+    distros : {
+      type: Array,
       graoui: {
-        label: "Blog",
-        type: 'url'
+        label: "Distributions",
+        type: 'select',
+        options: [ "Ubuntu", "Fedora", "Debian", "Mint", "Slackware", "Gentoo" ],
+        attr: { multiple: true }
       }
     },
-    idade: {
-      type : Number,
-      required : false,
-      validate : validate('isInt'),
-      graoui: {
-        label: "Idade",
-        type: 'number'
-      }
-    }
+    likes: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    dislikes: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    following: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }]
   };
 
   this.mongoose = new di.mongoose.Schema(this.json);

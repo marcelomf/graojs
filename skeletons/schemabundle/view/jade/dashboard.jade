@@ -16,24 +16,28 @@ block content
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
         include form
         +form_{{ schema | lower }}(true)
-  {%- for fieldName, field in fields %}{%- if field.ref %}{%- if field.type == 'select' %}
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ fieldName | capitalize }}")
-        h3=__('{{ fieldName | capitalize }}')
-          small {{ ' {{' }} ref.{{ fieldName | lower }}._id }}
-        form.form-horizontal(role='form')
-          include ../../{{ field.ref | lower }}/view/fields
-          +form_fields_{{ field.ref | lower }}('new{{ fieldName | capitalize }}')
-        .form-horizontal
-          .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ fieldName | capitalize }}("createOrUpdate");')=__('Save and back')
-            | 
-            button.btn.btn.btn-default(type='button', ng-click='clear{{ fieldName | capitalize }}(); share.window("createOrUpdate");')=__('Cancel')
-  {%- endif %}{%- endif %}{%- endfor %}
+{{ render_refSelect(schema, fields) }}
     .row
       .col-xs-18.col-sm-9.col-md-12
         include dashboard_actions
-  {%- for fieldName, field in fields %}{%- if field.ref %}
-    script(src='/js/{{ field.ref | lower }}/{{ field.ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
-  {%- endif %}{%- endfor %}
+{{ render_refScripts(allRefs, schema) }}
     script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
     script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicController.js', type='text/javascript', charset='utf-8').
+
+{%- macro render_refSelect(schema, fields) %}{%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }}")
+        h3=__('{{ fieldName | capitalize }}')
+          small=__('{{ schema | capitalize }}')
+        form.form-horizontal(role='form')
+          include ../../{{ field.ref | lower }}/view/fields
+          +form_fields_{{ field.ref | lower }}('new{{ schema | capitalize }}{{ fieldName | capitalize }}')
+        .form-horizontal
+          .form-group
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }}();')=__('Save and back')
+            | 
+            button.btn.btn.btn-default(type='button', ng-click='clear{{ schema | capitalize }}{{ fieldName | capitalize }}(); share.windowBack();')=__('Cancel'){%- endif %}{%- if field.hasRef && field.fields %}
+{{ render_refSelect(field.ref, field.fields) }}
+{%- endif %}{%- endfor %}{%- endmacro %}
+
+{%- macro render_refScripts(allRefs, schemaIgnore) %}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schemaIgnore|lower %}
+    script(src='/js/{{ ref | lower }}/{{ ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').{%- endif %}{%- endfor %}{%- endmacro %}
