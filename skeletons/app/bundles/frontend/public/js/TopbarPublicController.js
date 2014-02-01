@@ -3,16 +3,18 @@ function TopbarPublicController($scope, $timeout, $http, share, $log) {
   $scope.username = '';
   $scope.password = '';
 
-  $scope.eventTimer = function(){
-    $scope.share.events();
-    eventTime = $timeout($scope.eventTimer, 3000);
-  };
-   
-  var eventTimer = $timeout($scope.eventTimer, 3000);
-      
-  $scope.stop = function(){
-    $timeout.cancel(eventTimer);
-  };
+  setInterval(function(){
+      var eventAlert = share.eventsArray.shift();
+      if(eventAlert) {
+        share.alert.show = false;
+        share.alert.message = eventAlert.name+": "+eventAlert.message;
+        share.alert.style = 'info';
+        share.alert.show = true;
+        // ? console.log(share.alert);
+      } else {
+        share.events();
+      }
+  },3000);
 
   $scope.login = function(){
     $http.post('/login', {username: $scope.username, password: $scope.password})

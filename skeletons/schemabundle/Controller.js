@@ -91,7 +91,7 @@ var service = {
       if(err)
         res.json(event.new(err).error().log('error').json());
       else
-        res.json(event.new("destroy").success().log('info').json());
+        res.json(event.new("Destroyed").success().log('info').json());
     });
   }
 };

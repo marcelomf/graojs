@@ -1,7 +1,8 @@
 var FrontendRoute = function (di) {
-	di.graoExpress.get('/', function(req, res) {
-		res.render('frontend/view/index', {isAuth: req.isAuthenticated()});
-	});
+  di.graoExpress.get('/', function(req, res) {
+    var locale = (['pt-br', 'es', 'en'].indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : 'en';
+    res.render('frontend/view/index', {isAuth: req.isAuthenticated(), locale: locale});
+  });
 
   di.graoExpress.get('/events/pull', function(req, res){
     res.jsonp(di.event.listener.push());

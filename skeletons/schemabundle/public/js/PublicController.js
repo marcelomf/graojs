@@ -21,7 +21,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     }
   }
 
-  function validate(errorObject, reponseData, pathsIgnore){
+  function validate(errorObject, responseData, pathsIgnore){
     if(!pathsIgnore)
       pathsIgnore = new Array();
 
@@ -38,7 +38,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     }
 
     clear(errorObject);
-    var errors = reponseData.data;
+    var errors = responseData.data;
     for(var iField in errors){
       if(pathsIgnore.indexOf(errors[iField].path) >= 0)
         delete errors[iField];
@@ -47,8 +47,10 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     for(var iField in errors) count++;
     if(count <= 0) return true;
 
-    if(reponseData.event && reponseData.event.status == false) {
-      
+    if(responseData.event && responseData.event.status == false) {
+      share.alert.show = true;
+      share.alert.style = responseData.event.style;
+      share.alert.message = responseData.event.message;
       for(var iField in errors){
         if(errors[iField].path.indexOf('.') != -1)
           jumpPath(errorObject, errors[iField].path.split('.'), errors[iField].message);
@@ -62,8 +64,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
 {%- for fieldName, field in fields %}
 {%- if field.ref %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
 {%- if field.type == "select" %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
   $scope.new{{ fieldName | capitalize }} = {};
   $scope.errors.new{{ fieldName | capitalize }} = {};
   $scope.query{{ fieldName | capitalize }} = function(){
@@ -76,11 +78,13 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       if(validate($scope.errors.new{{ fieldName | capitalize }}, {{ fieldName | lower }}Response)) {
         $scope.{{ fieldName | lower }}.push({{ fieldName | lower }}Response);
         {%- if field.isArray == true %}
+        if(!($scope.{{ schema | lower }}.{{ fieldName | lower }} instanceof Array))
+          $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
         $scope.{{ schema | lower }}.{{ fieldName | lower }}.push({{ fieldName | lower }}Response._id);
         {%- else %}
         $scope.{{ schema | lower }}.{{ fieldName | lower }} = {{ fieldName | lower }}Response._id;
         {%- endif %}
-        clear{{ fieldName | capitalize }}();
+        $scope.clear{{ fieldName | capitalize }}();
         share.window(windowCallBack);
       }
     }
@@ -95,6 +99,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     $scope.new{{ fieldName | capitalize }} = {};
   }
 {%- else %}
+  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
   $scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = {};
   $scope.clear{{ fieldName | capitalize }} = function() {
     delete $scope.{{ schema | lower }}.{{ fieldName | lower }};
@@ -168,7 +173,11 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   }
 
   $scope.destroyByIndex = function(index) {
-    $scope.{{ schema | lower }}s[index].$delete();
+    $scope.{{ schema | lower }}s[index].$delete(function(responseData){
+      share.alert.show = true;
+      share.alert.style = responseData.event.style;
+      share.alert.message = responseData.event.message;
+    });
     $scope.{{ schema | lower }}s.splice(index, 1);
   }
   
