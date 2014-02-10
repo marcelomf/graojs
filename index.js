@@ -28,11 +28,14 @@ var graoJS = function() {
     graoExpress.use(express.methodOverride());
     graoExpress.use(i18n.init);
     graoExpress.use(express.favicon());
+    // https://github.com/evilpacket/helmet
+    // https://blog.liftsecurity.io/2012/12/07/writing-secure-express-js-apps
     //graoExpress.use(express.logger('dev'));
+    //graoExpress.use(express.bodyParser()); // Insecure and deprecated 
+    //graoExpress.use(express.urlencoded());
+    //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
     graoExpress.use(express.json());
-    graoExpress.use(express.urlencoded());
     graoExpress.use(express.cookieParser());
-    graoExpress.use(express.bodyParser());
     graoExpress.use(express.session({
       secret: 'FIXME AND RAND THIS',
       store: new MongoStore({ db: 'grao' })

@@ -7,7 +7,8 @@ cd ../../demo
 ls -laht node_modules/graojs/
 cp -rf ./../graojs/bin/builder/*Schema.js gen/
 cp -rf ./../graojs/bin/$app/*Schema.js gen/
-for schema in activity address phone person user system collection field
+#for schema in activity address phone person user system collection field
+for schema in system collection field
 do
   ./../graojs/bin/grao generate:schema --schema $schema --force
   ./../graojs/bin/grao generate:schemabundle --schema $schema --force

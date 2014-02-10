@@ -40,7 +40,8 @@
     "public/js/PublicFactory.js": "bundles/{{schema}}/public/js/{{schema | capitalize}}PublicFactory.js",
     "Validator.js": "bundles/{{schema}}/{{schema | capitalize}}Validator.js",
     "Model.js": "bundles/{{schema}}/{{schema | capitalize}}.js",
-    "Route.js": "bundles/{{schema}}/{{schema | capitalize}}Route.js"
+    "Route.js": "bundles/{{schema}}/{{schema | capitalize}}Route.js",
+    "config.js": "bundles/{{schema}}/config.js"
   },
   "conditions": [
     {
