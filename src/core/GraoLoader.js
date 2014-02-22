@@ -5,7 +5,6 @@ var GraoLoader = function(di) {
   this.dirBundles = di.config.bundles;
   
   this.loading = function(loadType) {
-    
     var bundles = fs.readdirSync(this.dirBundles);
     var load = new Array();
     
@@ -29,18 +28,16 @@ var GraoLoader = function(di) {
         }
         break;
       case 'publicRoute':
-        for(bundleIndex in bundles) {
+        for(var bundleIndex in bundles) {
           bundle = bundles[bundleIndex];
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/public/js'))
-            load['/js'+((bundle == 'frontend') ? '' : '/'+bundle)] = '/bundles/'+bundle+'/public/js';
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/public/css'))
-            load['/css'+((bundle == 'frontend') ? '' : '/'+bundle)] = '/bundles/'+bundle+'/public/css';
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/public/img'))
-            load['/img'+((bundle == 'frontend') ? '' : '/'+bundle)] = '/bundles/'+bundle+'/public/img';
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/public/font'))
-            load['/font'+((bundle == 'frontend') ? '' : '/'+bundle)] = '/bundles/'+bundle+'/public/font';
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/public/file'))
-            load['/file'+((bundle == 'frontend') ? '' : '/'+bundle)] = '/bundles/'+bundle+'/public/file';
+          if(fs.existsSync(this.dirBundles+'/'+bundle+'/config.js')) {
+            var config = require(this.dirBundles+'/'+bundle+'/config.js');
+            if(config.publicRoutes){
+              for(var i in config.publicRoutes){
+                load[config.publicRoutes[i].webdir] = config.publicRoutes[i].fsdir;
+              }
+            }
+          }
         }
         break;
       default:
