@@ -25,8 +25,8 @@ graoJS work with:
 http://graojs.org
 
 #### RoadMap
--	??/12/2013 – 1ª Beta Release
--	??/12/2013 – 1ª Stable Release
+-	??/??/???? – 1ª Beta Release
+-	??/??/???? – 1ª Stable Release
 
 #### INSTALL
 

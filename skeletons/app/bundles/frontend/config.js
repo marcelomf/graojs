@@ -5,14 +5,10 @@ module.exports = exports = {
     ]
   },
   publicRoutes : [
-    { fsdir: "/node_modules/graojs/vendor/bootstrap/public/css", webdir: "/css/bootstrap" },
-    { fsdir: "/node_modules/graojs/vendor/bootstrap/public/js", webdir: "/js/bootstrap" },
-    { fsdir: "/node_modules/graojs/vendor/jquery/public/css", webdir: "/css/jquery" },
-    { fsdir: "/node_modules/graojs/vendor/jquery/public/js", webdir: "/js/jquery" },
-    { fsdir: "/node_modules/graojs/vendor/jquery/public/img", webdir: "/image/jquery" },
-    { fsdir: "/node_modules/graojs/vendor/bootstrap/public/ui", webdir: "/ui" },
-    { fsdir: "/node_modules/graojs/vendor/font-awesome/public/css", webdir: "/css/font-awesome" },
-    { fsdir: "/node_modules/graojs/vendor/font-awesome/public/font", webdir: "/css/font" },
-    { fsdir: "/node_modules/graojs/vendor/angularjs/public/js", webdir: "/js/angujarjs" }
+    { fsdir: "/bundles/frontend/public/js", webdir: "/js" },
+    { fsdir: "/bundles/frontend/public/css", webdir: "/css" },
+    { fsdir: "/bundles/frontend/public/img", webdir: "/img" },
+    { fsdir: "/bundles/frontend/public/font", webdir: "/font" },
+    { fsdir: "/bundles/frontend/public/ui", webdir: "/ui" }
   ]
 }

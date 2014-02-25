@@ -44,7 +44,7 @@ var GraoLoader = function(di) {
         throw 'Invalid loadType!';
     }
     return load;
-  };
+  }
 
   this.tryLoad = function(originalLoad, di, loadType) {
     var reload = new Array();
@@ -71,17 +71,11 @@ var GraoLoader = function(di) {
     }
     loading(originalLoad);
     return di[loadType];
-  };
-};
+  }
+}
 
 function ucfirst(string) {
   return string.toUpperCase().substr(0, 1)+string.substr(1).toLowerCase();  
 }
-
-/*teste = new GraoLoader();
-t = new Array();
-t['3213S'] = '123';
-t.push(teste.loading('publicRoute'));
-console.log(t);*/
 
 module.exports = exports = GraoLoader;
