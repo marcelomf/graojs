@@ -217,8 +217,6 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
 }
 
-{{ schema | capitalize }}PublicController.$inject = ['$scope', '$http', '$q', 'share', '{{ schema | lower }}'{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, '{{ ref | lower }}'{%- endif %}{%- endfor %}];
-
 {%- macro render_refSelect(schema, fields) %}
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();

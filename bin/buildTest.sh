@@ -28,4 +28,4 @@ done;
 # PersonSchema
 #./../graojs/bin/grao generate:schema --schema person --force
 #./../graojs/bin/grao generate:schemabundle --schema person --force
-node index.js
+supervisor index.js
