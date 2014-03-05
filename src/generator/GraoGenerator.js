@@ -90,7 +90,6 @@ var GraoGenerator = function () {
         ) {
 
           var file = this.rewrite(config.rewrites, sourceFiles[i], sourcePath);
-
           tpls[ sourceFiles[i] ] = this.swigRender(
             path.join(config.target, file.replace(sourcePath, '/')),
             args
@@ -113,11 +112,20 @@ var GraoGenerator = function () {
         fs.mkdirsSync(distDir);
         fs.exists(process.cwd() + '/' + dist, function (exists) {
           if (!exists || force) {
-            if(tpl.search(/\.png$|\.jpg$|\.ttf$|\.woff/) >= 0)
-              fs.writeFileSync(dist, fs.readFileSync(tpl, 'binary'), 'binary');
-            else
-              fs.writeFileSync(dist, self.swigRender(fs.readFileSync(tpl, 'utf-8'), args), 'utf-8');
+            console.log(( '! ' + './' + dist ).blue);
+            var fileContent, fileType;
+            if(tpl.search(/\.png$|\.min\.js$|\.jpg$|\.ttf$|\.woff/) >= 0) {
+              fileContent = fs.readFileSync(tpl, 'binary');
+              fileType = 'binary';
+            } else {
+              fileContent = fs.readFileSync(tpl, 'utf-8');
+              fileContent = self.swigRender(fileContent, args);
+              fileType = 'utf-8';
+            }
+            fs.writeFileSync(dist, fileContent, fileType);
             console.log(( '+ ' + './' + dist).green);
+            delete fileContent;
+            delete fileType;
           } else {
             console.log(( '! ' + './' + dist ).red);
           }

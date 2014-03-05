@@ -4,10 +4,7 @@ var models, controllers, event, {{ schema | capitalize }};
 var service = {
 
   count: function(req, res) {
-    var filter = null;
-    
-    if(req.query.filter != null)
-      filter = controllers.filterRequest({{ schema | capitalize }}, req.query.filter);
+    var dataList = controllers.processDataList({{ schema | capitalize }}, req.query);
 
     {{ schema | capitalize }}.count({}, function(err, totality) {
       if(err) {
@@ -15,12 +12,12 @@ var service = {
         return;
       } 
 
-      if(filter == null) {
+      if(dataList.filter == null) {
           res.json({totality: totality, filtered: 0});
           return;
       }
 
-      {{ schema | capitalize }}.count(filter, function(err, filtered) {
+      {{ schema | capitalize }}.count(dataList.filter, function(err, filtered) {
         if(err)
           res.json(event.new(err).error().log('error').json());
         else
@@ -39,20 +36,19 @@ var service = {
   },
 
   query : function(req, res) {
-    var filter = null;
-    var skip = null;
+    var dataList = controllers.processDataList({{ schema | capitalize }}, req.query);
 
-    if(req.query.filter != null)
-      filter = controllers.filterRequest({{ schema | capitalize }}, req.query.filter);
-    
-    if(req.query.skip != null)
-      skip = req.query.skip;
-
-    {{ schema | capitalize }}.find(filter).sort('field -_id').skip(skip).limit(10).populate('{{ schema | lower }}'){%- for fieldName, field in fields %}{%- if field.ref %}.populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.exec(function(err, {{ schema | lower }}s) {
-      if(err)
-        res.json(event.new(err).error().log('error').json());
-      else
-        res.json({{ schema | lower }}s);
+    {{ schema | capitalize }}.find(dataList.filter).
+      sort(dataList.sort).
+      skip(dataList.page.skip).
+      limit(dataList.page.limit).
+      populate('{{ schema | lower }}'){%- for fieldName, field in fields %}{%- if field.ref %}.
+      populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.
+      exec(function(err, {{ schema | lower }}s) {
+        if(err)
+          res.json(event.new(err).error().log('error').json());
+        else
+          res.json({{ schema | lower }}s);
     });
   },
 

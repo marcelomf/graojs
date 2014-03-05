@@ -5,19 +5,19 @@
     button.btn.btn-default.btn-block.btn-xs(ng-click="notFilter = !notFilter")=__('FILTER')
 .row
   .col-xs-18.col-sm-9.col-md-12
-    .row(ng-init="query{{ schema | capitalize }}(count());")
-      .col-xs-4.col-sm-2.col-md-3(ng-repeat="{{ schema | lower }} in {{ schema | lower }}s")
+    .row(ng-init="query(count());")
+      .col-xs-4.col-sm-2.col-md-3(ng-repeat="{{ schema | lower }} in dataList.data")
         .thumbnail
           .caption
       {%- for fieldName, field in fields %}{%- if field.isList %}
             p {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
-            span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}") {{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
+            span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
       {%- endif %}{%- endfor %}
             button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')=__('Edit')
             | 
-            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query{{ schema | capitalize }}(); count();')=__('Remove')
+            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')=__('Remove')
 .row
   .col-xs-18.col-sm-9.col-md-12.text-right
-    p=__('Listing {{ '{{' }} statusData.listing }} {{ schema | lower }}s of {{ '{{' }} statusData.filtered }} filtered on {{ '{{' }} statusData.totality }} totality')
+    p=__('Listing {{ '{{' }} dataList.status.listing }} {{ schema | lower }}s of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} totality')
   .col-xs-18.col-sm-9.col-md-12
     button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore(); count();')=__('MORE')

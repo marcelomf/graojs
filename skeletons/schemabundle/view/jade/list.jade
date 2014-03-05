@@ -1,4 +1,17 @@
 .row
+  .col-xs-18.col-sm-9.col-md-12.text-center
+    .btn-group
+      button.btn.btn-default(ng-model="dataList.page.limit", btn-radio="10") 10
+      button.btn.btn-default(ng-model="dataList.page.limit", btn-radio="25") 25
+      button.btn.btn-default(ng-model="dataList.page.limit", btn-radio="50") 50
+      button.btn.btn-default(ng-model="dataList.page.limit", btn-radio="100") 100
+      button.btn.btn-default=__('Copy')
+      button.btn.btn-default=__('Print')
+      button.btn.btn-default Csv
+      button.btn.btn-default Pdf
+      button.btn.btn-default Txt
+  .col-xs-15.text-right
+.row
   .col-xs-18.col-sm-9.col-md-12(collapse="notFilter")
     include filter
   .col-xs-18.col-sm-9.col-md-12
@@ -6,25 +19,27 @@
 .row
   .col-xs-18.col-sm-9.col-md-12
     .table-responsive
-      table.table.table-striped(ng-init="query{{ schema | capitalize }}(count());")
+      table.table.table-striped(ng-init="query(count());")
         thead
           tr
       {%- for fieldName, field in fields %}{%- if field.isList %}
-            th=__('{{ field.label }}')
+            th(ng-class="dataList.sortClass('{{ fieldName }}')", ng-click="dataList.sortBy('{{ fieldName }}'); query();")=__('{{ field.label }}')
       {%- endif %}{%- endfor %}
             th=__('Actions')
         tbody
-          tr(ng-repeat="{{ schema | lower }} in {{ schema | lower }}s")
+          tr(ng-repeat="{{ schema | lower }} in dataList.data")
       {%- for fieldName, field in fields %}{%- if field.isList %}
             td {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
-              span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}") {{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
+              span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
       {%- endif %}{%- endfor %}
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query{{ schema | capitalize }}(); count();') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
               | 
               button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
 .row
-  .col-xs-18.col-sm-9.col-md-12.text-right
-    p=__('Listing {{ '{{' }} statusData.listing }} {{ schema | lower }}s of {{ '{{' }} statusData.filtered }} filtered on {{ '{{' }} statusData.totality }} totality')
-  .col-xs-18.col-sm-9.col-md-12
-    button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore(); count();')=__('MORE')
+  .col-xs-9.col-md-6.text-left
+    p=__('Listing {{ '{{' }} dataList.status.listing }} {{ schema | lower }}s of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} totality')
+  .col-xs-9.col-md-6.text-right
+    pagination(style="margin: 0px;", items-per-page="dataList.page.limit", page="dataList.page.current", max-size="5"
+      total-items="dataList.status.filtered ? dataList.status.filtered : dataList.status.totality", class="pagination", 
+      previous-text=__('Previous'), next-text=__('Next'), first-text=__('First'), last-text=__('Last'), boundary-links="true")
