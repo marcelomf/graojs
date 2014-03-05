@@ -128,6 +128,19 @@ var GraoEvent = function(di) {
     this.status = false;
     this.state = states.RUNNING;
     this.style = styles.DANGER;
+    if(this.message.errors && this.message.message){
+      this.payload = this.message.errors;
+      this.message = this.message.message;
+    } else if(this.message.path && this.message.message) {
+      this.payload = ({}[this.message.path]=this.message.message);
+      this.message = this.message.message;
+    } else if(this.message.name == 'MongoError') {
+      this.payload = {};
+      this.message = this.message.err ? this.message.err : this.message.errmsg;
+    } else {
+      this.payload = {};
+      this.message = (this.message) ? this.message : 'Unexpected Error';
+    }
     $.stateTime();
     return this;
   };
@@ -138,7 +151,7 @@ var GraoEvent = function(di) {
   };
 
   this.data = function(payload){
-  	this.payload = payload
+    this.payload = payload  
   	return this;
   };
 

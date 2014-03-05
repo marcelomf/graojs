@@ -7,13 +7,13 @@
   $scope.createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }} = function() {
     function save(dataResponse) {
       if(validate(share.alert, $scope.errors.new{{ schema | capitalize }}{{ fieldName | capitalize }}, dataResponse)) {
-        $scope.{{ field.ref | lower }}s.push(dataResponse);
+        $scope.{{ field.ref | lower }}s.push(dataResponse.data);
         {%- if field.isArray == true %}
         if(!($scope.{{ schema | lower }}.{{ fieldName | lower }} instanceof Array))
           $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-        $scope.{{ schema | lower }}.{{ fieldName | lower }}.push(dataResponse._id);
+        $scope.{{ schema | lower }}.{{ fieldName | lower }}.push(dataResponse.data._id);
         {%- else %}
-        $scope.{{ schema | lower }}.{{ fieldName | lower }} = dataResponse._id;
+        $scope.{{ schema | lower }}.{{ fieldName | lower }} = dataResponse.data._id;
         {%- endif %}
         $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }}();
         share.windowBack();
@@ -104,9 +104,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}
 {%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
-        {{ schema | lower }}.update({{ schema | lower }}Json, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, data)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | lower }}.update({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
       else
-        {{ schema | lower }}.save({{ schema | lower }}Json, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, data)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | lower }}.save({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
     }
 {%- if hasUnion == true %}
     var {{ schema | lower }}ValidDef = $q.defer();
@@ -124,9 +124,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
       var {{ fieldName | lower }}SaveDef = $q.defer();
       if($scope.{{ schema | lower }}.{{ fieldName | lower }}._id != null)
-        {{ field.ref | lower }}.update($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, data)) { {{ fieldName | lower }}SaveDef.resolve(data); }});
+        {{ field.ref | lower }}.update($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
       else
-        {{ field.ref | lower }}.save($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, data)) { {{ fieldName | lower }}SaveDef.resolve(data); }});
+        {{ field.ref | lower }}.save($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
   {%- endif %}{%- endfor %}
       $q.all([
   {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
@@ -134,10 +134,10 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       ]).then(function(servicesResponse){
         try {
   {%- set indexService = 0 %}{%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
-          if(servicesResponse[{{indexService}}] == null || servicesResponse[{{indexService}}]._id == null)
+          if(servicesResponse[{{indexService}}] == null || servicesResponse[{{indexService}}].data._id == null)
             throw "service {{ field.ref | lower }} error";
           else
-            $scope.{{ schema | lower }}.{{ fieldName | lower }} = servicesResponse[{{indexService}}];
+            $scope.{{ schema | lower }}.{{ fieldName | lower }} = servicesResponse[{{indexService}}].data;
   {%- set indexService = indexService+1 %}{%- endif %}{%- endfor %}
           save();
         } catch(err) {

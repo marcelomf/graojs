@@ -38,27 +38,41 @@ function validate(alert, errorObject, responseData, pathsIgnore){
 
   clearObject(errorObject);
   var errors = responseData.data;
-  for(var iField in errors){
-    if(pathsIgnore.indexOf(errors[iField].path) >= 0)
-      delete errors[iField];
-  }
-  var count = 0;
-  for(var iField in errors) count++;
-  if(count <= 0) return true;
 
   if(responseData.event && responseData.event.status == false) {
+    var countErrors = 0;
+    if(errors) {
+      console.log(pathsIgnore);
+      console.log(errors);
+      for(var iField in errors){
+        if(!(pathsIgnore.indexOf(errors[iField].path) >= 0)) {
+          countErrors++;
+          if(errors[iField].path.indexOf('.') != -1)
+            jumpPath(errorObject, errors[iField].path.split('.'), errors[iField].message);
+          else if(typeof errorObject[errors[iField].path] != 'object') // else ?
+            errorObject[errors[iField].path] = errors[iField].message;        
+        }
+      }
+    }
+    console.log(countErrors);
+    if(countErrors > 0) {
+      alert.show = true;
+      alert.style = responseData.event.style;
+      alert.message = responseData.event.message;
+      return false;
+    } else {
+      return true;
+    }
+  } else if(responseData.event && responseData.event.status == true && responseData.event.message) { // else ?
     alert.show = true;
     alert.style = responseData.event.style;
     alert.message = responseData.event.message;
-    for(var iField in errors){
-      if(errors[iField].path.indexOf('.') != -1)
-        jumpPath(errorObject, errors[iField].path.split('.'), errors[iField].message);
-      else if(typeof errorObject[errors[iField].path] != 'object') // else ?
-        errorObject[errors[iField].path] = errors[iField].message;
-    }
+    return true;
+  } else if(responseData.event.status == true) {
+    return true;
+  } else {
     return false;
   }
-  return true;
 }
 
 var DataList = function() {

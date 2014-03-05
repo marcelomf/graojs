@@ -56,7 +56,7 @@ var service = {
     var {{ schema | lower }} = new {{ schema | capitalize }}(req.body);
     {{ schema | lower }}.validate(function(err){
       if(err)
-        res.json(event.new(err.message).error().log('error').data(err.errors ? err.errors: err.path ? ({}[err.path]=err) : err).json());
+        res.json(event.new(err).error().log('error').json());
       else
         next();
     });
@@ -66,9 +66,9 @@ var service = {
     var {{ schema | lower }} = new {{ schema | capitalize }}(req.body);
     {{ schema | lower }}.save(function(err, {{ schema | lower }}) {
       if(err)
-        res.json(event.new(err).error().log('error').data(err.errors ? err.errors: err.path ? ({}[err.path]=err) : err).json());
+        res.json(event.new(err).error().log('error').json());
       else
-        res.json({{ schema | lower }});
+        res.json(event.new("{{ schema | capitalize }} created").success().log('info').data({{ schema | lower }}).json());
     });
   },
 
@@ -76,9 +76,9 @@ var service = {
     delete req.body._id;
     {{ schema | capitalize }}.findOneAndUpdate({_id : req.params.id }, req.body, { upsert : true }, function(err, {{ schema | lower }}) {
       if(err)
-        res.json(event.new(err).error().log('error').data(err.errors ? err.errors: err.path ? ({}[err.path]=err) : err).json());
+        res.json(event.new(err).error().log('error').json());
       else
-        res.json({{ schema | lower }});
+        res.json(event.new("{{ schema | capitalize }} updated").success().log('info').data({{ schema | lower }}).json());
     });
   },
 

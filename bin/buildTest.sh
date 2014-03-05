@@ -1,9 +1,9 @@
 #!/bin/bash
-rm -rf demo ../../demo
-./grao generate:app --name demo --description demo --author-name Synack --author-email int@synack.com.br --server-ports 8015,8016 --template-engine jade --theme graojs --mongodb-host localhost --mongodb-db grao
-rm -rf demo/node_modules/graojs/bin/demo
-mv demo ../../
-rm -rf demo
+#rm -rf demo ../../demo
+#./grao generate:app --name demo --description demo --author-name Synack --author-email int@synack.com.br --server-ports 8015,8016 --template-engine jade --theme graojs --mongodb-host localhost --mongodb-db grao
+#rm -rf demo/node_modules/graojs/bin/demo
+#mv demo ../../
+#rm -rf demo
 app="tests"
 cd ../../demo
 ls -laht node_modules/graojs/
