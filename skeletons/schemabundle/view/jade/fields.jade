@@ -1,13 +1,3 @@
-mixin filter_fields_{{ schema | lower }}(ngModelName)
-  if !ngModelName
-    ngModelName = '{{ schema | lower }}'
-  {%- for fieldName, field in fields %}{%- if field.isFilter %} {{ render_field(schema, fieldName, field, true) }} {%- endif %}{%- endfor %}  
-
-mixin form_fields_{{ schema | lower }}(ngModelName)
-  if !ngModelName
-    ngModelName = '{{ schema | lower }}'
-  {%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field, false) }} {%- endfor %}  
-  
   {%- macro render_field(schema, fieldName, field, isFilter) %}
       {%- set inputtypes = ['text', 'email', 'url', 'date', 'number', 'password' ] %}
       {%- if inputtypes.indexOf(field.type) !== -1 %}
@@ -93,7 +83,6 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
           tr(ng-repeat="{{ fieldName | lower }} in "+ngModelName+".{{ fieldName | lower }}"){%- for subFieldName, subField in field.fields %}
             td {{ '{{' }} {{ fieldName | lower }}.{{ subFieldName }} }}{%- endfor %}
             td  
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ fieldName | capitalize }}ByIndex($index);')
               //| 
               //button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ fieldName | capitalize }}($index);')
   {%- else %}
@@ -102,3 +91,12 @@ mixin form_fields_{{ schema | lower }}(ngModelName)
   {%- endfor %}
   {%- endif %}
   {%- endmacro %}
+mixin filter_fields_{{ schema | lower }}(ngModelName)
+  if !ngModelName
+    - var ngModelName = '{{ schema | lower }}'
+  {%- for fieldName, field in fields %}{%- if field.isFilter %} {{ render_field(schema, fieldName, field, true) }} {%- endif %}{%- endfor %}  
+
+mixin form_fields_{{ schema | lower }}(ngModelName)
+  if !ngModelName
+    - var ngModelName = '{{ schema | lower }}'
+  {%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field, false) }} {%- endfor %}  

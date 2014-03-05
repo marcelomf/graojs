@@ -88,7 +88,10 @@ var GraoGeneratorCommands = function (di) {
           for(var uiName in uiSchema) {
             result[uiName] = uiSchema[uiName];
           }
+          result = self.prepareRefFields(result);
+          result = self.prepareSubDocFields(result);
           console.log(result);
+          
           /** 
           * @FIXME
           * Dead code ?
@@ -103,6 +106,58 @@ var GraoGeneratorCommands = function (di) {
         }
       });
     });
+  }
+
+  this.prepareRefFields = function(resultUi, fields, fullPath) {
+    if(!fields)
+      fields = resultUi.fields;
+
+    if(!resultUi['allRefFields'])
+      resultUi['allRefFields'] = {};
+
+    for(fieldName in fields) {
+      if(fields[fieldName].ref){
+        resultUi['allRefFields'][fieldName] = fields[fieldName];
+        if(fullPath) {
+          resultUi['allRefFields'][fieldName]['fullPath'] = fullPath.normal+'.'+fieldName;
+          resultUi['allRefFields'][fieldName]['fullPathCc'] = fullPath.cc+self.capitalize(fieldName);
+        } else {
+          resultUi['allRefFields'][fieldName]['fullPath'] = resultUi.schema+'.'+fieldName;
+          resultUi['allRefFields'][fieldName]['fullPathCc'] = resultUi.schema+self.capitalize(fieldName);
+        }
+      }
+      if(fields[fieldName].hasRef && fields[fieldName].fields){
+        this.prepareRefFields(resultUi, fields[fieldName].fields, {normal: resultUi['allRefFields'][fieldName]['fullPath'], 
+                                                                    cc: resultUi['allRefFields'][fieldName]['fullPathCc'] });
+      }
+    }
+    return resultUi;
+  }
+
+  this.prepareSubDocFields = function(resultUi, fields, fullPath) {
+    if(!fields)
+      fields = resultUi.fields;
+
+    if(!resultUi['allSubDocFields'])
+      resultUi['allSubDocFields'] = {};
+
+    for(fieldName in fields) {
+      if(fields[fieldName].isSubDoc){
+        resultUi['allSubDocFields'][fieldName] = fields[fieldName];
+        if(fullPath) {
+          resultUi['allSubDocFields'][fieldName]['fullPath'] = fullPath.normal+'.'+fieldName;
+          resultUi['allSubDocFields'][fieldName]['fullPathCc'] = fullPath.cc+self.capitalize(fieldName);
+        } else {
+          resultUi['allSubDocFields'][fieldName]['fullPath'] = resultUi.schema+'.'+fieldName;
+          resultUi['allSubDocFields'][fieldName]['fullPathCc'] = resultUi.schema+self.capitalize(fieldName);
+        }
+      }
+      if(fields[fieldName].hasSubDoc){
+        this.prepareSubDocFields(resultUi, fields[fieldName].fields, {normal: resultUi['allRefFields'][fieldName]['fullPath'], 
+                                                                    cc: resultUi['allRefFields'][fieldName]['fullPathCc'] });
+      }
+    }
+    return resultUi;
   }
 
   this.runGenerateSchema = function (argv, prompt, schema) {
