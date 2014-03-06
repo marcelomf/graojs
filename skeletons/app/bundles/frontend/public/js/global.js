@@ -78,7 +78,7 @@ function validate(alert, errorObject, responseData, pathsIgnore){
 var DataList = function() {
   var self = this;
   this.data = [];
-  this.filter = null;
+  this.filter = {};
   this.sort = { field: '_id', type: '-'};
   this.page = { skip: 0, limit: 10, current: 1 };
   this.status = { totality: 0, filtered: 0, listing: 0 };

@@ -20,9 +20,9 @@
       }
     }
     if($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}._id != null)
-      {{ field.ref | lower }}.update($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
+      {{ field.ref | capitalize }}.update($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
     else
-      {{ field.ref | lower }}.save($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
+      {{ field.ref | capitalize }}.save($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
   }
 
   $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }} = function() {
@@ -71,7 +71,7 @@
 {%- endfor %}
 {%- endif %}
 {%- endmacro %}
-function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | lower }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | lower }}{%- endif %}{%- endfor %}) {
+function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | capitalize }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | capitalize }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
   $scope.{{ schema | lower }} = {};
   $scope.errors = {};
@@ -104,17 +104,17 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}
 {%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
-        {{ schema | lower }}.update({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | capitalize }}.update({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
       else
-        {{ schema | lower }}.save({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | capitalize }}.save({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
     }
 {%- if hasUnion == true %}
     var {{ schema | lower }}ValidDef = $q.defer();
     var ignorePaths = [{%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}"{{ fieldName | lower }}",{%- endif %}{%- endfor %}];
-    {{ schema | lower }}.validate($scope.{{ schema | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, data, ignorePaths)) { {{ schema | lower }}ValidDef.resolve(data); }});
+    {{ schema | capitalize }}.validate($scope.{{ schema | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, data, ignorePaths)) { {{ schema | lower }}ValidDef.resolve(data); }});
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
     var {{ fieldName | lower }}ValidDef = $q.defer();
-    {{ field.ref | lower }}.validate($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, data)) { {{ fieldName | lower }}ValidDef.resolve(data); }});
+    {{ field.ref | capitalize }}.validate($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, data)) { {{ fieldName | lower }}ValidDef.resolve(data); }});
 {%- endif %}{%- endfor %}
     $q.all([
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
@@ -124,9 +124,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
       var {{ fieldName | lower }}SaveDef = $q.defer();
       if($scope.{{ schema | lower }}.{{ fieldName | lower }}._id != null)
-        {{ field.ref | lower }}.update($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
+        {{ field.ref | capitalize }}.update($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
       else
-        {{ field.ref | lower }}.save($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
+        {{ field.ref | capitalize }}.save($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
   {%- endif %}{%- endfor %}
       $q.all([
   {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
@@ -151,20 +151,20 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   }
 
   $scope.destroyByIndex = function(index) {
-    $scope.dataList.data[index].$delete(function(responseData){
+    $scope.dataList.data[index].$delete(function(dataResponse){
       share.alert.show = true;
-      share.alert.style = responseData.event.style;
-      share.alert.message = responseData.event.message;
+      share.alert.style = dataResponse.event.style;
+      share.alert.message = dataResponse.event.message;
     });
     $scope.dataList.data.splice(index, 1);
   }
 
   $scope.filter = function() {
-    $scope.dataList.data = {{ schema | lower }}.query($scope.dataList.toParams());
+    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams());
   }
 
   $scope.query = function() {
-      $scope.dataList.data = {{ schema | lower }}.query($scope.dataList.toParams(), function () { 
+      $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function () { 
         $scope.dataList.status.listing = $scope.dataList.data.length;
       });
   }
@@ -182,7 +182,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
   $scope.queryMore = function() {
     $scope.dataList.page.skip = $scope.dataList.data.length;
-    var more{{ schema | capitalize }}s = {{ schema | lower }}.query($scope.dataList.toParams(), function(){
+    var more{{ schema | capitalize }}s = {{ schema | capitalize }}.query($scope.dataList.toParams(), function(){
       angular.forEach(more{{ schema | capitalize }}s, function({{ schema | lower }}){
         $scope.dataList.data.push({{ schema | lower }});
         $scope.dataList.status.listing++;
@@ -215,7 +215,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
 {%- for key, ref in allRefs|uniq %}
   $scope.query{{ ref | capitalize }} = function(){
-    $scope.{{ ref | lower }}s = {{ ref | lower }}.query();
+    $scope.{{ ref | lower }}s = {{ ref | capitalize }}.query();
   };
   $scope.query{{ ref | capitalize }}();
 {%- endfor %}

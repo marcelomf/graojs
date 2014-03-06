@@ -1,5 +1,5 @@
-graoJS.factory('{{ schema | lower }}', ['$resource', function($resource) {
-  var {{ schema | lower }} = $resource('/{{ schema | lower }}/:id', { id: '@_id' }, {
+graoJS.factory('{{ schema | capitalize }}', ['$resource', function($resource) {
+  var {{ schema | capitalize }} = $resource('/{{ schema | lower }}/:id', { id: '@_id' }, {
     update: {
       method: 'PUT'
     },
@@ -12,5 +12,5 @@ graoJS.factory('{{ schema | lower }}', ['$resource', function($resource) {
       url: '/{{ schema | lower }}/count'
     }
   });
-  return {{ schema | lower }};
+  return {{ schema | capitalize }};
 }]);
