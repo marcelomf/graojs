@@ -4,10 +4,6 @@ var FrontendRoute = function (di) {
     res.render('frontend/view/index', {isAuth: req.isAuthenticated(), locale: locale});
   });
 
-  di.graoExpress.get('/events/pull', function(req, res){
-    res.jsonp(di.event.listener.push());
-  });
-
   di.graoExpress.get('/locale/:locale', function (req, res) {
     res.setLocale(req.params.locale);
     res.cookie('locale', req.params.locale);

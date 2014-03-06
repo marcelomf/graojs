@@ -112,7 +112,7 @@ var GraoEvent = function(di) {
   
   this.new = function(message) {
     var newEvent = new GraoEvent( { message: message } );
-    handle.events.push(newEvent);
+    //handle.events.push(newEvent);
     return newEvent;
   };
   
@@ -199,7 +199,7 @@ var GraoEvent = function(di) {
   $.stateTime();
   
   this.last = this;
-  handle.events.push(this.last);
+  //handle.events.push(this.last);
   return this;
 };
 
@@ -215,7 +215,7 @@ var listener = {
             !handle.events[id].presented)
           continue;
             
-        eventsPushing.push({
+/*        eventsPushing.push({
           id: handle.events[id].id,
           name: handle.events[id].name,
           data: handle.events[id].payload,
@@ -225,7 +225,7 @@ var listener = {
           initialTime: handle.events[id].initialTime,
           status: handle.events[id].status,
           presented: handle.events[id].presented,
-        });
+        });*/
         
         handle.events[id].presented = false;
         
