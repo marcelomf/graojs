@@ -20,7 +20,7 @@ var GraoController = function(di) {
     if(query.sort)
       dataList.sort = JSON.parse(query.sort);
 
-    dataList.sort = "field "+dataList.sort.type+dataList.sort.field;
+    dataList.sort = "field "+(dataList.sort.type == '-' ? '-' : '')+dataList.sort.field;
 
     if(query.filter) {
       var realyFilter = false;

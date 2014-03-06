@@ -168,17 +168,14 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
         $scope.dataList.status.listing = $scope.dataList.data.length;
       });
   }
+  $scope.query();
 
   $scope.count = function() {
-    // {{ schema | lower }}.count() ...  
-    $http.get("/{{ schema | lower }}/count", {params: $scope.dataList.toParams()})
-      .success(function (data, status, headers, config){
-        $scope.dataList.status.totality = data.totality;
-        $scope.dataList.status.filtered = data.filtered;
-        $scope.dataList.status.listing = $scope.dataList.data.length;
-      })
-      .error(function (data, status, headers, config){});
+    $scope.dataList.status = {{ schema | capitalize }}.count($scope.dataList.toParams(), function(dataResponse){
+      $scope.dataList.status.listing = $scope.dataList.data.length;
+    });
   }
+  $scope.count();
 
   $scope.queryMore = function() {
     $scope.dataList.page.skip = $scope.dataList.data.length;

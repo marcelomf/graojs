@@ -42,8 +42,6 @@ function validate(alert, errorObject, responseData, pathsIgnore){
   if(responseData.event && responseData.event.status == false) {
     var countErrors = 0;
     if(errors) {
-      console.log(pathsIgnore);
-      console.log(errors);
       for(var iField in errors){
         if(!(pathsIgnore.indexOf(errors[iField].path) >= 0)) {
           countErrors++;
@@ -54,7 +52,6 @@ function validate(alert, errorObject, responseData, pathsIgnore){
         }
       }
     }
-    console.log(countErrors);
     if(countErrors > 0) {
       alert.show = true;
       alert.style = responseData.event.style;
@@ -97,7 +94,7 @@ var DataList = function() {
   }
 
   this.sortClass = function(fieldName){
-    if(this.sort.field == fieldName && this.sort.type == '+')
+    if(this.sort.field == fieldName && this.sort.type == '')
       return 'sorting_asc';
     else if(this.sort.field == fieldName && this.sort.type == '-')
       return 'sorting_desc';
@@ -107,6 +104,6 @@ var DataList = function() {
 
   this.sortBy = function(fieldName){
     this.sort.field = fieldName; 
-    this.sort.type = (this.sort.type == '+') ? '-' : '+';
+    this.sort.type = (this.sort.type == '-') ? '' : '-';
   }
 }
