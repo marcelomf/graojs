@@ -190,10 +190,10 @@ var GraoEvent = function(di) {
   };
 
   this.json = function(){
-    return { 
-            "event": { "status": $.status, "style": $.style, "message": $.message },
-            "data": $.payload 
-           }
+    return JSON.stringify({ 
+              "event": { "status": $.status, "style": $.style, "message": $.message },
+              "data": $.payload 
+           }); 
   };
 
   $.stateTime();
