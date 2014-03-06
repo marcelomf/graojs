@@ -91,7 +91,7 @@ service.destroy = function(req, res) {
 }
 
 admin.dashboard = function(req, res) {
-  res.render('{{ schema | lower }}/view/dashboard', {isAuth: req.isAuthenticated()});
+  res.render('{{ schema | lower }}/view/{{ schema | lower }}_dashboard', {isAuth: req.isAuthenticated()});
 }
 
 var {{ schema | capitalize }}Controller = function(di) {

@@ -1,6 +1,6 @@
 h3=__('Filters')
 form.form-inline(role='form')
-  include fields
+  include {{schema}}_fields
   +filter_fields_{{ schema | lower }}('dataList.filter')
   button.btn.btn-info(type='button', ng-click='filter(); count();')=__('Filter')
   | 

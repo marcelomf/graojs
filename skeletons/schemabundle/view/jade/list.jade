@@ -13,7 +13,7 @@
   .col-xs-15.text-right
 .row
   .col-xs-18.col-sm-9.col-md-12(collapse="notFilter")
-    include filter
+    include {{schema}}_filter
   .col-xs-18.col-sm-9.col-md-12
     button.btn.btn-default.btn-block.btn-xs(ng-click="notFilter = !notFilter")=__('FILTER')
 .row

@@ -54,6 +54,8 @@ var graoJS = function() {
     
     graoExpress.use(graoExpress.router);
   });
+  
+  graoExpress.locals.basedir = kernel.config.bundles; // For absolute templates
 
 // development only
 /*if ('development' == app.get('env')) {
