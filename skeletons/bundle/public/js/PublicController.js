@@ -88,6 +88,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   }, true);
 
   $scope.createOrUpdate = function(windowCallBack) {
+    share.alertLoad();
     function save() {
       var {{ schema | lower }}Json = $scope.{{ schema | lower }};
 {%- for fieldName, field in fields %}{%- if field.ref %}
@@ -150,6 +151,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   }
 
   $scope.destroyByIndex = function(index) {
+    share.alertLoad();
     $scope.dataList.data[index].$delete(function(dataResponse){
       share.alert.show = true;
       share.alert.style = dataResponse.event.style;
@@ -159,13 +161,16 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   }
 
   $scope.filter = function() {
-    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams());
+    share.alertLoad();
+    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), share.alertClean);
   }
 
   $scope.query = function() {
-      $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function () { 
-        $scope.dataList.status.listing = $scope.dataList.data.length;
-      });
+    share.alertLoad();
+    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function () { 
+      $scope.dataList.status.listing = $scope.dataList.data.length;
+      share.alertClean();
+    });
   }
   $scope.query();
 
@@ -177,12 +182,14 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   $scope.count();
 
   $scope.queryMore = function() {
+    share.alertLoad();
     $scope.dataList.page.skip = $scope.dataList.data.length;
     var more{{ schema | capitalize }}s = {{ schema | capitalize }}.query($scope.dataList.toParams(), function(){
       angular.forEach(more{{ schema | capitalize }}s, function({{ schema | lower }}){
         $scope.dataList.data.push({{ schema | lower }});
         $scope.dataList.status.listing++;
       });
+      share.alertClean();
     });
   }
   
