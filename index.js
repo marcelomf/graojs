@@ -62,9 +62,7 @@ var graoJS = function() {
   app.use(express.errorHandler());
 }
 */
-
   kernel.routes();
-  
   this.kernel = kernel;
   this.servers = servers;
   

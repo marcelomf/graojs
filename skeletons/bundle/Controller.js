@@ -1,4 +1,4 @@
-var models, controllers, event, {{ schema | capitalize }};
+var models, controllers, event, config, {{ schema | capitalize }};
 var service = {};
 var admin = {};
 
@@ -91,11 +91,13 @@ service.destroy = function(req, res) {
 }
 
 admin.dashboard = function(req, res) {
-  res.render('{{ bundle | lower }}/view/{{ schema | lower }}_dashboard', {isAuth: req.isAuthenticated()});
+  var locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
+  res.render('{{ bundle | lower }}/view/{{ schema | lower }}_dashboard', {isAuth: req.isAuthenticated(), locale: locale});
 }
 
 var {{ schema | capitalize }}Controller = function(di) {
   event = new di.event.new('Instance created').success().present().log('info');
+  config = di.config;
   models = di.models;
   controllers = di.controllers;
   {{ schema | capitalize }} = models.{{ schema | lower }}; // object/class

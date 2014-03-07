@@ -71,7 +71,9 @@
     "bundles/frontend/theme/jade/css.jade": "bundles/frontend/theme/css.jade",
     "bundles/frontend/theme/jade/adminmenu.jade": "bundles/frontend/theme/adminmenu.jade",
     "bundles/frontend/theme/jade/layout.jade": "bundles/frontend/theme/layout.jade",
-    "bundles/frontend/theme/jade/javascript.jade": "bundles/frontend/theme/javascript.jade"
+    "bundles/frontend/theme/jade/javascript.jade": "bundles/frontend/theme/javascript.jade",
+    "bundles/frontend/theme/jade/404.jade": "bundles/frontend/theme/404.jade",
+    "bundles/frontend/theme/jade/500.jade": "bundles/frontend/theme/500.jade"
   },
   "conditions": [
     {

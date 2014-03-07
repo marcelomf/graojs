@@ -104,9 +104,23 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       {{ schema | lower }}Json.{{ fieldName }} = ({{ schema | lower }}Json.{{ fieldName }} && {{ schema | lower }}Json.{{ fieldName }}._id) ? {{ schema | lower }}Json.{{ fieldName }}._id : null;
 {%- endif %}{%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
-        {{ schema | capitalize }}.update({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | capitalize }}.update({{ schema | lower }}Json, function(dataResponse){ 
+          if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ 
+            $scope.query(); 
+            $scope.count(); 
+            $scope.clear(); 
+            share.window(windowCallBack); 
+          }
+        });
       else
-        {{ schema | capitalize }}.save({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
+        {{ schema | capitalize }}.save({{ schema | lower }}Json, function(dataResponse){ 
+          if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ 
+            $scope.query(); 
+            $scope.count(); 
+            $scope.clear(); 
+            share.window(windowCallBack); 
+          }
+        });
     }
 {%- if hasUnion == true %}
     var {{ schema | lower }}ValidDef = $q.defer();
@@ -114,7 +128,11 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     {{ schema | capitalize }}.validate($scope.{{ schema | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, data, ignorePaths)) { {{ schema | lower }}ValidDef.resolve(data); }});
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
     var {{ fieldName | lower }}ValidDef = $q.defer();
-    {{ field.ref | capitalize }}.validate($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(data){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, data)) { {{ fieldName | lower }}ValidDef.resolve(data); }});
+    {{ field.ref | capitalize }}.validate($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ 
+      if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)){ 
+        {{ fieldName | lower }}ValidDef.resolve(dataResponse); 
+      }
+    });
 {%- endif %}{%- endfor %}
     $q.all([
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
@@ -124,9 +142,17 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
       var {{ fieldName | lower }}SaveDef = $q.defer();
       if($scope.{{ schema | lower }}.{{ fieldName | lower }}._id != null)
-        {{ field.ref | capitalize }}.update($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
+        {{ field.ref | capitalize }}.update($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ 
+          if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)){ 
+            {{ fieldName | lower }}SaveDef.resolve(dataResponse); 
+          }
+        });
       else
-        {{ field.ref | capitalize }}.save($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)) { {{ fieldName | lower }}SaveDef.resolve(dataResponse); }});
+        {{ field.ref | capitalize }}.save($scope.{{ schema | lower }}.{{ fieldName | lower }}, function(dataResponse){ 
+          if(validate(share.alert, $scope.errors.{{ schema | lower }}.{{ fieldName | lower }}, dataResponse)){ 
+            {{ fieldName | lower }}SaveDef.resolve(dataResponse); 
+          }
+        });
   {%- endif %}{%- endfor %}
       $q.all([
   {%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
@@ -141,7 +167,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   {%- set indexService = indexService+1 %}{%- endif %}{%- endfor %}
           save();
         } catch(err) {
-          throw err;
+          share.alertDanger(err);
         }
       });
     });
@@ -162,12 +188,14 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
   $scope.filter = function() {
     share.alertLoad();
-    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), share.alertClean);
+    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function(){
+      share.alertClean();
+    });
   }
 
   $scope.query = function() {
     share.alertLoad();
-    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function () { 
+    $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function(){ 
       $scope.dataList.status.listing = $scope.dataList.data.length;
       share.alertClean();
     });
