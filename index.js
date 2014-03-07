@@ -16,7 +16,7 @@ var graoJS = function() {
   
   i18n.configure({
       locales: kernel.config.locales,
-      defaultLocale: locales: kernel.config.defaultLocale,
+      defaultLocale: kernel.config.defaultLocale,
       directory: kernel.config.localesPath,
       cookie: 'locale'
   });
@@ -39,7 +39,7 @@ var graoJS = function() {
     graoExpress.use(express.cookieParser());
     graoExpress.use(express.session({
       secret: kernel.config.secretSession,
-      store: new MongoStore({ db: kernel.config.db })
+      store: new MongoStore({ url: kernel.config.db })
     }));
     graoExpress.use(passport.initialize());
     graoExpress.use(passport.session());

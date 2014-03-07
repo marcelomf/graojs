@@ -53,8 +53,7 @@ var GraoKernel = function(di) {
     event: this.event,
     loader: this.loader,
     mongoose : mongoose,
-    schemas : this.schemas,
-    hash : hash
+    schemas : this.schemas
   });
 
   this.controllers = new (require('./GraoController'))({

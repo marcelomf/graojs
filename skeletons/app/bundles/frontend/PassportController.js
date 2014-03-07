@@ -1,30 +1,6 @@
 var models, controllers, event, passport, Strategy;
 var service = {};
 
-passport.serializeUser(function(user, done) {
-  console.log('serializa');
-  done(null, user.username);
-});
-
-passport.deserializeUser(function(username, done) {
-  console.log('deserializa');
-  models.user.findOne({ username: username }, function (err, user) {
-    done(err, user);
-  });
-});
-
-passport.use(new Strategy(function(username, password, done) {
-  console.log('strategy');
-  models.user.findOne({ username: username, password: password }, function (err, user) {
-    if(err) 
-      return done(err);
-    if(!user) 
-      return done(null, false);
-    if(user) 
-      return done(null, user);
-  });
-}));
-
 service.login = function(req, res, next) {
   console.log('postlogin');
   passport.authenticate('local', function(err, user) {
@@ -60,6 +36,30 @@ var PassportController = function(di) {
   passport = di.passport;
   Strategy = di.Strategy;
   this.service = service;
+
+  passport.serializeUser(function(user, done) {
+    console.log('serializa');
+    done(null, user.username);
+  });
+
+  passport.deserializeUser(function(username, done) {
+    console.log('deserializa');
+    models.user.findOne({ username: username }, function (err, user) {
+      done(err, user);
+    });
+  });
+
+  passport.use(new Strategy(function(username, password, done) {
+    console.log('strategy');
+    models.user.findOne({ username: username, password: password }, function (err, user) {
+      if(err) 
+        return done(err);
+      if(!user) 
+        return done(null, false);
+      if(user) 
+        return done(null, user);
+    });
+  }));
 };
 
 module.exports = exports = PassportController;

@@ -311,6 +311,9 @@ var GraoGeneratorCommands = function (di) {
 
     if(!fs.existsSync(appPath+"/node_modules/graojs") || force)
       fs.copy(__dirname+"/../..", appPath+"/node_modules/graojs");
+
+    if(!fs.existsSync(appPath+"/node_modules/passport-local") || force)
+      fs.copy(__dirname+"/../../node_modules/passport-local", appPath+"/node_modules/passport-local");
   }
 }
 

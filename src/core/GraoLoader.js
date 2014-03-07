@@ -14,14 +14,16 @@ var GraoLoader = function(di) {
       case 'route':
       case 'schema':
       case 'validator':
-      case 'stress':
         for(var bundleIndex in bundles) {
           bundle = bundles[bundleIndex];
           if(fs.existsSync(this.dirBundles+'/'+bundle+'/config.js')) {
             var config = require(this.dirBundles+'/'+bundle+'/config.js');
             if(config.injection && config.injection[loadType]){
               for(var i in config.injection[loadType]){
-                load[config.injection[loadType][i].name] = this.dirBundles+'/'+bundle+'/'+config.injection[loadType][i].object;
+                load[config.injection[loadType][i].name] = { 
+                  object: this.dirBundles+'/'+bundle+'/'+config.injection[loadType][i].object, 
+                  di: (config.injection[loadType][i].di) ? config.injection[loadType][i].di : {}
+                };
               }
             }
           }
@@ -51,7 +53,10 @@ var GraoLoader = function(di) {
     function loading(loads) {
       for(loadIndex in loads) {
         try {
-          di[loadType][loadIndex] = new (require(loads[loadIndex]))(di);
+          for(iDi in loads[loadIndex].di) {
+            di[iDi] = loads[loadIndex].di[iDi];
+          }
+          di[loadType][loadIndex] = new (require(loads[loadIndex].object))(di);
           var indexReload = reload.indexOf(loadIndex);
           if(indexReload >= 0)
             reload.splice(indexReload, 1);
