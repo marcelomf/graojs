@@ -21,14 +21,14 @@
   {%- macro input(type, schema, fieldName, field) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
     input.form-control(type='{{ type }}', ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")=__('{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}"){{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}
   {%- endmacro %} 
   {%- macro input_checkbox(schema, fieldName, field) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
     label.checkbox-inline
       input.form-control(type='checkbox', ng-model=ngModelName+'.{{ fieldName }}' value='{{ field.value }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
       =__('{{ field.label }}')
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")=__('{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}"){{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}
   {%- endmacro %}
   {%- macro input_radio(schema, fieldName, field) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
@@ -36,12 +36,12 @@
     label.radio-inline
       input.form-control(type='radio', ng-model=ngModelName+'.{{ fieldName }}' value='{{ loop.key }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
       =__('{{ option }}'){%- endfor %}
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")=__('{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}"){{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}
   {%- endmacro %}
   {%- macro textarea(schema, fieldName, field) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
     textarea.form-control(ng-model=ngModelName+'.{{ fieldName }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")=__('{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}"){{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}
   {%- endmacro %}
   {%- macro select(schema, fieldName, field, isFilter) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}"){%- if field.ref %}
@@ -53,7 +53,7 @@
     select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
       option.form-control(value=''){%- if field.options %}{%- for option in field.options %}
       option.form-control(value='{{ loop.key }}')=__('{{ option }}'){%- endfor %}{%- endif %}{%- endif %}
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")=__('{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}"){{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}
   {%- endmacro %}
   {%- macro union(schema, fieldName, field, isFilter) %}
   {%- if field.ref %}
