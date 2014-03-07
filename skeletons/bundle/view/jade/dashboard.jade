@@ -18,23 +18,23 @@ extends /frontend/theme/layout
 block content
   .container(ng-controller='{{ schema | capitalize }}PublicController', ng-init='clear(); share.window("list");')
     .row
-      .col-xs-18.col-sm-9.col-md-12
+      .col-md-12
         alert(ng-repeat="alert in alerts", type="alert.style", close="closeAlert($index);"){{ alert.message }}
     .row
-      .col-xs-18.col-sm-9.col-md-12
+      .col-md-12
         h2=__('{{ schema | capitalize }}s')
     .row
-      .col-xs-18.col-sm-9.col-md-12
+      .col-md-12
         include {{ schema | lower }}_dashboard_actions
     .row(ng-switch='share.selectWindow')
-      .col-xs-18.col-sm-9.col-md-12(ng-switch-when="list")
+      .col-md-12(ng-switch-when="list")
         include {{ schema | lower }}_list
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
         include {{ schema | lower }}_form
         +form_{{ schema | lower }}(true)
 {{ render_refSelect(schema, fields) }}
     .row
-      .col-xs-18.col-sm-9.col-md-12
+      .col-md-12
         include {{ schema | lower }}_dashboard_actions
 {{ render_refScripts(allRefs, schema) }}
     script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').

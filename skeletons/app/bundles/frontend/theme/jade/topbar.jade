@@ -42,5 +42,5 @@
               input.form-control(type='password', placeholder=__('Password'), ng-model='password')
             button.btn.btn-success(ng-click="login()")=__('Login')
   .row
-    .col-xs-6.col-sm-3.col-md-4.col-md-push-3
+    .col-md-4.col-md-push-3
       alert(ng-show='share.alert.show', type="share.alert.style", close='share.alert.show = false', style='{ top: 49px; position: fixed; z-index: 1029; width: inherit; }') {{ '{{' }} share.alert.message }}
