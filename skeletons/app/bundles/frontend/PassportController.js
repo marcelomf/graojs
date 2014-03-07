@@ -1,21 +1,21 @@
 var models, controllers, event, passport, Strategy;
 var service = {};
 
-di.passport.serializeUser(function(user, done) {
+passport.serializeUser(function(user, done) {
   console.log('serializa');
   done(null, user.username);
 });
 
-di.passport.deserializeUser(function(username, done) {
+passport.deserializeUser(function(username, done) {
   console.log('deserializa');
-  di.models.user.findOne({ username: username }, function (err, user) {
+  models.user.findOne({ username: username }, function (err, user) {
     done(err, user);
   });
 });
 
-di.passport.use(new Strategy(function(username, password, done) {
+passport.use(new Strategy(function(username, password, done) {
   console.log('strategy');
-  di.models.user.findOne({ username: username, password: password }, function (err, user) {
+  models.user.findOne({ username: username, password: password }, function (err, user) {
     if(err) 
       return done(err);
     if(!user) 
@@ -27,7 +27,7 @@ di.passport.use(new Strategy(function(username, password, done) {
 
 service.login = function(req, res, next) {
   console.log('postlogin');
-  di.passport.authenticate('local', function(err, user) {
+  passport.authenticate('local', function(err, user) {
     if(err) 
       return res.send({statusLogin: false, mensage: "Error: "+err}); // FIXME, not present real error!
     if(!user) 
