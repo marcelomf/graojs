@@ -1,6 +1,6 @@
 var FrontendRoute = function (di) {
   di.graoExpress.get('/', function(req, res) {
-    var locale = (['pt-br', 'es', 'en'].indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : 'en';
+    var locale = (di.config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : di.config.defaultLocale;
     res.render('frontend/view/index', {isAuth: req.isAuthenticated(), locale: locale});
   });
 
@@ -10,10 +10,8 @@ var FrontendRoute = function (di) {
     res.redirect("/");
   });
 
-  di.graoExpress.post('/login', di.graoPassport.postLogin);
-
-  di.graoExpress.get('/logout', di.graoPassport.logout);
-
+  di.graoExpress.post('/login', di.controllers.passport.service.login);
+  di.graoExpress.get('/logout', di.controllers.passport.service.logout);
 };
 
 module.exports = exports = FrontendRoute;

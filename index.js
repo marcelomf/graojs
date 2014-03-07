@@ -15,18 +15,19 @@ var graoJS = function() {
   kernel.logger.info('Setting global configs...');
   
   i18n.configure({
-      locales: ['en', 'pt-br'],
-      cookie: 'locale',
-      defaultLocale: 'en',
-      directory: kernel.config.locales
+      locales: kernel.config.locales,
+      defaultLocale: locales: kernel.config.defaultLocale,
+      directory: kernel.config.localesPath,
+      cookie: 'locale'
   });
 
   graoExpress.configure(function(){
     graoExpress.set('views', kernel.config.bundles);
-    graoExpress.set('view engine', 'jade');
+    graoExpress.set('view engine', kernel.config.templateEngine);
     graoExpress.enable('jsonp callback');
     graoExpress.use(express.methodOverride());
     graoExpress.use(i18n.init);
+    //graoExpress.use(express.compress());
     graoExpress.use(express.favicon());
     // https://github.com/evilpacket/helmet
     // https://blog.liftsecurity.io/2012/12/07/writing-secure-express-js-apps
@@ -37,12 +38,11 @@ var graoJS = function() {
     graoExpress.use(express.json());
     graoExpress.use(express.cookieParser());
     graoExpress.use(express.session({
-      secret: 'FIXME AND RAND THIS',
-      store: new MongoStore({ db: 'grao' })
+      secret: kernel.config.secretSession,
+      store: new MongoStore({ db: kernel.config.db })
     }));
     graoExpress.use(passport.initialize());
     graoExpress.use(passport.session());
-    //graoExpress.use(express.compress());
 
     kernel.publics.enable({
       express: express, 

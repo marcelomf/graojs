@@ -1,5 +1,4 @@
-var crypto = require("crypto"), 
-  hash = crypto.createHash("sha256"), 
+var 
   mongoose = require('mongoose'), 
   validate = require('mongoose-validator').validate,
   styles = require('./styles'),
@@ -7,7 +6,6 @@ var crypto = require("crypto"),
   stackTrace = require('stack-trace');
 
 var GraoKernel = function(di) {
-  
   this.config = di.config;
   this.graoExpress = di.graoExpress;
   this.express = di.express;
@@ -59,19 +57,12 @@ var GraoKernel = function(di) {
     hash : hash
   });
 
-  this.graoPassport = new (require('./GraoPassport'))({
-  	models: this.models,
-  	passport: this.passport,
-    config : this.config,
-    event: this.event
-  });
-
   this.controllers = new (require('./GraoController'))({
     config : this.config,
     models : this.models,
     event: this.event,
     loader: this.loader,
-    graoPassport: this.graoPassport
+    passport: this.passport
   });
 
   this.routes = function() {
@@ -81,7 +72,7 @@ var GraoKernel = function(di) {
       loader: this.loader,
       graoExpress : this.graoExpress,
       controllers : this.controllers,
-      graoPassport: this.graoPassport
+      passport: this.passport
     });
   };
 
