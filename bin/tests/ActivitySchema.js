@@ -3,6 +3,7 @@ var ActivitySchema = function(di) {
   validator = di.validators.activity;
 
   this.graoui = {
+    bundle: "access",
     label: "Activitys",
     description: "Activitys of users",
     refLabel: 'name'

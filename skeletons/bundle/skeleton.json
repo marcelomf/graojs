@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Generating graoJS Bundle"
+  },
+  "properties": {
+    "schemas": {
+      "description": "Schemas (lowercase letters)",
+      "pattern": "^[a-z,]+$",
+      "message": "Must be only lowercase letters - no uppercase letters, spaces, numbers, special chars",
+      "required": true
+    }
+  },
+  "target": "./",
+  "ignores": [
+    "skeleton.json",
+    "view/jade/select.jade",
+    "view/jade/textarea.jade",
+    "view/jade/input_text.jade",
+    "view/jade/input_number.jade",
+    "view/jade/input_radio.jade",
+    "view/jade/input_email.jade",
+    "view/jade/date.jade",
+    "view/jade/input_checkbox.jade",
+    "view/jade/input_url.jade",
+    "view/jade/input_password.jade",
+    "view/jade/field_macros.jade",
+    "view/jade/currency.jade"
+  ],
+  "rewrites": {
+    "view/jade/dashboard.jade": "bundles/{{bundle}}/view/{{schema}}_dashboard.jade",
+    "view/jade/dashboard_actions.jade": "bundles/{{bundle}}/view/{{schema}}_dashboard_actions.jade",
+    "view/jade/filter.jade": "bundles/{{bundle}}/view/{{schema}}_filter.jade",
+    "view/jade/list.jade": "bundles/{{bundle}}/view/{{schema}}_list.jade",
+    "view/jade/list_thumbnail.jade": "bundles/{{bundle}}/view/{{schema}}_list_thumbnail.jade",
+    "view/jade/form.jade": "bundles/{{bundle}}/view/{{schema}}_form.jade",
+    "view/jade/fields.jade": "bundles/{{bundle}}/view/{{schema}}_fields.jade",
+    "view/jade/form_actions.jade": "bundles/{{bundle}}/view/{{schema}}_form_actions.jade",
+    "Controller.js": "bundles/{{bundle}}/{{schema | capitalize}}Controller.js",
+    "public/js/PublicController.js": "bundles/{{bundle}}/public/js/{{schema | capitalize}}PublicController.js",
+    "public/js/PublicFactory.js": "bundles/{{bundle}}/public/js/{{schema | capitalize}}PublicFactory.js",
+    "Validator.js": "bundles/{{bundle}}/{{schema | capitalize}}Validator.js",
+    "Model.js": "bundles/{{bundle}}/{{schema | capitalize}}.js",
+    "Route.js": "bundles/{{bundle}}/{{schema | capitalize}}Route.js",
+    "config.js": "bundles/{{bundle}}/config.js"
+  },
+  "conditions": [
+    {
+      "matches": [
+        "view/swig"
+      ],
+      "rules": [
+        { "arg": "template-engine", "value": "swig" }
+      ]
+    },
+    {
+      "matches": [
+        "view/jade"
+      ],
+      "rules": [
+        { "arg": "template-engine", "value": "jade" }
+      ]
+    }
+  ]
+}

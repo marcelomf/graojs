@@ -41,6 +41,7 @@ function validate(alert, errorObject, responseData, pathsIgnore){
 
   if(responseData.event && responseData.event.status == false) {
     var countErrors = 0;
+    var isFieldErros = false;
     if(errors) {
       for(var iField in errors){
         if(!(pathsIgnore.indexOf(errors[iField].path) >= 0)) {
@@ -52,7 +53,7 @@ function validate(alert, errorObject, responseData, pathsIgnore){
         }
       }
     }
-    if(countErrors > 0) {
+    if(countErrors > 0 || !isFieldErros) {
       alert.show = true;
       alert.style = responseData.event.style;
       alert.message = responseData.event.message;

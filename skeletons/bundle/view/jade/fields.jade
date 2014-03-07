@@ -58,7 +58,7 @@
   {%- macro union(schema, fieldName, field, isFilter) %}
   {%- if field.ref %}
   .form-group
-    include /{{ field.ref | lower }}/view/{{ field.ref | lower }}_fields
+    include /{{ field.bundle | lower }}/view/{{ field.ref | lower }}_fields
     {%- if isFilter == true %}
     +filter_fields_{{ field.ref | lower }}(ngModelName+'.{{ fieldName | lower }}')
     {%- else %}

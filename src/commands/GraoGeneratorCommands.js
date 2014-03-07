@@ -35,20 +35,6 @@ var GraoGeneratorCommands = function (di) {
       desc: 'Generate a new graoJS Bundle',
       appOnly: true,
       promptSchema: {}
-    },
-    {
-      id: 'schemabundle',
-      method: 'runGenerateSchemaBundle',
-      desc: 'Generate a new graoJS Bundle based on a Schema',
-      appOnly: true,
-      promptSchema: {}
-    },
-    {
-      id: 'schema',
-      method: 'runGenerateSchema',
-      desc: 'Generate a new graoJS Mongoose Schema',
-      appOnly: true,
-      promptSchema: {}
     }
   ];
 
@@ -66,45 +52,43 @@ var GraoGeneratorCommands = function (di) {
   }
 
   this.runGenerateBundle = function (argv, prompt, schema) {
-
-    console.log('-- TODO runGenerateBundle');
-
-  }
-
-  this.runGenerateSchemaBundle = function (argv, prompt, schema) {
-    this.prepareGenerator('schemabundle', argv);
-    prompt.get(generator.config, function (err, result) {
-      if (err) {
+    this.prepareGenerator('bundle', argv);
+    prompt.get(generator.config, function (err, options) {
+      if (err)
         return onErr(err);
-      }
-      var force = argv.hasOwnProperty('force')
-        ? argv.force
-        : false;
-      var schemaCapitalized = self.capitalize(result['schema']);
-      var schemaPath = self.prepareSchemaPath(schemaCapitalized);
-      fs.exists(path.join(process.cwd(), schemaPath), function (exists) {
-        if (exists) {
-          var uiSchema = self.prepareSchemaUi(schemaCapitalized, self.prepareSchema(result['schema'], path.join(process.cwd(), schemaPath)));
+      var force = argv.hasOwnProperty('force') ? argv.force : false;
+      var schemas = new Array();
+      if(options['schemas'].indexOf(','))
+        schemas = options['schemas'].split(',');
+      else
+        schemas.push(options['schemas']);
+
+      for(i in schemas) {
+        var varsGenerate = {};
+        /* @FIXME BUG when generateBundle with divergent schemas of different bundles */
+        varsGenerate['allSchemas'] = schemas;
+        varsGenerate['schema'] = schemas[i];
+        var schemaCapitalized = self.capitalize(varsGenerate['schema']);
+        var schemaPath = self.prepareSchemaPath(schemaCapitalized);
+        var fullSchemaPath = path.join(process.cwd(), schemaPath);
+        console.log(fullSchemaPath);
+        if(fs.existsSync(fullSchemaPath)){
+          var uiSchema = self.prepareSchemaUi(schemaCapitalized, self.prepareSchema(varsGenerate['schema'], fullSchemaPath));
           for(var uiName in uiSchema) {
-            result[uiName] = uiSchema[uiName];
+            varsGenerate[uiName] = uiSchema[uiName];
           }
-          result = self.prepareRefFields(result);
-          result = self.prepareSubDocFields(result);
-          console.log(result);
-          
-          /** 
-          * @FIXME
-          * Dead code ?
-          * result['jadeMacrosPath'] = path.join(generator.skelPath, "/view/jade/field_macros.jade");
-          */
-          generator.generate(result, force);
-          fs.writeFileSync(path.join(process.cwd(), 'bundles/'+result['schema']+'/'+schemaCapitalized+'Schema.js'), 
-            fs.readFileSync(path.join(process.cwd(), schemaPath), 'utf-8'), 'utf-8');
+          varsGenerate = self.prepareRefFields(varsGenerate);
+          varsGenerate = self.prepareSubDocFields(varsGenerate);
+          console.log(varsGenerate);
+          if(!fs.existsSync("bundles/"+varsGenerate['bundle']))
+            fs.mkdirSync("bundles/"+varsGenerate['bundle'], 0755);
+          generator.generate(varsGenerate, force);
+          fs.writeFileSync(path.join(process.cwd(), 'bundles/'+varsGenerate['bundle']+'/'+schemaCapitalized+'Schema.js'), 
+            fs.readFileSync(fullSchemaPath, 'utf-8'), 'utf-8');
         } else {
-          console.log(( 'ERROR: ' + schemaPath + ' doesn\'t exist. Aborting').red);
-          return false;
+          console.log(( 'ERROR: ' + fullSchemaPath + ' doesn\'t exist. Aborting this file').red);
         }
-      });
+      }
     });
   }
 
@@ -116,7 +100,16 @@ var GraoGeneratorCommands = function (di) {
       resultUi['allRefFields'] = {};
 
     for(fieldName in fields) {
+      //if(fields[fieldName].ref && !resultUi['allRefFields'][fieldName]){
       if(fields[fieldName].ref){
+        if(!fields[fieldName].bundle) {
+           var schemaRefObj = self.prepareSchema(fields[fieldName].ref, 
+            path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(fields[fieldName].ref))));
+           if(schemaRefObj.graoui != null && schemaRefObj.graoui.bundle != null)
+            fields[fieldName].bundle = schemaRefObj.graoui.bundle;
+           else
+            fields[fieldName].bundle = fields[fieldName].ref.toLowerCase();
+        }
         resultUi['allRefFields'][fieldName] = fields[fieldName];
         if(fullPath) {
           resultUi['allRefFields'][fieldName]['fullPath'] = fullPath.normal+'.'+fieldName;
@@ -160,25 +153,6 @@ var GraoGeneratorCommands = function (di) {
     return resultUi;
   }
 
-  this.runGenerateSchema = function (argv, prompt, schema) {
-    this.prepareGenerator('schema', argv);
-    prompt.get(generator.config, function (err, result) {
-      if (err)
-        return onErr(err);
-
-      var force = argv.hasOwnProperty('force')
-        ? argv.force
-        : false;
-      generator.generate(result, force, function () {
-        console.log(
-          "Edit the schema and add your fields" +
-            "\nthen run " + "grao generate:schemabundle".blue +
-            " to generate a CRUD bundle for your schema \n"
-        )
-      });
-    });
-  }
-
   this.capitalize = function(string) {
     return string.charAt(0).toUpperCase() + string.substring(1);
   }
@@ -218,6 +192,7 @@ var GraoGeneratorCommands = function (di) {
 
     function prepareFields(jsonFields){
       var result = {  name: schemaName, 
+                    bundle: (rootGraoui.bundle != null) ? rootGraoui.bundle : schemaName.toLowerCase(), 
                     label: (rootGraoui.label != null) ? rootGraoui.label : schemaName, 
                     description: (rootGraoui.description != null) ? rootGraoui.description : schemaName, 
                     refLabel: (rootGraoui.refLabel != null) ? rootGraoui.refLabel : null, 

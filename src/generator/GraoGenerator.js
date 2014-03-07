@@ -29,9 +29,7 @@ var GraoGenerator = function () {
   this.currentDir = process.cwd();
   this.defaultSkels = {
     "app": "skeletons/app",
-    "bundle": "skeletons/bundle",
-    "schemabundle": "skeletons/schemabundle",
-    "schema": "skeletons/schema"
+    "bundle": "skeletons/bundle"
   };
   this.args = {};
   this.argsSwig = {};
@@ -112,7 +110,7 @@ var GraoGenerator = function () {
         fs.mkdirsSync(distDir);
         fs.exists(process.cwd() + '/' + dist, function (exists) {
           if (!exists || force) {
-            console.log(( '! ' + './' + dist ).blue);
+            console.log(( '- ' + './' + dist ).blue);
             var fileContent, fileType;
             if(tpl.search(/\.png$|\.min\.js$|\.jpg$|\.ttf$|\.woff/) >= 0) {
               fileContent = fs.readFileSync(tpl, 'binary');

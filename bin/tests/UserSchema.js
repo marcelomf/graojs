@@ -3,6 +3,7 @@ var UserSchema = function(di) {
   validator = di.validators.user;
 
   this.graoui = {
+    bundle: "access",
     label: "Users",
     description: "Users of the system",
     refLabel: 'username'

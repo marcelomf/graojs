@@ -3,7 +3,7 @@
         h3=__('{{ fieldName | capitalize }}')
           small=__('{{ schema | capitalize }}')
         form.form-horizontal(role='form')
-          include /{{ field.ref | lower }}/view/{{ field.ref | lower }}_fields
+          include /{{ field.bundle | lower }}/view/{{ field.ref | lower }}_fields
           +form_fields_{{ field.ref | lower }}('new{{ schema | capitalize }}{{ fieldName | capitalize }}')
         .form-horizontal
           .form-group
