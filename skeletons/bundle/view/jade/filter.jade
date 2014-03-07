@@ -4,4 +4,4 @@ form.form-inline(role='form')
   +filter_fields_{{ schema | lower }}('dataList.filter')
   button.btn.btn-info(type='button', ng-click='filter(); count();')=__('Filter')
   | 
-  button.btn.btn-danger(type='button', ng-click='dataList.filter = {}; query(); count();')=__('Reset')
+  button.btn.btn-danger(type='button', ng-click='dataList.filter = null; query(); count();')=__('Reset')

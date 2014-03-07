@@ -101,8 +101,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}
 {%- else %}
       {{ schema | lower }}Json.{{ fieldName }} = ({{ schema | lower }}Json.{{ fieldName }} && {{ schema | lower }}Json.{{ fieldName }}._id) ? {{ schema | lower }}Json.{{ fieldName }}._id : null;
-{%- endif %}
-{%- endif %}{%- endfor %}
+{%- endif %}{%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
         {{ schema | capitalize }}.update({{ schema | lower }}Json, function(dataResponse){ if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ $scope.query(); $scope.count(); $scope.clear(); share.window(windowCallBack); }});
       else

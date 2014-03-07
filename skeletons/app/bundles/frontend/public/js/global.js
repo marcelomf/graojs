@@ -44,6 +44,7 @@ function validate(alert, errorObject, responseData, pathsIgnore){
     var isFieldErros = false;
     if(errors) {
       for(var iField in errors){
+        isFieldErros = true;
         if(!(pathsIgnore.indexOf(errors[iField].path) >= 0)) {
           countErrors++;
           if(errors[iField].path.indexOf('.') != -1)
@@ -76,7 +77,7 @@ function validate(alert, errorObject, responseData, pathsIgnore){
 var DataList = function() {
   var self = this;
   this.data = [];
-  this.filter = {};
+  this.filter = null;
   this.sort = { field: '_id', type: '-'};
   this.page = { skip: 0, limit: 10, current: 1 };
   this.status = { totality: 0, filtered: 0, listing: 0 };
