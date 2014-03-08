@@ -18,6 +18,6 @@
             button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')=__('Remove')
 .row
   .col-md-12.text-right
-    p=__('Listing {{ '{{' }} dataList.status.listing }} {{ schema | lower }}s of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} totality')
+    p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')
   .col-md-12
     button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore(); count();')=__('MORE')

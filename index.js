@@ -25,18 +25,18 @@ var graoJS = function() {
     graoExpress.set('views', kernel.config.bundles);
     graoExpress.set('view engine', kernel.config.templateEngine);
     graoExpress.enable('jsonp callback');
-    graoExpress.use(express.methodOverride());
-    graoExpress.use(i18n.init);
     //graoExpress.use(express.compress());
-    graoExpress.use(express.favicon());
     // https://github.com/evilpacket/helmet
     // https://blog.liftsecurity.io/2012/12/07/writing-secure-express-js-apps
     //graoExpress.use(express.logger('dev'));
     //graoExpress.use(express.bodyParser()); // Insecure and deprecated 
     //graoExpress.use(express.urlencoded());
     //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
-    graoExpress.use(express.json());
+    graoExpress.use(express.favicon());
     graoExpress.use(express.cookieParser());
+    graoExpress.use(express.methodOverride());
+    graoExpress.use(express.json());
+    graoExpress.use(i18n.init); // need after cookieParser, methodOverride and before graoExpress.router
     graoExpress.use(express.session({
       secret: kernel.config.secretSession,
       store: new MongoStore({ url: kernel.config.db })

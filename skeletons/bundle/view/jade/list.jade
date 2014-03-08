@@ -37,7 +37,7 @@
               button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
 .row
   .col-md-6.text-left
-    p=__('Listing {{ '{{' }} dataList.status.listing }} {{ schema | lower }}s of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} totality')
+    p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')
   .col-md-6.text-right
     pagination(style="margin: 0px;", items-per-page="dataList.page.limit", page="dataList.page.current", max-size="5"
       total-items="dataList.status.filtered ? dataList.status.filtered : dataList.status.totality", class="pagination", 

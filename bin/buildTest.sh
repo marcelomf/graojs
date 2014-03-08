@@ -18,4 +18,4 @@ cp -rf ./../graojs/bin/$app/*Schema.js gen/
 ./../graojs/bin/grao generate:bundle --schemas collection --force
 ./../graojs/bin/grao generate:bundle --schemas field --force
 #done;
-node index.js
+supervisor -i log index.js
