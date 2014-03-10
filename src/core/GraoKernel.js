@@ -12,7 +12,6 @@ var GraoKernel = function(di) {
   this.S = require('string');
   this.moment = require('moment');
   this.humanize = require('humanize');
-  this.is = require('is-js');
   this.emailTemplates = require('email-templates');
   this.nodemailer = require('nodemailer');
   this.path = require('path');

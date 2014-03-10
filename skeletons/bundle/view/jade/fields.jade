@@ -91,12 +91,12 @@
   {%- endfor %}
   {%- endif %}
   {%- endmacro %}
-mixin filter_fields_{{ schema | lower }}(ngModelName)
-  if !ngModelName
-    - var ngModelName = '{{ schema | lower }}'
-  {%- for fieldName, field in fields %}{%- if field.isFilter %} {{ render_field(schema, fieldName, field, true) }} {%- endif %}{%- endfor %}  
-
 mixin form_fields_{{ schema | lower }}(ngModelName)
   if !ngModelName
     - var ngModelName = '{{ schema | lower }}'
   {%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field, false) }} {%- endfor %}  
+  
+mixin filter_fields_{{ schema | lower }}(ngModelName)
+  if !ngModelName
+    - var ngModelName = '{{ schema | lower }}'
+  {%- for fieldName, field in fields %}{%- if field.isFilter %} {{ render_field(schema, fieldName, field, true) }} {%- endif %}{%- endfor %}  

@@ -63,7 +63,9 @@ var UserSchema = function(di) {
         label: "Enabled",
         type: 'checkbox',
         value: "IS_ENABLED",
-        attr: { checked: true }
+        attr: { checked: true },
+        isList: true,
+        isFilter: true
       }
     },
   };
