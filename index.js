@@ -3,13 +3,14 @@ var http = require('http'),
   express = require('express'),
   MongoStore = require('connect-mongo')(express),
   graoExpress = express(),
-  kernel = new (require('./src/core/GraoKernel'))({
-            config: require('./../../config/prod'), 
-            passport: passport,
-            graoExpress: graoExpress, 
-            express: express}),
-  servers = new Array(),
-  i18n = require('i18n');
+  i18n = require('i18n'),
+  di = { config: require('./../../config/prod'), 
+          passport: passport,
+          graoExpress: graoExpress, 
+          express: express,
+          i18n: i18n },
+  kernel = new (require('./src/core/GraoKernel'))(di),
+  servers = new Array();
 
 var graoJS = function() {
   kernel.logger.info('Setting global configs...');

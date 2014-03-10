@@ -1,7 +1,8 @@
-var fs = require('fs');
-var path = require('path');
+var fs, path;
 
 var GraoLoader = function(di) {
+  fs = di.fs;
+  path = di.path;
   this.dirBundles = di.config.bundles;
   
   this.loading = function(loadType) {
@@ -78,9 +79,4 @@ var GraoLoader = function(di) {
     return di[loadType];
   }
 }
-
-function ucfirst(string) {
-  return string.toUpperCase().substr(0, 1)+string.substr(1).toLowerCase();  
-}
-
 module.exports = exports = GraoLoader;

@@ -18,9 +18,9 @@
   ],
   "readme" : "README.md",
   "dependencies": {
-    "winston": "", "express": "", "mongodb": "", "mongoose": "", "mongoose-validator": "", "mongoose-rbac": "", "i18n": "", "underscore": "",
+    "winston": "", "express": "", "mongodb": "", "mongoose": "", "mongoose-validator": "", "i18n": "", "lodash": "",
     "jade": "", "swig" : "1.1.0", "fs-extra": "", "stack-trace": "", "prompt": "", "optimist": "", "string": "", "q": "", "passport": "", 
-    "passport-local": "", "connect-mongo": ""
+    "passport-local": "", "connect-mongo": "", "moment": "", "humanize": "", "is-js": "", "email-templates": "", "nodemailer": ""
   },
   "keywords": [
     "framework", "mvc", "grao", "graojs", "restful", "rad", "app", "api", "ria", "generator", "builder"
