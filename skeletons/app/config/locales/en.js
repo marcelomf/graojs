@@ -31,5 +31,9 @@
 	"Remove": "Remove",
 	"Cancel": "Cancel",
 	"Save and back": "Save and back",
-	"Activity": "Activity"
+	"Activity": "Activity",
+	"Enabled": "Enabled",
+	"Enable": "Enable",
+	"Disabled": "Disabled",
+	"Disable": "Disable",
 }

@@ -57,6 +57,15 @@ var UserSchema = function(di) {
         isFilter: true
       }
     }],
+    enabled : {
+      type: Boolean,
+      graoui: {
+        label: "Enabled",
+        type: 'checkbox',
+        value: "IS_ENABLED",
+        attr: { checked: true }
+      }
+    },
   };
 
   this.mongoose = new di.mongoose.Schema(this.json);

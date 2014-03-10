@@ -58,6 +58,7 @@
     "skeleton.json"
   ],
   "rewrites": {
+    "log/app.log": "log/{{name}}.log",
     "bundles/frontend/view/jade/home.jade": "bundles/frontend/view/home.jade",
     "bundles/frontend/view/jade/index.jade": "bundles/frontend/view/index.jade",
     "bundles/frontend/view/jade/explore.jade": "bundles/frontend/view/explore.jade",

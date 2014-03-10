@@ -22,11 +22,11 @@ module.exports = exports = {
   log : {
     transport : {
       console : { colorize: true, json : false, timestamp : true, level : 'info' },
-      file : { filename : rootPath + '/log/grao.log', json : false, level : 'error' }
+      file : { filename : rootPath + '/log/{{name}}.log', json : false, level : 'error' }
     },
     exception : {
       console : { colorize: true, json : false, timestamp : true, level : 'info' },
-      file : { filename : rootPath + '/log/grao.log', json : false, level : 'error' }
+      file : { filename : rootPath + '/log/{{name}}.log', json : false, level : 'error' }
     },
   }
 };
