@@ -4,34 +4,39 @@ function TopbarPublicController($scope, $timeout, $http, share, $log) {
   $scope.password = '';
 
   $scope.login = function(){
+    share.alertInfo("Loading...");
     $http.post('/login', {username: $scope.username, password: $scope.password})
       .success(function (data, status, headers, config){
-        console.log('SUCESSO');
-        console.log(data);
-        if(data.statusLogin)
-          window.location.href = '/admin/user';
-        else
-          alert(data.mensage);
+        if(data.event){
+          share.alert.message = data.event.message;
+          share.alert.style = data.event.style;
+          share.alert.show = true;
+          if(data.event.status)
+            window.location.href = '/admin/user';
+        } else {
+          share.alertDanger(data);
+        }
       })
       .error(function (data, status, headers, config){
-        console.log('ERROR');
-        console.log(data);
+        share.alertDanger(data);
       });
   };
 
   $scope.logout = function(){
-    $http.get('/logout', {username: $scope.username, password: $scope.password})
+    $http.get('/logout')
       .success(function (data, status, headers, config){
-        console.log('SUCESSO');
-        console.log(data);
-        if(data.statusLogout)
-          window.location.href = '/';
-        else
-          alert(data.mensage);
+        if(data.event) {
+          share.alert.message = data.event.message;
+          share.alert.style = data.event.style;
+          share.alert.show = true;
+          if(data.event.status)
+            window.location.href = '/';
+        } else {
+          share.alertDanger(data);
+        }
       })
       .error(function (data, status, headers, config){
-        console.log('ERROR');
-        console.log(data);
+        share.alertDanger(data);
       });
   };
 }

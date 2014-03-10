@@ -17,6 +17,8 @@ module.exports = exports = {
   name : packageJson.description,
   templateEngine : 'jade',
   secretSession: 'FIXME AND RAND THIS',
+  secretSalt: 'FIXME AND RAND THIS',
+  hashAlgo: 'sha256',
   log : {
     transport : {
       console : { colorize: true, json : false, timestamp : true, level : 'info' },

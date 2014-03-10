@@ -1,57 +1,62 @@
-var models, controllers, event, passport, Strategy;
+var models, controllers, event, passport, Strategy, hash, __;
 var service = {};
 
 service.login = function(req, res, next) {
-  console.log('postlogin');
+  //console.log('postlogin');
   passport.authenticate('local', function(err, user) {
-    if(err) 
-      return res.send({statusLogin: false, mensage: "Error: "+err}); // FIXME, not present real error!
-    if(!user) 
-      return res.send({statusLogin: false, mensage: "Invalid User."});
+    if(err || !user) 
+      return res.json(event.new(__("Access Denied.")).error().log('error').toJson());
+
     req.logIn(user, function(err) {
       if(err) 
-        return res.send({statusLogin: false, mensage: "Error: "+err}); // FIXME, not present real error!
-      return res.send({statusLogin: true, mensage: "Success."});
+        return res.json(event.new(__("Access Denied.")).error().log('error').toJson());
+
+      res.json(event.new(__("Welcome")).success().log('info').toJson());
     });
   })(req, res, next);
 }
 
 service.logout = function(req, res, next) {
-  console.log('logout');
+  //console.log('logout');
   req.logout();
-  res.send({statusLogout: true});
+  res.json(event.new(__("Logout")).success().log('info').toJson());
 }
 
 service.checkAuth = function(req, res, next){
-  console.log('checkauth');
+  //console.log('checkauth');
   if(req.isAuthenticated()) 
   	return next();
-  res.send({statusLogin: false, mensage: "Access Denied."});
+  
+  res.json(event.new(__("Access Denied.")).error().log('error').toJson());
 };
 
 var PassportController = function(di) {
+  __ = di.__;
   event = new di.event.new('Instance created').success().present().log('info');
   models = di.models;
   controllers = di.controllers;
   passport = di.passport;
   Strategy = di.Strategy;
+  hash = di.hash;
   this.service = service;
 
   passport.serializeUser(function(user, done) {
-    console.log('serializa');
-    done(null, user.username);
+    //console.log('serializa');
+    done(null, user._id);
   });
 
-  passport.deserializeUser(function(username, done) {
-    console.log('deserializa');
-    models.user.findOne({ username: username }, function (err, user) {
+  passport.deserializeUser(function(id, done) {
+    //console.log('deserializa');
+    models.user.findOne({ _id: id }).populate('activitys').exec(function(err, user) {
       done(err, user);
     });
   });
 
   passport.use(new Strategy(function(username, password, done) {
-    console.log('strategy');
-    models.user.findOne({ username: username, password: password }, function (err, user) {
+    //console.log('strategy');
+    models.user.findOne({ username: username, password: hash(password) }).
+      populate('activitys').
+      exec(function(err, user) {
       if(err) 
         return done(err);
       if(!user) 
