@@ -1,4 +1,4 @@
-var models, controllers, event, passport, Strategy, hash, __;
+var models, controllers, event, passport, Strategy, __;
 var service = {};
 
 service.login = function(req, res, next) {
@@ -37,7 +37,6 @@ var PassportController = function(di) {
   controllers = di.controllers;
   passport = di.passport;
   Strategy = di.Strategy;
-  hash = di.hash;
   this.service = service;
 
   passport.serializeUser(function(user, done) {
@@ -54,7 +53,7 @@ var PassportController = function(di) {
 
   passport.use(new Strategy(function(username, password, done) {
     //console.log('strategy');
-    models.user.findOne({ username: username, password: hash(password) }).
+    models.user.findOne({ username: username, password: di.hash(password) }).
       populate('activitys').
       exec(function(err, user) {
       if(err) 

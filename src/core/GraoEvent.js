@@ -1,4 +1,3 @@
-// Glocal Scope :)
 var styles,
   states,
   logger,
@@ -112,8 +111,10 @@ var GraoEvent = function(di) {
   
   this.new = function(message) {
     var newEvent = new GraoEvent( { message: message } );
-    //handle.events.push(newEvent);
     return newEvent;
+    //handle.events.push(newEvent);
+    //this.message = message;
+    //return this;
   };
   
   this.success = function() {

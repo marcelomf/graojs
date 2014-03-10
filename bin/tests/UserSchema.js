@@ -11,32 +11,10 @@ var UserSchema = function(di) {
 
   this.json = {
     id : di.mongoose.Schema.ObjectId,
-    person: { 
-      type: di.mongoose.Schema.Types.ObjectId, 
-      ref: 'Person',
-      required : true,
-      graoui: {
-        label: "Person",
-        type: "union",
-        isList: true,
-        isFilter: true
-      },
-    },
-    activitys: [{ 
-      type: di.mongoose.Schema.Types.ObjectId, 
-      ref: 'Activity',
-      graoui: {
-        label: "Activitys",
-        fieldRefLabel: "name",
-        type: "select",
-        attr: { multiple: true },
-        isList: true,
-        isFilter: true
-      }
-    }],
     username : {
       type : String,
       required : true,
+      unique: true,
       trim : true,
       graoui: {
         label: "User Name",
@@ -53,33 +31,45 @@ var UserSchema = function(di) {
         type: 'password'
       }
     },
-    languages : {
-      type: Array,
+    email : {
+      type : String,
+      lowercase : true,
+      required : false,
+      index : true,
+      unique : true,
+      trim : true,
+      validate : validate('isEmail'),
       graoui: {
-        label: "Languages",
-        type: 'select',
-        options: { "PHP": "PHP Language", "JAVA": "Java Language", "JAVASCRIPT": "Javascript Language", "PYTHON": "Python Language", "RUBY": "Ruby Language" },
-        attr: { multiple: true },
+        label: "Email",
+        type: 'email',
         isList: true,
         isFilter: true
       }
     },
-    distros : {
-      type: Array,
+    activitys: [{ 
+      type: di.mongoose.Schema.Types.ObjectId, 
+      ref: 'Activity',
       graoui: {
-        label: "Distributions",
-        type: 'select',
-        options: [ "Ubuntu", "Fedora", "Debian", "Mint", "Slackware", "Gentoo" ],
-        attr: { multiple: true }
+        label: "Activitys",
+        type: "select",
+        attr: { multiple: true },
+        isList: true,
+        isFilter: true
       }
-    },
-    likes: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    dislikes: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    followers: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    following: [{ type: di.mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    }],
   };
 
   this.mongoose = new di.mongoose.Schema(this.json);
+
+  this.mongoose.pre('save', function(next) {
+    var user = this;
+
+    if (!user.isModified('password')) 
+      return next();
+
+    user.password = di.hash(user.password);
+    next();
+  });
 };
 
 module.exports = exports = UserSchema;
