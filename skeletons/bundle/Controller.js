@@ -67,7 +67,7 @@ service.create = function(req, res) {
     if(err)
       res.json(event.new(err).error().log('error').toJson());
     else
-      res.json(event.new("{{ schema | capitalize }} created").success().log('info').data({{ schema | lower }}).toJson());
+      res.json(event.new(res.__("{{ schema | capitalize }}")+" "+res.__("created")).success().log('info').data({{ schema | lower }}).toJson());
   });
 }
 
@@ -77,7 +77,7 @@ service.update = function(req, res) {
     if(err)
       res.json(event.new(err).error().log('error').toJson());
     else
-      res.json(event.new("{{ schema | capitalize }} updated").success().log('info').data({{ schema | lower }}).toJson());
+      res.json(event.new(res.__("{{ schema | capitalize }}") +" "+res.__("updated")).success().log('info').data({{ schema | lower }}).toJson());
   });
 }
 
@@ -86,7 +86,7 @@ service.destroy = function(req, res) {
     if(err)
       res.json(event.new(err).error().log('error').toJson());
     else
-      res.json(event.new("Destroyed").success().log('info').toJson());
+      res.json(event.new(res.__("Destroyed")).success().log('info').toJson());
   });
 }
 

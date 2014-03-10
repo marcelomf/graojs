@@ -38,5 +38,8 @@
 	"Enable": "Habilitado",
 	"Disabled": "Desabilitado",
 	"Disable": "Desabilitado",
+	"Destroyed": "Destruído",
+	"created": "criado",
+	"updated": "atualizado",
 	"Not Found": "Não encontrado"
 }

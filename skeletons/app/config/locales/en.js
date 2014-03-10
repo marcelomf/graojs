@@ -38,5 +38,8 @@
 	"Enable": "Enable",
 	"Disabled": "Disabled",
 	"Disable": "Disable",
+	"Destroyed": "Destroyed",
+	"created": "created",
+	"updated": "updated",
 	"Not Found": "Not Found"
 }
