@@ -3,19 +3,19 @@ var http = require('http'),
   express = require('express'),
   MongoStore = require('connect-mongo')(express),
   graoExpress = express(),
-  i18n = require('i18n'),
   di = { config: require('./../../config/prod'), 
           passport: passport,
           graoExpress: graoExpress, 
-          express: express,
-          i18n: i18n },
+          express: express},
   kernel = new (require('./src/core/GraoKernel'))(di),
+  i18n = require('i18n'),
   servers = new Array();
 
 var graoJS = function() {
   kernel.logger.info('Setting global configs...');
   
   i18n.configure({
+      //updateFiles: false,
       locales: kernel.config.locales,
       defaultLocale: kernel.config.defaultLocale,
       directory: kernel.config.localesPath,

@@ -1,4 +1,5 @@
 {
+	"Welcome": "Bem vindo",
 	"Login": "Entrar",
 	"Logout": "Sair",
 	"Learn more": "Saiba mais",
@@ -13,6 +14,7 @@
 	"Email": "Email",
 	"Activitys": "Atividades",
 	"User Name": "Usuário",
+	"Username": "Usuário",
 	"Filter": "Filtrar",
 	"Reset": "Reiniciar",
 	"FILTER": "FILTRO",
@@ -36,4 +38,5 @@
 	"Enable": "Habilitado",
 	"Disabled": "Desabilitado",
 	"Disable": "Desabilitado",
+	"Not Found": "Não encontrado"
 }

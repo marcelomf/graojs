@@ -2,7 +2,6 @@ var GraoKernel = function(di) {
   for(iDi in di) {
     this[iDi] = di[iDi];
   }
-  this.__ = this.i18n.__;
   this.mongoose = require('mongoose');
   this.mongooseValidator = require('mongoose-validator');
   this.validate = this.mongooseValidator.validate;

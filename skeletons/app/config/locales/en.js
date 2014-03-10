@@ -1,4 +1,5 @@
 {
+	"Welcome": "Welcome",
 	"Login": "Login",
 	"Logout": "Logout",
 	"Learn more": "Learn more",
@@ -13,6 +14,7 @@
 	"Email": "Email",
 	"Activitys": "Activitys",
 	"User Name": "User Name",
+	"Username": "Username",
 	"Filter": "Filter",
 	"Reset": "Reset",
 	"FILTER": "FILTER",
@@ -36,4 +38,5 @@
 	"Enable": "Enable",
 	"Disabled": "Disabled",
 	"Disable": "Disable",
+	"Not Found": "Not Found"
 }

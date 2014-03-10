@@ -1,17 +1,17 @@
-var models, controllers, event, passport, Strategy, __;
+var models, controllers, event, passport, Strategy;
 var service = {};
 
 service.login = function(req, res, next) {
   //console.log('postlogin');
   passport.authenticate('local', function(err, user) {
     if(err || !user) 
-      return res.json(event.new(__("Access Denied.")).error().log('error').toJson());
+      return res.json(event.new(res.__("Access Denied.")).error().log('error').toJson());
 
     req.logIn(user, function(err) {
       if(err) 
-        return res.json(event.new(__("Access Denied.")).error().log('error').toJson());
+        return res.json(event.new(res.__("Access Denied.")).error().log('error').toJson());
 
-      res.json(event.new(__("Welcome")).success().log('info').toJson());
+      res.json(event.new(res.__("Welcome")).success().log('info').toJson());
     });
   })(req, res, next);
 }
@@ -19,7 +19,7 @@ service.login = function(req, res, next) {
 service.logout = function(req, res, next) {
   //console.log('logout');
   req.logout();
-  res.json(event.new(__("Logout")).success().log('info').toJson());
+  res.json(event.new(res.__("Logout")).success().log('info').toJson());
 }
 
 service.checkAuth = function(req, res, next){
@@ -27,11 +27,10 @@ service.checkAuth = function(req, res, next){
   if(req.isAuthenticated()) 
   	return next();
   
-  res.json(event.new(__("Access Denied.")).error().log('error').toJson());
+  res.json(event.new(res.__("Access Denied.")).error().log('error').toJson());
 };
 
 var PassportController = function(di) {
-  __ = di.__;
   event = new di.event.new('Instance created').success().present().log('info');
   models = di.models;
   controllers = di.controllers;
