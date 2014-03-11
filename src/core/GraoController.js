@@ -3,8 +3,14 @@ var GraoController = function(di) {
   di.controllers = this;
 
   this.accessDeniedTpl = function(req, res, next) {
+    var isAdmin = (req.user) ? req.user.do('admin') : false;
+    var locale = (di.config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : di.config.defaultLocale;
     if(!req.isAuthenticated())
-      return res.render('frontend/theme/500', { error: res.__("Access Denied.") });
+      return res.render('frontend/theme/500', { error: res.__("Access Denied."),
+                                                isAuth: req.isAuthenticated(), 
+                                                locale: locale, 
+                                                user: req.user,
+                                                isAdmin: isAdmin  });
 
     next();
   }
