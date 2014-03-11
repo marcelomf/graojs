@@ -23,24 +23,30 @@ var GraoController = function(di) {
     dataList.sort = "field "+(dataList.sort.type == '-' ? '-' : '')+dataList.sort.field;
 
     if(query.filter) {
-      var realyFilter = false;
-      dataList.filter = JSON.parse(query.filter, function(key, value){
+      dataList.filter = JSON.parse(query.filter);
+      for(var key in dataList.filter) {
         if(key.length <= 0)
-          return value;
+          continue;
 
         if(!(model.schema.paths[key] && typeof model.schema.paths[key] === 'object'))
-          return null;
+          continue;
+
 
         if(model.schema.paths[key].instance == 'String') {
-          if(value.length > 0) {
-            realyFilter = true;
-            return new RegExp('.*'+value+'.*', "i");
+          if(dataList.filter[key].length > 0) {
+            dataList.filter[key] = RegExp('.*'+dataList.filter[key]+'.*', "i");
           }
           else
-            return "";
+            dataList.filter[key] = "";
+        } else if(model.schema.tree[key]) { // ref
+          if(model.schema.tree[key] instanceof Array && model.schema.tree[key][0].ref) {
+            dataList.filter[key] = { $in: dataList.filter[key] };
+          } else if(model.schema.tree[key] && model.schema.tree[key].ref) {
+            dataList.filter[key] = dataList.filter[key];
+          }
         }
-      });
-    }  
+      }
+    }
 
     return dataList;
   };
