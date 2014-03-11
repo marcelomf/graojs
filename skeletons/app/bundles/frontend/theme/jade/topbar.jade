@@ -17,6 +17,7 @@
             a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
             ul.dropdown-menu
               include adminmenu
+        ul.nav.navbar-nav.navbar-right
           li.dropdown
             a.dropdown-toggle(href="/locale/"+locale, data-toggle='dropdown')
               img(src="/img/flag/"+locale+".png")
@@ -30,11 +31,14 @@
               li
                 a(href="/locale/es")
                   img(src="/img/flag/es.png")
+          if isAuth == true && user
+            li
+              a(href="/u/"+user.username)=user.username
           if isAuth == true
             li
               a(ng-click="logout()")=__('Logout')
 
-        if isAuth == false
+        if !isAuth || isAuth == false
           form.navbar-form.navbar-right(role='form')
             .form-group
               input.form-control(type='text', placeholder=__('Username'), ng-model='username')
@@ -43,4 +47,4 @@
             button.btn.btn-success(ng-click="login()")=__('Login')
   .row
     .col-md-4.col-md-push-3
-      alert(ng-show='share.alert.show', type="share.alert.style", close='share.alert.show = false', style='{ top: 49px; position: fixed; z-index: 1029; width: inherit; }') {{ '{{' }} share.alert.message }}
+      alert(ng-show='share.alert.show', type="share.alert.style", close='share.alert.show = false', style='{ top: 49px; position: fixed; z-index: 1029; width: inherit; }') {{ share.alert.message }}

@@ -2,26 +2,6 @@ var GraoController = function(di) {
   di.event.newSuccess('Instance created');
   di.controllers = this;
 
-  this.accessDeniedTpl = function(req, res, next) {
-    var isAdmin = (req.user) ? req.user.do('admin') : false;
-    var locale = (di.config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : di.config.defaultLocale;
-    if(!req.isAuthenticated())
-      return res.render('frontend/theme/500', { error: res.__("Access Denied."),
-                                                isAuth: req.isAuthenticated(), 
-                                                locale: locale, 
-                                                user: req.user,
-                                                isAdmin: isAdmin  });
-
-    next();
-  }
-
-  this.accessDeniedJson = function(req, res, next) {
-    if(!req.isAuthenticated())
-      return res.json(di.event.newError(res.__("Access Denied.")).toJson());
-
-    next();
-  }
-
   this.processDataList = function(model, query){
     var dataList = { data: null,
                       filter: null,
