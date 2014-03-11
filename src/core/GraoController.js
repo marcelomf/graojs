@@ -11,7 +11,7 @@ var GraoController = function(di) {
 
   this.accessDeniedJson = function(req, res, next) {
     if(!req.isAuthenticated())
-      return res.json(event.newError(res.__("Access Denied.")).toJson());
+      return res.json(di.event.newError(res.__("Access Denied.")).toJson());
 
     next();
   }
