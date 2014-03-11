@@ -13,7 +13,7 @@ var {{ schema | capitalize }}Route = function(di) {
   di.graoExpress.post('/{{ schema | lower }}/validate', 
   	di.controllers.{{ schema | lower }}.service.validate, 
   	function(req, res){ 
-  	  res.json(di.event.new("Successful validation!").success().log('success').toJson()); 
+  	  res.json(di.event.newSuccess("Successful validation!").toJson()); 
     });
   di.graoExpress.post('/{{ schema | lower }}', 
   	di.controllers.{{ schema | lower }}.service.validate, 
