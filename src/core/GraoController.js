@@ -1,6 +1,20 @@
 var GraoController = function(di) {
-  di.event.new('Instance created').success().present().log('info');
+  di.event.newSuccess('Instance created');
   di.controllers = this;
+
+  this.accessDeniedTpl = function(req, res, next) {
+    if(!req.isAuthenticated())
+      return res.render('frontend/theme/500', { error: res.__("Access Denied.") });
+
+    next();
+  }
+
+  this.accessDeniedJson = function(req, res, next) {
+    if(!req.isAuthenticated())
+      return res.json(event.newError(res.__("Access Denied.")).toJson());
+
+    next();
+  }
 
   this.processDataList = function(model, query){
     var dataList = { data: null,

@@ -89,8 +89,9 @@ service.destroy = function(req, res) {
 }
 
 admin.dashboard = function(req, res) {
+  var isAdmin = (req.user) ? req.user.do('admin') : false;
   var locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
-  res.render('{{ bundle | lower }}/view/{{ schema | lower }}_dashboard', {isAuth: req.isAuthenticated(), locale: locale, user: req.user});
+  res.render('{{ bundle | lower }}/view/{{ schema | lower }}_dashboard', { isAuth: req.isAuthenticated(), locale: locale, user: req.user, isAdmin: isAdmin});
 }
 
 var {{ schema | capitalize }}Controller = function(di) {
