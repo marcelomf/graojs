@@ -14,9 +14,18 @@ module.exports = exports = {
   locales: ['pt-br', 'es', 'en'],
   defaultLocale: 'en',
   bundles: rootPath + '/bundles',
+  templateEngine : 'jade',
   name : packageJson.name,
   description : packageJson.description,
-  templateEngine : 'jade',
+  smtpOptions: {
+    host: "smtp.yourserver.com",
+    secureConnection: true,
+    port: 465,
+    auth: {
+      user: "username@yourserver.com",
+      pass: "yourpassword"
+    }
+  },
   secretSession: 'FIXME AND RAND THIS',
   secretSalt: 'FIXME AND RAND THIS',
   hashAlgo: 'sha256',

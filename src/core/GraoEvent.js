@@ -116,6 +116,22 @@ var GraoEvent = function(di) {
     //this.message = message;
     //return this;
   };
+
+  this.newError = function(message) {
+    var newEvent = new GraoEvent( { message: message } );
+    return newEvent.error().log('error');
+    //handle.events.push(newEvent);
+    //this.message = message;
+    //return this;
+  };
+
+  this.newSuccess = function(message) {
+    var newEvent = new GraoEvent( { message: message } );
+    return newEvent.success().log('info');
+    //handle.events.push(newEvent);
+    //this.message = message;
+    //return this;
+  };
   
   this.success = function() {
     this.status = true;

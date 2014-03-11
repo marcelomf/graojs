@@ -19,9 +19,6 @@ block content
   .container(ng-controller='{{ schema | capitalize }}PublicController', ng-init='clear(); share.window("list");')
     .row
       .col-md-12
-        alert(ng-repeat="alert in alerts", type="alert.style", close="closeAlert($index);"){{ alert.message }}
-    .row
-      .col-md-12
         h2=__('{{ schema | capitalize }}s')
     .row
       .col-md-12

@@ -33,6 +33,7 @@
 	"New password": "Nova senha",
 	"Confirm new password": "Confirme a nova senha",
 	"Save and continue": "Salvar e continuar",
+	"Save": "Salvar",
 	"Remove": "Remover",
 	"Cancel": "Cancelar",
 	"Save and back": "Salvar e voltar",
