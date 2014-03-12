@@ -1,0 +1,8 @@
+.form-group
+  button.btn.btn-success(type='button', ng-click='createOrUpdate("list");')=__('Save')
+  | 
+  button.btn.btn-warning(type='button', ng-click='createOrUpdate("createOrUpdate");')=__('Save and continue')
+  | 
+  button.btn.btn-danger(type='button', ng-click='user.$delete(); query(); count(); clear(); share.window("list");')=__('Remove')
+  | 
+  button.btn.btn-default(type='button', ng-click='clear(); share.window("list")')=__('Cancel')

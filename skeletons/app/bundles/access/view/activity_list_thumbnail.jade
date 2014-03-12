@@ -1,0 +1,23 @@
+.row
+  .col-md-12(collapse="notFilter")
+    include activity_filter
+  .col-md-12
+    button.btn.btn-default.btn-block.btn-xs(ng-click="notFilter = !notFilter")=__('FILTER')
+.row
+  .col-md-12
+    .row
+      .col-md-3(ng-repeat="activity in dataList.data")
+        .thumbnail
+          .caption
+            p {{ activity.name }} 
+
+            p {{ activity.activitys }} 
+
+            button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')=__('Edit')
+            | 
+            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')=__('Remove')
+.row
+  .col-md-12.text-right
+    p=__('Listing {{ dataList.status.listing }} of {{ dataList.status.filtered }} filtered on {{ dataList.status.totality }} registers')
+  .col-md-12
+    button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore(); count();')=__('MORE')

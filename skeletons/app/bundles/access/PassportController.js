@@ -22,15 +22,27 @@ service.logout = function(req, res, next) {
   res.json(event.new(res.__("Logout")).success().log('info').toJson());
 }
 
-service.checkAuth = function(req, res, next){
-  //console.log('checkauth');
-  if(req.isAuthenticated()) 
-  	return next();
-  
-  res.json(event.new(res.__("Access Denied.")).error().log('error').toJson());
-};
+service.validateTpl = function(req, res, next) {
+  var isAdmin = (req.user) ? req.user.do('admin') : false;
+  var locale = ($i.config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : $i.config.defaultLocale;
+  if(!req.isAuthenticated())
+    return res.render('frontend/theme/500', { error: res.__("Access Denied."),
+                                              isAuth: req.isAuthenticated(), 
+                                              locale: locale, 
+                                              user: req.user,
+                                              isAdmin: isAdmin  });
+  next();
+}
+
+service.validateJson = function(req, res, next) {
+  if(!req.isAuthenticated())
+    return res.json(di.event.newError(res.__("Access Denied.")).toJson());
+
+  next();
+}
 
 var PassportController = function(di) {
+  $i = di;
   event = new di.event.new('Instance created').success().present().log('info');
   models = di.models;
   controllers = di.controllers;
@@ -45,7 +57,7 @@ var PassportController = function(di) {
 
   passport.deserializeUser(function(id, done) {
     //console.log('deserializa');
-    models.user.findOne({ _id: id }).populate('activitys').exec(function(err, user) {
+    models.user.findOne({ _id: id }, "_id username email activitys enabled").populate('activitys').exec(function(err, user) {
       done(err, user);
     });
   });

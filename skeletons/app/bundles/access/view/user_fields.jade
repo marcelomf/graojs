@@ -1,0 +1,78 @@
+mixin form_fields_user_common(ngModelName)
+  if !ngModelName
+    - var ngModelName = 'user'
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".username}")
+    input.form-control(type='text', ng-model=ngModelName+'.username', placeholder=__('User Name')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".username")='{{ errors.'+ngModelName+'.username }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".email}")
+    input.form-control(type='text', ng-model=ngModelName+'.email', placeholder=__('Email')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".email")='{{ errors.'+ngModelName+'.email }}'
+
+mixin form_fields_user_profile(ngModelName)
+  if !ngModelName
+    - var ngModelName = 'user'
+  +form_fields_user_common(ngModelName)
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".currentPassword}")
+    input.form-control(type='password', ng-model=ngModelName+'.currentPassword', placeholder=__('Current password')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".currentPassword")='{{ errors.'+ngModelName+'.currentPassword }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".newPassword}")
+    input.form-control(type='password', ng-model=ngModelName+'.newPassword', placeholder=__('New password')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".newPassword")='{{ errors.'+ngModelName+'.newPassword }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".confirmNewPassword}")
+    input.form-control(type='password', ng-model=ngModelName+'.confirmNewPassword', placeholder=__('Confirm new password')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".confirmNewPassword")='{{ errors.'+ngModelName+'.confirmNewPassword }}'
+
+mixin form_fields_user(ngModelName)
+  if !ngModelName
+    - var ngModelName = 'user' 
+
+  +form_fields_user_common(ngModelName)
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".activitys}")
+    .input-group
+      select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
+        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
+      span.input-group-btn
+        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".activitys}", ng-click='clearUserActivitys(); share.window("createOrUpdateUserActivitys");') + 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'  
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".enabled}")
+    label.checkbox-inline
+      input.form-control(type='checkbox', ng-model=ngModelName+'.enabled' value='IS_ENABLED', checked='true') 
+      =__('Enabled')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".enabled")='{{ errors.'+ngModelName+'.enabled }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".generatePassword}")
+    label.checkbox-inline
+      input.form-control(type='checkbox', ng-model=ngModelName+'.generatePassword' value='IS_GENERATE_PASSWORD') 
+      =__('Generate password')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".generatePassword")='{{ errors.'+ngModelName+'.generatePassword }}'
+
+mixin filter_fields_user(ngModelName)
+  if !ngModelName
+    - var ngModelName = 'user' 
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".username}")
+    input.form-control(type='text', ng-model=ngModelName+'.username', placeholder=__('User Name')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".username")='{{ errors.'+ngModelName+'.username }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".email}")
+    input.form-control(type='text', ng-model=ngModelName+'.email', placeholder=__('Email')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".email")='{{ errors.'+ngModelName+'.email }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".activitys}")
+    .input-group
+      select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
+        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".enabled}")
+    label.checkbox-inline
+      input.form-control(type='checkbox', ng-model=ngModelName+'.enabled' value='IS_ENABLED', checked='true') 
+      =__('Enabled')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".enabled")='{{ errors.'+ngModelName+'.enabled }}'
+

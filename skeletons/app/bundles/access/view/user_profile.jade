@@ -1,0 +1,18 @@
+
+extends /frontend/theme/layout
+block content
+  .container(ng-controller='UserPublicController', 
+    ng-init='clear(); share.window("createOrUpdate"); user.username = "'+user.username+'"; user.email = "'+user.email+'";')
+    .row
+      .col-md-12
+        h2=__('Profile')+" {{user.username}}"
+    .row(ng-switch='share.selectWindow')
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
+        form.form-horizontal(role='form')
+          include user_fields
+          +form_fields_user_profile()
+          .form-group
+            button.btn.btn-success(type='button', ng-click='updateProfile("createOrUpdate");')=__('Update')
+    script(src='/js/user/ActivityPublicFactory.js', type='text/javascript', charset='utf-8').
+    script(src='/js/user/UserPublicFactory.js', type='text/javascript', charset='utf-8').
+    script(src='/js/user/UserPublicController.js', type='text/javascript', charset='utf-8').

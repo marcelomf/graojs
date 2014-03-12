@@ -1,0 +1,37 @@
+mixin form_fields_activity(ngModelName)
+  if !ngModelName
+    - var ngModelName = 'activity' 
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".name}")
+    input.form-control(type='text', ng-model=ngModelName+'.name', placeholder=__('Name')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".name")='{{ errors.'+ngModelName+'.name }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".tag}")
+    input.form-control(type='text', ng-model=ngModelName+'.tag', placeholder=__('Tag')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".tag")='{{ errors.'+ngModelName+'.tag }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".activitys}")
+    .input-group
+      select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
+        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity._id }}
+      span.input-group-btn
+        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".activitys}", ng-click='clearActivityActivitys(); share.window("createOrUpdateActivityActivitys");') + 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".description}")
+    textarea.form-control(ng-model=ngModelName+'.description', placeholder='Description')
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".description")='{{ errors.'+ngModelName+'.description }}'
+
+mixin filter_fields_activity(ngModelName)
+  if !ngModelName
+    - var ngModelName = 'activity' 
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".name}")
+    input.form-control(type='text', ng-model=ngModelName+'.name', placeholder=__('Name')) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".name")='{{ errors.'+ngModelName+'.name }}'
+
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".activitys}")
+    .input-group
+      select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
+        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity._id }}
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'
