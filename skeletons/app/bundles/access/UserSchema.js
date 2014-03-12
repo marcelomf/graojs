@@ -76,7 +76,6 @@ var UserSchema = function(di) {
       token: {
         type : String,
         index : true,
-        unique : true,
         trim : true,
       },
       createdToken: { type: Date }
