@@ -17,6 +17,14 @@
             a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
             ul.dropdown-menu
               include adminmenu
+          if isAuth == true && user && user.do('admin')
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown')=__('Access Admin')
+              ul.dropdown-menu
+                li
+                  a(href="/admin/user")=__('User')
+                li
+                  a(href="/admin/activity")=__('Activity')
         ul.nav.navbar-nav.navbar-right
           li.dropdown
             a.dropdown-toggle(href="/locale/"+locale, data-toggle='dropdown')
@@ -37,8 +45,7 @@
           if isAuth == true
             li
               a(ng-click="logout()")=__('Logout')
-
-        if !isAuth || isAuth == false
+        if !isAuth
           form.navbar-form.navbar-right(role='form')
             .form-group
               input.form-control(type='text', placeholder=__('Username'), ng-model='username')

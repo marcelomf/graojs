@@ -111,7 +111,7 @@ var GraoGenerator = function () {
           if (!exists || force) {
             //console.log(( '- ' + './' + dist ).blue);
             var fileContent, fileType;
-            if(tpl.search(/\.png$|\.min\.js$|\.jpg$|\.ttf$|\.woff/) >= 0) {
+            if(tpl.search(/\.png$|\.min\.js$|\.jpg$|\.ico$|\.ttf$|\.woff/) >= 0) {
               fileContent = fs.readFileSync(tpl, 'binary');
               fileType = 'binary';
             } else {

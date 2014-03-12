@@ -23,14 +23,12 @@ service.logout = function(req, res, next) {
 }
 
 service.validateTpl = function(req, res, next) {
-  var isAdmin = (req.user) ? req.user.do('admin') : false;
   var locale = ($i.config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : $i.config.defaultLocale;
   if(!req.isAuthenticated())
     return res.render('frontend/theme/500', { error: res.__("Access Denied."),
                                               isAuth: req.isAuthenticated(), 
                                               locale: locale, 
-                                              user: req.user,
-                                              isAdmin: isAdmin  });
+                                              user: req.user });
   next();
 }
 

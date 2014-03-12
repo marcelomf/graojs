@@ -92,7 +92,9 @@ service.destroy = function(req, res) {
 
 admin.dashboard = function(req, res) {
   var locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
-  res.render('access/view/activity_dashboard', {isAuth: req.isAuthenticated(), locale: locale});
+  res.render('access/view/activity_dashboard', { isAuth: req.isAuthenticated(), 
+                                                  locale: locale,
+                                                  user: req.user });
 }
 
 var ActivityController = function(di) {

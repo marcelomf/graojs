@@ -5,6 +5,7 @@
 	"Access denied": "Acesso negado",
 	"Access Denied.": "Acesso negado.",
 	"not found!" : "não encontrado!",
+	"Access Admin" : "Acesso Administrativo",
 	"Error": "Erro",
 	"error": "erro",
 	"Login": "Entrar",
