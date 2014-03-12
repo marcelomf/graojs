@@ -57,6 +57,9 @@
   "ignores": [
     "skeleton.json"
   ],
+  "parseIgnores": [
+    "bundles/access"
+  ],
   "rewrites": {
     "log/app.log": "log/{{name}}.log",
     "bundles/frontend/view/jade/home.jade": "bundles/frontend/view/home.jade",

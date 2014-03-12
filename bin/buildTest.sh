@@ -12,7 +12,6 @@ cp -rf ./../graojs/bin/$app/*Schema.js gen/
 #for schema in activity address phone person user system collection field
 #for schema in system collection field
 #do
-./../graojs/bin/grao generate:bundle --schemas user,activity --force
 ./../graojs/bin/grao generate:bundle --schemas phone,address,person --force
 ./../graojs/bin/grao generate:bundle --schemas system --force
 ./../graojs/bin/grao generate:bundle --schemas collection --force

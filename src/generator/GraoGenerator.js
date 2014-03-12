@@ -99,7 +99,6 @@ var GraoGenerator = function () {
   }
 
   this.writeTpls = function (tpls, args, force, callback) {
-
     var skelPath = this.skelPath;
     Object.keys(tpls).forEach(function (tpl) {
 
@@ -117,7 +116,8 @@ var GraoGenerator = function () {
               fileType = 'binary';
             } else {
               fileContent = fs.readFileSync(tpl, 'utf-8');
-              fileContent = self.swigRender(fileContent, args);
+              if(!self.checkIgnore(self.config.parseIgnores, dist))
+                fileContent = self.swigRender(fileContent, args);
               fileType = 'utf-8';
             }
             fs.writeFileSync(dist, fileContent, fileType);
@@ -155,9 +155,16 @@ var GraoGenerator = function () {
   }
 
   this.checkIgnore = function (ignores, file, sourcePath) {
-    file = file.replace(sourcePath + '/', '');
+    if(sourcePath)
+      file = file.replace(sourcePath + '/', '');
+    else
+      file = file.replace(/\//g, "");
+
     for (var i in ignores) {
-      var pattern = "^" + ignores[i].replace(/\//g, "\\/").replace(/\./g, "\\.") + ".*";
+      if(sourcePath)
+        var pattern = "^" + ignores[i].replace(/\//g, "\\/").replace(/\./g, "\\.") + ".*";
+      else
+        var pattern = ".*" + ignores[i].replace(/\//g, "").replace(/\./g, "\\.") + ".*";
       var regex = RegExp(pattern);
       if (file.match(regex)) {
           return true;
