@@ -33,7 +33,6 @@ var graoJS = function() {
     //graoExpress.use(express.bodyParser()); // Insecure and deprecated 
     //graoExpress.use(express.urlencoded());
     //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
-    graoExpress.use(express.favicon());
     graoExpress.use(express.cookieParser());
     graoExpress.use(express.methodOverride());
     graoExpress.use(express.json());
