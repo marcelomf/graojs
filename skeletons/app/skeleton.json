@@ -58,7 +58,9 @@
     "skeleton.json"
   ],
   "parseIgnores": [
-    "bundles/access"
+    "bundles/access",
+    "bundles/frontend/theme/topbar",
+    "config/locales"
   ],
   "rewrites": {
     "log/app.log": "log/{{name}}.log",
