@@ -71,7 +71,7 @@ var GraoGeneratorCommands = function (di) {
         var schemaCapitalized = self.capitalize(varsGenerate['schema']);
         var schemaPath = self.prepareSchemaPath(schemaCapitalized);
         var fullSchemaPath = path.join(process.cwd(), schemaPath);
-        console.log(fullSchemaPath);
+        //console.log(fullSchemaPath);
         if(fs.existsSync(fullSchemaPath)){
           var uiSchema = self.prepareSchemaUi(schemaCapitalized, self.prepareSchema(varsGenerate['schema'], fullSchemaPath));
           for(var uiName in uiSchema) {

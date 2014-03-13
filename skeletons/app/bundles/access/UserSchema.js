@@ -14,6 +14,7 @@ var UserSchema = function(di) {
     username : {
       type : String,
       required : true,
+      lowercase : true,
       unique: true,
       trim : true,
       validate: validator.username,
