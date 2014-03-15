@@ -1,3 +1,4 @@
-button.btn.btn-default.pull-right(ng-click='query(); count(); share.window("list");')=__('List')
-| 
-button.btn.btn-success.pull-right(ng-click='clear(); share.window("createOrUpdate");')=__('New')
+.form-group.pull-right
+  button.btn.btn-default(ng-click='query(); count(); share.window("list");')=__('List')
+  | 
+  button.btn.btn-success(ng-click='clear(); share.window("createOrUpdate");')=__('New')

@@ -34,7 +34,9 @@
             td
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
               | 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");') 
+              | 
+              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select($index); share.window("show");') 
 .row
   .col-md-6.text-left
     p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')

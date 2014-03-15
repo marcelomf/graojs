@@ -33,6 +33,7 @@
     "view/jade/list.jade": "bundles/{{bundle}}/view/{{schema}}_list.jade",
     "view/jade/list_thumbnail.jade": "bundles/{{bundle}}/view/{{schema}}_list_thumbnail.jade",
     "view/jade/form.jade": "bundles/{{bundle}}/view/{{schema}}_form.jade",
+    "view/jade/show.jade": "bundles/{{bundle}}/view/{{schema}}_show.jade",
     "view/jade/fields.jade": "bundles/{{bundle}}/view/{{schema}}_fields.jade",
     "view/jade/form_actions.jade": "bundles/{{bundle}}/view/{{schema}}_form_actions.jade",
     "Controller.js": "bundles/{{bundle}}/{{schema | capitalize}}Controller.js",

@@ -16,6 +16,8 @@
             button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')=__('Edit')
             | 
             button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')=__('Remove')
+            | 
+            button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select($index); share.window("show");')=__('Show')
 .row
   .col-md-12.text-right
     p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')

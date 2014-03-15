@@ -29,6 +29,8 @@ block content
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
         include {{ schema | lower }}_form
         +form_{{ schema | lower }}(true)
+      .col-md-6.col-md-offset-3(ng-switch-when="show")
+        include {{ schema | lower }}_show
 {{ render_refSelect(schema, fields) }}
     .row
       .col-md-12

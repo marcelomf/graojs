@@ -40,18 +40,20 @@
   {%- endmacro %}
   {%- macro textarea(schema, fieldName, field) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
-    textarea.form-control(ng-model=ngModelName+'.{{ fieldName }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+    textarea.form-control(ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
   {%- endmacro %}
   {%- macro select(schema, fieldName, field, isFilter) %}
+  {%- set isMultiple = false %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}"){%- if field.ref %}
     .input-group
-      select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+      select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+        {% if !isMultiple %}option.form-control(value=''){% endif %}
         option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ field.ref | lower }}s') {{ '{{' }} {{ field.ref | lower }}.{% if field.refLabel %}{{ field.refLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter %}
       span.input-group-btn
         button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".{{ fieldName | lower }}}", ng-click='clear{{ schema | capitalize }}{{ fieldName | capitalize }}(); share.window("createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }}");') + {%- endif %}{%- else %}  
-    select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
-      option.form-control(value=''){%- if field.options %}{%- for option in field.options %}
+    select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+      {% if !isMultiple %}option.form-control(value=''){% endif %}{%- if field.options %}{%- for option in field.options %}
       option.form-control(value='{{ loop.key }}')=__('{{ option }}'){%- endfor %}{%- endif %}{%- endif %}
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
   {%- endmacro %}
@@ -83,8 +85,7 @@
           tr(ng-repeat="{{ fieldName | lower }} in "+ngModelName+".{{ fieldName | lower }}"){%- for subFieldName, subField in field.fields %}
             td {{ '{{' }} {{ fieldName | lower }}.{{ subFieldName }} }}{%- endfor %}
             td  
-              //| 
-              //button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ fieldName | capitalize }}($index);')
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ fieldName | capitalize }}($index);')
   {%- else %}
   {%- for subFieldName, subField in field.fields %}
   {{ render_field(schema, fieldName+'.'+subFieldName, subField) }}
