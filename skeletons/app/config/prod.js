@@ -2,7 +2,7 @@ var fs = require('fs'),
   path = require('path'), 
   rootPath = path.normalize(__dirname + '/..'),
   charset = 'utf-8',
-  packageJson = JSON.parse(fs.readFileSync(rootPath+'/package.json', charset));
+  packageJson = JSON.parse(fs.readFileSync(path.join(rootPath,'package.json'), charset));
 
 module.exports = exports = {
   packageJson: packageJson,
@@ -10,10 +10,10 @@ module.exports = exports = {
   charset: charset,
   db: 'mongodb://{{mongodb_host}}/{{mongodb_db}}',
   rootPath: rootPath,
-  localesPath: rootPath + '/config/locales',
+  localesPath: path.join(rootPath, "config", "locales"),
   locales: ['pt-br', 'es', 'en'],
   defaultLocale: 'en',
-  bundles: rootPath + '/bundles',
+  bundles: path.join(rootPath, "bundles"),
   templateEngine : 'jade',
   name : packageJson.name,
   description : packageJson.description,
@@ -32,11 +32,11 @@ module.exports = exports = {
   log : {
     transport : {
       console : { colorize: true, json : false, timestamp : true, level : 'info' },
-      file : { filename : rootPath + '/log/{{name}}.log', json : false, level : 'error' }
+      file : { filename : path.join(rootPath, 'log', '{{name}}.log'), json : false, level : 'error' }
     },
     exception : {
       console : { colorize: true, json : false, timestamp : true, level : 'info' },
-      file : { filename : rootPath + '/log/{{name}}.log', json : false, level : 'error' }
+      file : { filename : path.join(rootPath, 'log', '{{name}}.log'), json : false, level : 'error' }
     },
   },
   injection: {

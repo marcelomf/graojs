@@ -108,8 +108,8 @@ var GraoTools = function (di) {
             if (this.actions[actionId].appOnly) {
 
                 //var skeletonExists = fs.existsSync(path.join(this.currentDir, 'config/default.skeleton.json'));
-                var prodJsExists = fs.existsSync(path.join(this.currentDir, 'config/prod.js'));
-                var graoJsExists = fs.existsSync(path.join(this.currentDir, 'node_modules/graojs/index.js'));
+                var prodJsExists = fs.existsSync(path.join(this.currentDir, 'config', 'prod.js'));
+                var graoJsExists = fs.existsSync(path.join(this.currentDir, 'node_modules','graojs','index.js'));
 
                 if (prodJsExists && graoJsExists) {
 

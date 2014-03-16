@@ -17,12 +17,12 @@ var GraoLoader = function(di) {
       case 'validator':
         for(var bundleIndex in bundles) {
           bundle = bundles[bundleIndex];
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/config.js')) {
-            var config = require(this.dirBundles+'/'+bundle+'/config.js');
+          if(fs.existsSync(path.join(this.dirBundles, bundle, 'config.js'))) {
+            var config = require(path.join(this.dirBundles, bundle, 'config.js'));
             if(config.injection && config.injection[loadType]){
               for(var i in config.injection[loadType]){
                 load[config.injection[loadType][i].name] = { 
-                  object: this.dirBundles+'/'+bundle+'/'+config.injection[loadType][i].object, 
+                  object: path.join(this.dirBundles, bundle, config.injection[loadType][i].object), 
                   di: (config.injection[loadType][i].di) ? config.injection[loadType][i].di : {}
                 };
               }
@@ -33,8 +33,8 @@ var GraoLoader = function(di) {
       case 'publicRoute':
         for(var bundleIndex in bundles) {
           bundle = bundles[bundleIndex];
-          if(fs.existsSync(this.dirBundles+'/'+bundle+'/config.js')) {
-            var config = require(this.dirBundles+'/'+bundle+'/config.js');
+          if(fs.existsSync(path.join(this.dirBundles, bundle, 'config.js'))) {
+            var config = require(path.join(this.dirBundles, bundle, 'config.js'));
             if(config.publicRoutes){
               for(var i in config.publicRoutes){
                 load[config.publicRoutes[i].webdir] = config.publicRoutes[i].fsdir;

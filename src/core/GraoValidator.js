@@ -1,5 +1,5 @@
 var GraoValidator = function(di) {
-  di.event.new('Instance created').success().present().log('info');
+  di.event.newSuccess('Instance created');
   di.validators = this;
   di.validators = di.loader.tryLoad(di.loader.loading('validator'), di, 'validators');
 };
