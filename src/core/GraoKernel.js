@@ -1,31 +1,33 @@
 var GraoKernel = function(di) {
-  for(iDi in di) {
+  for(var iDi in di) {
     this[iDi] = di[iDi];
   }
-  this.mongoose = require('mongoose');
-  this.mongooseValidator = require('mongoose-validator');
-  this.validate = this.mongooseValidator.validate;
-  this.styles = require('./styles');
-  this.states = require('./states');
-  this.stackTrace = require('stack-trace');
-  this._ = require('lodash');
-  this.S = require('string');
-  this.moment = require('moment');
-  this.humanize = require('humanize');
-  /*this.emailTemplates = require('email-templates');*/
-  this.nodemailer = require('nodemailer');
-  this.path = require('path');
-  this.fs = require('fs-extra');
-  this.Q = require('q');
-  this.crypto = require('crypto');
-  this.logger = new require('./GraoLogger')(this.config);
+  var diKernel = this.config.injection.kernel;
+  for(var i in diKernel){
+    if(diKernel[i].object.indexOf('kernel.') == 0) {
+      var jumps = diKernel[i].object.replace('kernel.', '').split('.');
+      var newJump = this;
+      for(var y in jumps) {
+        newJump = newJump[jumps[y]];
+      }
+      this[diKernel[i].name] = newJump;
+      delete newJump;
+      delete jumps;
+    } else {
+      if(diKernel[i].object.indexOf('./') == 0)
+        diKernel[i].object = this.path.join(__dirname, diKernel[i].object.replace('./', ''));
+      this[diKernel[i].name] = require(this.path.normalize(diKernel[i].object));
+    }
+  }
+
+  this.logger = new require(this.path.join(__dirname, 'GraoLogger'))(this.config);
   this.logger.info('{ ' + this.config.name + ' }');
-  this.loader = new (require('./GraoLoader'))(this);
+  this.loader = new (require(this.path.join(__dirname, 'GraoLoader')))(this);
   this.hash = function(string){
     return this.crypto.createHmac(this.config.hashAlgo, this.config.secretSalt).update(string).digest('hex');
   }
   
-  this.event = new (require('./GraoEvent'))({
+  this.event = new (require(this.path.join(__dirname, 'GraoEvent')))({
     logger: this.logger,
     styles: this.styles,
     states: this.states,
@@ -38,14 +40,14 @@ var GraoKernel = function(di) {
     state: this.states.INITIAL
   }).present().log('info');
   
-  this.validators = new (require('./GraoValidator'))(this);
-  this.schemas = new (require('./GraoSchema'))(this);
-  this.models = new (require('./GraoModel'))(this);
-  this.controllers = new (require('./GraoController'))(this);
+  this.validators = new (require(this.path.join(__dirname, 'GraoValidator')))(this);
+  this.schemas = new (require(this.path.join(__dirname, 'GraoSchema')))(this);
+  this.models = new (require(this.path.join(__dirname, 'GraoModel')))(this);
+  this.controllers = new (require(this.path.join(__dirname, 'GraoController')))(this);
   this.routes = function() {
-    return new (require('./GraoRoute'))(this);
+    return new (require(this.path.join(__dirname, 'GraoRoute')))(this);
   };
-  this.publics = require('./GraoPublicRoute');
+  this.publics = require(this.path.join(__dirname, 'GraoPublicRoute'));
 };
 
 module.exports = exports = GraoKernel;

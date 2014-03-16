@@ -34,3 +34,5 @@ table.table thead .sorting_asc_disabled { background: url('/img/sort_asc_disable
 table.table thead .sorting_desc_disabled { background: url('/img/sort_desc_disabled.png') no-repeat center right; }
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.form-inline div { margin-right: 5px; }

@@ -1,13 +1,15 @@
-var http = require('http'),
+var path = require('path'),
+  config = require(path.join(process.cwd(), 'config', 'prod')),
   passport = require('passport'),
   express = require('express'),
   MongoStore = require('connect-mongo')(express),
   graoExpress = express(),
-  di = { config: require('./../../config/prod'), 
+  di = {  path: path,
+          config: config, 
           passport: passport,
           graoExpress: graoExpress, 
           express: express},
-  kernel = new (require('./src/core/GraoKernel'))(di),
+  kernel = new (require(path.join(__dirname, 'src', 'core', 'GraoKernel')))(di),
   i18n = require('i18n'),
   servers = new Array();
 
