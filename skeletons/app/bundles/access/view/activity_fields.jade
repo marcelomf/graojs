@@ -13,7 +13,7 @@ mixin form_fields_activity(ngModelName)
   .form-group(ng-class="{'has-error': errors."+ngModelName+".activitys}")
     .input-group
       select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
-        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity._id }}
+        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
       span.input-group-btn
         button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".activitys}", ng-click='clearActivityActivitys(); share.window("createOrUpdateActivityActivitys");') + 
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'
@@ -33,5 +33,5 @@ mixin filter_fields_activity(ngModelName)
   .form-group(ng-class="{'has-error': errors."+ngModelName+".activitys}")
     .input-group
       select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
-        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity._id }}
+        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'

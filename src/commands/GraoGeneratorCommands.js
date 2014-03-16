@@ -282,9 +282,8 @@ var GraoGeneratorCommands = function (di) {
 
     if(autoRefsFieldName.length > 0) {
       for(var i in autoRefsFieldName) {
-        for(var nameObj in resultUi) {
-          if(resultUi.fields[autoRefsFieldName[i]] != null && resultUi.fields[autoRefsFieldName[i]][nameObj] != null)
-            resultUi.fields[autoRefsFieldName[i]][nameObj] = resultUi[nameObj]; // Circular
+        if(resultUi.fields[autoRefsFieldName[i]] != null){
+          resultUi.fields[autoRefsFieldName[i]].refLabel = resultUi.refLabel;
         }
       }
       autoRefsFieldName = new Array();
