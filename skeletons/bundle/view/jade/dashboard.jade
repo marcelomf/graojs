@@ -1,15 +1,15 @@
 {%- macro render_refSelect(schema, fields) %}{%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }}")
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ field.fullPathCc }}")
         h3=__('{{ fieldName | capitalize }}')
           small=__('{{ schema | capitalize }}')
         form.form-horizontal(role='form')
           include /{{ field.bundle | lower }}/view/{{ field.ref | lower }}_fields
-          +form_fields_{{ field.ref | lower }}('new{{ schema | capitalize }}{{ fieldName | capitalize }}')
+          +form_fields_{{ field.ref | lower }}('new{{ field.fullPathCc }}')
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }}();')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ field.fullPathCc }}();')=__('Save and back')
             | 
-            button.btn.btn.btn-default(type='button', ng-click='clear{{ schema | capitalize }}{{ fieldName | capitalize }}(); share.windowBack();')=__('Cancel')
+            button.btn.btn.btn-default(type='button', ng-click='clear{{ field.fullPathCc }}(); share.windowBack();')=__('Cancel')
 {%- endif %}
 {%- if field.hasRef && field.fields %}
   {{ render_refSelect(field.ref, field.fields) }}

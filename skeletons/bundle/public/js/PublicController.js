@@ -1,37 +1,37 @@
 {%- macro render_refSelect(schema, fields) %}
 {%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-  $scope.new{{ schema | capitalize }}{{ fieldName | capitalize }} = {};
-  $scope.errors.new{{ schema | capitalize }}{{ fieldName | capitalize }} = {};
+  $scope.{{ field.fullPath }} = new Array();
+  $scope.new{{ field.fullPathCc }} = {};
+  $scope.errors.new{{ field.fullPathCc }} = {};
 
-  $scope.createOrUpdate{{ schema | capitalize }}{{ fieldName | capitalize }} = function() {
+  $scope.createOrUpdate{{ field.fullPathCc }} = function() {
     function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.new{{ schema | capitalize }}{{ fieldName | capitalize }}, dataResponse)) {
+      if(validate(share.alert, $scope.errors.new{{ field.fullPathCc }}, dataResponse)) {
         $scope.{{ field.ref | lower }}s.push(dataResponse.data);
         {%- if field.isArray == true %}
-        if(!($scope.{{ schema | lower }}.{{ fieldName | lower }} instanceof Array))
-          $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-        $scope.{{ schema | lower }}.{{ fieldName | lower }}.push(dataResponse.data._id);
+        if(!($scope.{{ field.fullPath }} instanceof Array))
+          $scope.{{ field.fullPath }} = new Array();
+        $scope.{{ field.fullPath }}.push(dataResponse.data._id);
         {%- else %}
-        $scope.{{ schema | lower }}.{{ fieldName | lower }} = dataResponse.data._id;
+        $scope.{{ field.fullPath }} = dataResponse.data._id;
         {%- endif %}
-        $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }}();
+        $scope.clear{{ field.fullPathCc }}();
         share.windowBack();
       }
     }
-    if($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}._id != null)
-      {{ field.ref | capitalize }}.update($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
+    if($scope.new{{ field.fullPathCc }}._id != null)
+      {{ field.ref | capitalize }}.update($scope.new{{ field.fullPathCc }}, save);
     else
-      {{ field.ref | capitalize }}.save($scope.new{{ schema | capitalize }}{{ fieldName | capitalize }}, save);
+      {{ field.ref | capitalize }}.save($scope.new{{ field.fullPathCc }}, save);
   }
 
-  $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }} = function() {
-    delete $scope.new{{ schema | capitalize }}{{ fieldName | capitalize }};
-    $scope.new{{ schema | capitalize }}{{ fieldName | capitalize }} = {};
+  $scope.clear{{ field.fullPathCc }} = function() {
+    delete $scope.new{{ field.fullPathCc }};
+    $scope.new{{ field.fullPathCc }} = {};
   }
 {%- endif %}
 {%- if field.hasRef && field.fields %}
-  $scope.{{ field.ref | lower }} = {};
+  $scope.{{ field.fullPath }} = {};
 {{ render_refSelect(field.ref, field.fields) }}
 {%- endif %}{%- endfor %}{%- endmacro %}
 
@@ -39,35 +39,35 @@
 {%- if field.isSubDoc == true %}
   {%- if field.isArray == true %}
 
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-  $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
-  //$scope.errors.{{ schema | lower }}.new{{ fieldName | capitalize }} = false;
+  $scope.{{ field.fullPath }} = new Array();
+  $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = {};
+  //$scope.errors.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = false;
 
-  $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
-    if($scope.{{ schema | lower }}.{{ fieldName | lower }} == null)
-      $scope.{{ schema | lower }}.{{ fieldName | lower }} = new Array();
-    $scope.{{ schema | lower }}.{{ fieldName | lower }}.push($scope.{{ schema | lower }}.new{{ fieldName|capitalize }});
+  $scope.createOrUpdate{{ field.fullPathCc }} = function(){
+    if($scope.{{ field.fullPath }} == null)
+      $scope.{{ field.fullPath }} = new Array();
+    $scope.{{ field.fullPath }}.push($scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }});
   }
 
-  $scope.clear{{ fieldName | capitalize }} = function() {
-    delete $scope.{{ schema | lower }}.new{{ fieldName | capitalize }};
-    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = {};
+  $scope.clear{{ field.fullPathCc }} = function() {
+    delete $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }};
+    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = {};
   }
 
-  $scope.select{{ fieldName | capitalize }} = function(index) {
-    $scope.{{ schema | lower }}.new{{ fieldName | capitalize }} = $scope.{{ schema | lower }}.{{ fieldName | lower }}[index];
+  $scope.select{{ field.fullPathCc }} = function(index) {
+    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = $scope.{{ field.fullPath }}[index];
   }
 
-  $scope.destroy{{ fieldName | capitalize }}ByIndex = function (index) {
-    $scope.{{ schema | lower }}.{{ fieldName | lower }}.splice(index, 1);
+  $scope.destroy{{ field.fullPathCc }}ByIndex = function (index) {
+    $scope.{{ field.fullPath }}.splice(index, 1);
   }
   {%- else %}
-  $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
-  //$scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = false;
+  $scope.{{ field.fullPath }} = {};
+  //$scope.errors.{{ field.fullPath }} = false;
   {%- endif %}
 {%- elseif field.hasSubDoc == true %}
 {%- for subFieldName, subField in field.fields %}
-{{ render_subDoc(schema+'.'+fieldName, subFieldName, subField) }}
+{{ render_subDoc(schema, subFieldName, subField) }}
 {%- endfor %}
 {%- endif %}
 {%- endmacro %}
@@ -239,9 +239,10 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   $scope.clear = function() {
     delete $scope.{{ schema | lower }};
     $scope.{{ schema | lower }} = {};
-{%- for fieldName, field in fields %}{%- if field.ref && field.type == "select" %}
-    $scope.clear{{ schema | capitalize }}{{ fieldName | capitalize }}();{%- elseif field.isSubDoc == true && field.isArray == true %}
-    $scope.clear{{ fieldName | capitalize }}();{%- endif %}{%- endfor %}
+{%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray != true %}
+    $scope.{{ field.fullPath }} = {};{%- elseif field.ref && field.type == "select" %}
+    $scope.clear{{ field.fullPathCc }}();{%- elseif field.isSubDoc == true && field.isArray == true %}
+    $scope.clear{{ field.fullPathCc }}();{%- endif %}{%- endfor %}
   }
 
 {%- for key, ref in allRefs|uniq %}
@@ -250,8 +251,6 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   };
   $scope.query{{ ref | capitalize }}();
 {%- endfor %}
-
-{{ render_refSelect(schema, fields) }}
 
 {%- for fieldName, field in fields %}{%- if field.ref && field.type != "select" %}
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
@@ -263,4 +262,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}
 {{ render_subDoc(schema, fieldName, field) }}
 {%- endfor %}
+
+{{ render_refSelect(schema, fields) }}
+
 }
