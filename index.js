@@ -1,5 +1,7 @@
 var path = require('path'),
-  config = require(path.join(process.cwd(), 'config', 'prod')),
+  dirProject = process.cwd(),
+  dirProject = (dirProject.indexOf('tasks') >= 0) ? path.join(dirProject, "..") : dirProject;
+  config = require(path.resolve(dirProject, 'config', 'prod')),
   passport = require('passport'),
   express = require('express'),
   MongoStore = require('connect-mongo')(express),
