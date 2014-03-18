@@ -1,15 +1,15 @@
 graoJS.factory('Activity', ['$resource', function($resource) {
-  var Activity = $resource('/activity/:id', { id: '@_id' }, {
+  var Activity = $resource('/service/activity/:id', { id: '@_id' }, {
     update: {
       method: 'PUT'
     },
     validate: {
       method: 'POST',
-      url: '/activity/validate'
+      url: '/service/activity/validate'
     },
     count: {
       method: 'GET',
-      url: '/activity/count'
+      url: '/service/activity/count'
     }
   });
   return Activity;

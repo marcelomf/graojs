@@ -1,19 +1,19 @@
 graoJS.factory('User', ['$resource', function($resource) {
-  var User = $resource('/user/:id', { id: '@_id' }, {
+  var User = $resource('/service/user/:id', { id: '@_id' }, {
     update: {
       method: 'PUT'
     },
     validate: {
       method: 'POST',
-      url: '/user/validate'
+      url: '/service/user/validate'
     },
     count: {
       method: 'GET',
-      url: '/user/count'
+      url: '/service/user/count'
     },
     updateProfile: {
       method: 'PUT',
-      url: '/user/update/profile'
+      url: '/service/user/update/profile'
     }
   });
   return User;

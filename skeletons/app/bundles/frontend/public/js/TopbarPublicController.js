@@ -5,7 +5,7 @@ function TopbarPublicController($scope, $timeout, $http, share, $log) {
 
   $scope.login = function(){
     share.alertInfo("Loading...");
-    $http.post('/login', {username: $scope.username, password: $scope.password})
+    $http.post('/service/login', {username: $scope.username, password: $scope.password})
       .success(function (data, status, headers, config){
         if(data.event){
           share.alert.message = data.event.message;
@@ -23,7 +23,7 @@ function TopbarPublicController($scope, $timeout, $http, share, $log) {
   };
 
   $scope.logout = function(){
-    $http.get('/logout')
+    $http.get('/service/logout')
       .success(function (data, status, headers, config){
         if(data.event) {
           share.alert.message = data.event.message;

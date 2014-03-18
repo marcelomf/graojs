@@ -5,21 +5,20 @@ service.login = function(req, res, next) {
   //console.log('postlogin');
   passport.authenticate('local', function(err, user) {
     if(err || !user) 
-      return res.json(event.new(res.__("Access Denied.")).error().log('error').toJson());
+      return res.json(event.newError(res.__("Access Denied.")).toJson());
 
     req.logIn(user, function(err) {
       if(err) 
-        return res.json(event.new(res.__("Access Denied.")).error().log('error').toJson());
+        return res.json(event.newError(res.__("Access Denied.")).toJson());
 
-      res.json(event.new(res.__("Welcome")).success().log('info').toJson());
+      res.json(event.newSuccess(res.__("Welcome")).toJson());
     });
   })(req, res, next);
 }
 
 service.logout = function(req, res, next) {
-  //console.log('logout');
   req.logout();
-  res.json(event.new(res.__("Logout")).success().log('info').toJson());
+  res.json(event.newSuccess(res.__("Logout")).toJson());
 }
 
 service.validateTpl = function(req, res, next) {
@@ -34,14 +33,14 @@ service.validateTpl = function(req, res, next) {
 
 service.validateJson = function(req, res, next) {
   if(!req.isAuthenticated())
-    return res.json(di.event.newError(res.__("Access Denied.")).toJson());
+    return res.json(event.newError(res.__("Access Denied.")).toJson());
 
   next();
 }
 
 var PassportController = function(di) {
   $i = di;
-  event = new di.event.new('Instance created').success().present().log('info');
+  event = new di.event.newSuccess('Instance created');
   models = di.models;
   controllers = di.controllers;
   passport = di.passport;
