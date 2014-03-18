@@ -4,7 +4,7 @@ h3=__('{{ schema | capitalize }}')
   table.table.table-striped
   {%- for fieldName, field in fields %}
     tr
-      td=__('{{ field.label }}')
+      td=__('{{ field.label || fieldName }}')
       td {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
         span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
   {%- endfor %}
