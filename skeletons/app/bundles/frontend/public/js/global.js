@@ -42,10 +42,15 @@ function validate(alert, errorObject, responseData, pathsIgnore){
   if(responseData.event && responseData.event.status == false) {
     var countErrors = 0;
     var isFieldErros = false;
+    var allMessages = '';
     if(errors) {
       for(var iField in errors){
         isFieldErros = true;
         if(!(pathsIgnore.indexOf(errors[iField].path) >= 0)) {
+          if(errors[iField].message)
+            allMessages += ", "+iField+": "+errors[iField].message;
+          else
+            allMessages += ", "+iField+": "+errors[iField];
           countErrors++;
           if(errors[iField].path.indexOf('.') != -1)
             jumpPath(errorObject, errors[iField].path.split('.'), errors[iField].message);
@@ -57,7 +62,7 @@ function validate(alert, errorObject, responseData, pathsIgnore){
     if(countErrors > 0 || !isFieldErros) {
       alert.show = true;
       alert.style = responseData.event.style;
-      alert.message = responseData.event.message;
+      alert.message = responseData.event.message+allMessages;
       return false;
     } else {
       return true;
