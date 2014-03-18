@@ -95,8 +95,10 @@
         tbody
           tr(ng-repeat="item in {{ field.fullPath }}"){%- for subFieldName, subField in field.fields %}
             td {{ '{{' }} item.{{ subFieldName }} }}{%- endfor %}
-            td  
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ field.fullPathCc }}($index);')
+            td
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ field.fullPathCc }}ByIndex($index);') 
+              | 
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ field.fullPathCc }}($index);') 
   {%- else %}
   {%- for subFieldName, subField in field.fields %}
   {{ render_field(schema, fieldName+"."+subFieldName, subField) }}

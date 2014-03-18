@@ -41,24 +41,29 @@
 
   $scope.{{ field.fullPath }} = new Array();
   $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = {};
+  $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode = 'create';
   //$scope.errors.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = false;
 
   $scope.createOrUpdate{{ field.fullPathCc }} = function(){
     if($scope.{{ field.fullPath }} == null)
       $scope.{{ field.fullPath }} = new Array();
-    $scope.{{ field.fullPath }}.push($scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }});
+    if($scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode == 'create')
+      $scope.{{ field.fullPath }}.push($scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }});
+    $scope.clear{{ field.fullPathCc }}()
   }
 
   $scope.clear{{ field.fullPathCc }} = function() {
     delete $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }};
     $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = {};
+    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode = 'create';
   }
 
   $scope.select{{ field.fullPathCc }} = function(index) {
     $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = $scope.{{ field.fullPath }}[index];
+    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode = 'update';
   }
 
-  $scope.destroy{{ field.fullPathCc }}ByIndex = function (index) {
+  $scope.destroy{{ field.fullPathCc }}ByIndex = function(index) {
     $scope.{{ field.fullPath }}.splice(index, 1);
   }
   {%- else %}
