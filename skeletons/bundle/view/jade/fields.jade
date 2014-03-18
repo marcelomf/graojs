@@ -1,7 +1,9 @@
   {%- macro render_field(schema, fieldName, field, isFilter) %}
-      {%- set inputtypes = ['text', 'email', 'url', 'date', 'number', 'password' ] %}
+      {%- set inputtypes = ['text', 'password' ] %}
       {%- if inputtypes.indexOf(field.type) !== -1 %}
           {{ input(field.type, schema, fieldName, field) }}
+      {%- elseif field.type == 'date' %}
+          {{ input_date(schema, fieldName, field) }}
       {%- elseif field.type == 'checkbox' %}
           {{ input_checkbox(schema, fieldName, field) }}
       {%- elseif field.type == 'radio' %}
@@ -18,9 +20,18 @@
           {{ input('text', schema, fieldName, field) }}
       {%- endif %}
   {%- endmacro %}
+
   {%- macro input(type, schema, fieldName, field) %}
   .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
     input.form-control(type='{{ type }}', ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
+    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+  {%- endmacro %} 
+  {%- macro input_date(schema, fieldName, field) %}
+  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
+    input.form-control(type='input', ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}
+      show-weeks="false", datepicker-popup=__("yyyy-MM-dd"), day-format="dd", month-format="MM", year-format="yyyy", year-range="20", 
+      day-header-format="EEE", day-title-format="MM/yyyy", moth-tittle-format="yyyy", datepicker-options="{ 'starting-day' : '1' }",
+      current-text=__('Today'), toggle-weeks-text=__('Weeks'), clear-text=__('Clear'), close-text=__('Close'))
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
   {%- endmacro %} 
   {%- macro input_checkbox(schema, fieldName, field) %}

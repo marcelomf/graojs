@@ -81,7 +81,7 @@ var GraoGeneratorCommands = function (di) {
           varsGenerate = self.prepareRefFields(varsGenerate);         
           //console.log(varsGenerate['allSubDocFields']);
           //console.log(varsGenerate['allRefFields']);
-          console.log(varsGenerate);
+          //console.log(varsGenerate);
           if(!fs.existsSync("bundles/"+varsGenerate['bundle']))
             fs.mkdirSync("bundles/"+varsGenerate['bundle'], 0755);
           generator.generate(varsGenerate, force);
