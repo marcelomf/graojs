@@ -101,6 +101,9 @@ var GraoGeneratorCommands = function (di) {
     if(!resultUi['allRefFields'])
       resultUi['allRefFields'] = {};
 
+    if(!resultUi['allRefsBundle'])
+      resultUi['allRefsBundle'] = {};
+
     for(fieldName in fields) {
       //if(fields[fieldName].ref && !resultUi['allRefFields'][fieldName]){
       var newEntrie = resultUi.schema+'.'+fieldName;
@@ -108,10 +111,15 @@ var GraoGeneratorCommands = function (di) {
         if(!fields[fieldName].bundle) {
            var schemaRefObj = self.prepareSchema(fields[fieldName].ref, 
             path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(fields[fieldName].ref))));
-           if(schemaRefObj.graoui != null && schemaRefObj.graoui.bundle != null)
+           if(schemaRefObj.graoui != null && schemaRefObj.graoui.bundle != null) {
             fields[fieldName].bundle = schemaRefObj.graoui.bundle;
-           else
+            resultUi['allRefsBundle'][fields[fieldName].ref] = schemaRefObj.graoui.bundle;
+           } else {
             fields[fieldName].bundle = fields[fieldName].ref.toLowerCase();
+            resultUi['allRefsBundle'][fields[fieldName].ref] = schemaRefObj.graoui.bundle;
+           }
+        } else {
+          resultUi['allRefsBundle'][fields[fieldName].ref] = fields[fieldName].bundle;
         }
         if(fullPath) {
           newEntrie = fullPath.normal+'.'+fieldName;
