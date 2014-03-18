@@ -234,6 +234,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       angular.forEach($scope.{{ schema | lower }}.{{ fieldName }}, function({{ field.ref | lower }}){
         {{ fieldName }}Ids.push({{ field.ref | lower }}._id);
       });
+      $scope.{{ schema | lower }}._{{ fieldName }} = angular.copy($scope.{{ schema | lower }}.{{ fieldName }});
       $scope.{{ schema | lower }}.{{ fieldName }} = {{ fieldName }}Ids;
 {%- else %}
       if($scope.{{ schema | lower }}.{{ fieldName }} && $scope.{{ schema | lower }}.{{ fieldName }}._id)

@@ -94,6 +94,7 @@ function ActivityPublicController($scope, $http, $q, share, Activity) {
       angular.forEach($scope.activity.activitys, function(activity){
         activitysIds.push(activity._id);
       });
+      $scope.activity._activitys = angular.copy($scope.activity.activitys);
       $scope.activity.activitys = activitysIds;
 
   }

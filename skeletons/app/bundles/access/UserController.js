@@ -26,7 +26,7 @@ service.count = function(req, res) {
 }
 
 service.get = function(req, res) {
-    User.findOne({_id : req.params.id}, "_id username email activitys enabled").populate('activitys').exec(function(err, user) {
+    User.findOne({_id : req.params.id}, "_id username email enabled activitys").populate('activitys').exec(function(err, user) {
     if (err)
       res.json(event.newError(err).toJson());
     else
@@ -37,7 +37,7 @@ service.get = function(req, res) {
 service.query = function(req, res) {
   var dataList = controllers.processDataList(User, req.query);
 
-  User.find(dataList.filter, "_id username email activitys enabled").
+  User.find(dataList.filter, "_id username email enabled activitys").
     sort(dataList.sort).
     skip(dataList.page.skip).
     limit(dataList.page.limit).

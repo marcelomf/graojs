@@ -1,0 +1,23 @@
+h3=__('Activity')
+  small {{ activity._id }}
+.table-responsive
+  table.table.table-striped
+    tr
+      td=__('Name')
+      td {{ activity.name }}
+    tr
+      td=__('Tag')
+      td {{ activity.tag }}
+    tr
+      td=__('Activitys')
+      td
+        span(ng-repeat="activity in activity._activitys") {{ activity.name }} 
+    tr
+      td=__('Description')
+      td {{ activity.description }}
+.form-group
+  button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdate");')=__('Edit')
+  | 
+  button.btn.btn-danger(type='button', ng-click='activity.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
+  | 
+  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')

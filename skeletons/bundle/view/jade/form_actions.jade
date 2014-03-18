@@ -3,8 +3,8 @@
   | 
   button.btn.btn-warning(type='button', ng-click='createOrUpdate("createOrUpdate");')=__('Save and continue')
   | 
-  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); query(); count(); clear(); share.window("list");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
   | 
   button.btn.btn-info(type='button', ng-click='share.window("show")')=__('Show')
   | 
-  button.btn.btn-default(type='button', ng-click='clear(); share.window("list")')=__('List')
+  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')

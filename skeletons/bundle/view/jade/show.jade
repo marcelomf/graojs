@@ -6,11 +6,11 @@ h3=__('{{ schema | capitalize }}')
     tr
       td=__('{{ field.label || fieldName }}')
       td {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
-        span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
+        span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}._{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }} {% endif %}{% endif %} 
   {%- endfor %}
 .form-group
   button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdate");')=__('Edit')
   | 
-  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); query(); count(); clear(); share.window("list");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
   | 
-  button.btn.btn-default(type='button', ng-click='clear(); share.window("list")')=__('List')
+  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')

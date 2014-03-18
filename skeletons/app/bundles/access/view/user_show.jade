@@ -1,0 +1,29 @@
+h3=__('User')
+  small  {{ user._id }}
+.table-responsive
+  table.table.table-striped
+    tr
+      td=__('Username')
+      td {{ user.username }}
+    tr
+      td=__('Email')
+      td {{ user.email }}
+    tr
+      td=__('Enabled')
+      td {{ user.enabled }}
+    tr
+      td=__('Created At')
+      td {{ user.createdAt }}
+    tr
+      td=__('Updated At')
+      td {{ user.updatedAt }}
+    tr
+      td=__('Activitys')
+      td
+        span(ng-repeat="activity in user._activitys") {{ activity.name }} 
+.form-group
+  button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdate");')=__('Edit')
+  | 
+  button.btn.btn-danger(type='button', ng-click='user.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
+  | 
+  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')

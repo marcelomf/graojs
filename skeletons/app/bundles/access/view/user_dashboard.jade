@@ -14,7 +14,8 @@ block content
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
         include user_form
         +form_user(true)
-
+      .col-md-6.col-md-offset-3(ng-switch-when="show")
+        include user_show
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateUserActivitys")
         h3=__('Activitys')
           small=__('User')
