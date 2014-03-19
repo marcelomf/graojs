@@ -1,76 +1,70 @@
 {%- macro render_refSelect(schema, fields) %}
-{%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
-  $scope.{{ field.fullPath }} = new Array();
-  $scope.new{{ field.fullPathCc }} = {};
-  $scope.errors.new{{ field.fullPathCc }} = {};
+{%- for ref, bundle in allRefsBundle %}
+  //$scope.fullPath ? = new Array();
+  $scope.new{{ ref | capitalize }} = {};
+  $scope.errors.new{{ ref | capitalize }} = {};
 
-  $scope.createOrUpdate{{ field.fullPathCc }} = function() {
+  $scope.createOrUpdate{{ ref | capitalize }} = function() {
     function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.new{{ field.fullPathCc }}, dataResponse)) {
-        $scope.{{ field.ref | lower }}s.push(dataResponse.data);
-        {%- if field.isArray == true %}
-        if(!($scope.{{ field.fullPath }} instanceof Array))
-          $scope.{{ field.fullPath }} = new Array();
-        $scope.{{ field.fullPath }}.push(dataResponse.data._id);
-        {%- else %}
-        $scope.{{ field.fullPath }} = dataResponse.data._id;
-        {%- endif %}
-        $scope.clear{{ field.fullPathCc }}();
+      if(validate(share.alert, $scope.errors.new{{ ref | capitalize }}, dataResponse)) {
+        $scope.{{ ref | lower }}s.push(dataResponse.data);
+        // Add id em array ou vincula a campo... como ? Callback ? Promise ?
+        $scope.clear{{ ref | capitalize }}();
         share.windowBack();
       }
     }
-    if($scope.new{{ field.fullPathCc }}._id != null)
-      {{ field.ref | capitalize }}.update($scope.new{{ field.fullPathCc }}, save);
+    if($scope.new{{ ref | capitalize }}._id != null)
+      {{ ref | capitalize }}.update($scope.new{{ ref | capitalize }}, save);
     else
-      {{ field.ref | capitalize }}.save($scope.new{{ field.fullPathCc }}, save);
+      {{ ref | capitalize }}.save($scope.new{{ ref | capitalize }}, save);
   }
 
-  $scope.clear{{ field.fullPathCc }} = function() {
-    delete $scope.new{{ field.fullPathCc }};
-    $scope.new{{ field.fullPathCc }} = {};
+  $scope.clear{{ ref | capitalize }} = function() {
+    delete $scope.new{{ ref | capitalize }};
+    $scope.new{{ ref | capitalize }} = {};
   }
-{%- endif %}
-{%- if field.hasRef && field.fields %}
-  $scope.{{ field.fullPath }} = {};
-{{ render_refSelect(field.ref, field.fields) }}
+{%- endfor %}{%- endmacro %}
+
+{%- macro render_subDocArray() %}
+{%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray == true%}
+function {{ fieldName | capitalize }}PublicController($scope, $http, $q, share) {
+  $scope.new{{ fieldName | capitalize }} = {};
+  $scope.new{{ fieldName | capitalize }}Mode = 'create';
+
+  $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
+    if($scope.{{ fieldName | lower }} == null)
+      return share.alertDanger("{{ fieldName | capitalize }} not to be null.");
+    if($scope.new{{ fieldName | capitalize }}Mode == 'create')
+      $scope.{{ fieldName | lower }}.push($scope.new{{ fieldName | capitalize }});
+    $scope.clear{{ fieldName | capitalize }}();
+  }
+
+  $scope.clear{{ fieldName | capitalize }} = function() {
+    delete $scope.new{{ fieldName | capitalize }};
+    $scope.new{{ fieldName | capitalize }} = {};
+    $scope.new{{ fieldName | capitalize }}Mode = 'create';
+  }
+
+  $scope.select{{ fieldName | capitalize}} = function(index) {
+    if($scope.{{ fieldName | lower }} == null || !$scope.{{ fieldName | lower }}[index])
+      return share.alertDanger("{{ fieldName | capitalize }} not found!");
+    $scope.new{{ fieldName | capitalize }} = $scope.{{ fieldName | lower }}[index];
+    $scope.new{{ fieldName | capitalize }}Mode = 'update';
+  }
+
+  $scope.destroy{{ fieldName | capitalize }}ByIndex = function(index) {
+    if($scope.{{ fieldName | lower }} == null || !$scope.{{ fieldName | lower }}[index])
+      return share.alertDanger("{{ fieldName | capitalize }} not found!");
+    $scope.{{ fieldName | lower }}.splice(index, 1);
+  }
+}
 {%- endif %}{%- endfor %}{%- endmacro %}
 
 {%- macro render_subDoc(schema, fieldName, field) %}
-{%- if field.isSubDoc == true %}
-  {%- if field.isArray == true %}
-
-  $scope.{{ field.fullPath }} = new Array();
-  $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = {};
-  $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode = 'create';
-  //$scope.errors.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = false;
-
-  $scope.createOrUpdate{{ field.fullPathCc }} = function(){
-    if($scope.{{ field.fullPath }} == null)
-      $scope.{{ field.fullPath }} = new Array();
-    if($scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode == 'create')
-      $scope.{{ field.fullPath }}.push($scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }});
-    $scope.clear{{ field.fullPathCc }}()
-  }
-
-  $scope.clear{{ field.fullPathCc }} = function() {
-    delete $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }};
-    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = {};
-    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode = 'create';
-  }
-
-  $scope.select{{ field.fullPathCc }} = function(index) {
-    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }} = $scope.{{ field.fullPath }}[index];
-    $scope.{{ schema | lower }}.new{{ field.fullPathCc | capitalize }}Mode = 'update';
-  }
-
-  $scope.destroy{{ field.fullPathCc }}ByIndex = function(index) {
-    $scope.{{ field.fullPath }}.splice(index, 1);
-  }
-  {%- else %}
+{%- if field.isSubDoc == true && !field.isArray %}
   $scope.{{ field.fullPath }} = {};
   //$scope.errors.{{ field.fullPath }} = false;
-  {%- endif %}
-{%- elseif field.hasSubDoc == true %}
+{%- elseif field.hasSubDoc == true && !field.ref %}
 {%- for subFieldName, subField in field.fields %}
 {{ render_subDoc(schema, subFieldName, subField) }}
 {%- endfor %}
@@ -247,8 +241,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     $scope.{{ schema | lower }} = {};
 {%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray != true %}
     $scope.{{ field.fullPath }} = {};{%- elseif field.ref && field.type == "select" %}
-    $scope.clear{{ field.fullPathCc }}();{%- elseif field.isSubDoc == true && field.isArray == true %}
-    $scope.clear{{ field.fullPathCc }}();{%- endif %}{%- endfor %}
+    $scope.clear{{ field.ref | capitalize }}();{%- elseif field.isSubDoc == true && field.isArray == true %}
+    $scope.{{ field.fullPath }} = new Array();{%- endif %}{%- endfor %}
   }
 
 {%- for key, ref in allRefs|uniq %}
@@ -272,3 +266,5 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {{ render_refSelect(schema, fields) }}
 
 }
+
+{{ render_subDocArray() }}

@@ -102,39 +102,33 @@ function ActivityPublicController($scope, $http, $q, share, Activity) {
   $scope.clear = function() {
     delete $scope.activity;
     $scope.activity = {};
-    $scope.clearActivityActivitys();
+    $scope.clearActivity();
   }
   $scope.queryActivity = function(){
     $scope.activitys = Activity.query();
   };
   $scope.queryActivity();
 
-  $scope.activity.activitys = new Array();
-  $scope.newActivityActivitys = {};
-  $scope.errors.newActivityActivitys = {};
+  $scope.newActivity = {};
+  $scope.errors.newActivity = {};
 
-  $scope.createOrUpdateActivityActivitys = function() {
+  $scope.createOrUpdateActivity = function() {
     function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.newActivityActivitys, dataResponse)) {
+      if(validate(share.alert, $scope.errors.newActivity, dataResponse)) {
         $scope.activitys.push(dataResponse.data);
-
-        if(!($scope.activity.activitys instanceof Array))
-          $scope.activity.activitys = new Array();
-        $scope.activity.activitys.push(dataResponse.data._id);
-
-        $scope.clearActivityActivitys();
+        $scope.clearActivity();
         share.windowBack();
       }
     }
-    if($scope.newActivityActivitys._id != null)
-      Activity.update($scope.newActivityActivitys, save);
+    if($scope.newActivity._id != null)
+      Activity.update($scope.newActivity, save);
     else
-      Activity.save($scope.newActivityActivitys, save);
+      Activity.save($scope.newActivity, save);
   }
 
-  $scope.clearActivityActivitys = function() {
-    delete $scope.newActivityActivitys;
-    $scope.newActivityActivitys = {};
+  $scope.clearActivity = function() {
+    delete $scope.newActivity;
+    $scope.newActivity = {};
   }
 
 }

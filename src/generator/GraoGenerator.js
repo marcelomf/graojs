@@ -116,8 +116,26 @@ var GraoGenerator = function () {
               fileType = 'binary';
             } else {
               fileContent = fs.readFileSync(tpl, 'utf-8');
-              if(!self.checkIgnore(self.config.parseIgnores, dist))
+              if(!self.checkIgnore(self.config.parseIgnores, dist)) {
                 fileContent = self.swigRender(fileContent, args);
+                if(dist.indexOf('fields') > 0) {
+                  var lines = fileContent.split('\n');
+                  var isAppend = false;
+                  for(var i in lines){
+                    if(lines[i].indexOf('div') == 0){
+                      isAppend = true;
+                      lines[i] = "  "+lines[i];
+                    } else if(isAppend && lines[i].match(/^[a-zA-Z0-9]/) == null) {
+                      lines[i] = "  "+lines[i];
+                    } else {
+                      isAppend = false;
+                    }
+                  }
+                  fileContent = lines.join('\n');
+                  delete lines;
+                }
+              }
+                
               fileType = 'utf-8';
             }
             fs.writeFileSync(dist, fileContent, fileType);

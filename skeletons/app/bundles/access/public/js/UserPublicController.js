@@ -113,69 +113,32 @@ function UserPublicController($scope, $http, $q, share, User, Activity) {
   $scope.clear = function() {
     delete $scope.user;
     $scope.user = {generatePassword: true, enabled: true};
-    $scope.clearUserActivitys();
+    $scope.clearActivity();
   }
   $scope.queryActivity = function(){
     $scope.activitys = Activity.query();
   };
   $scope.queryActivity();
 
-  $scope.user.activitys = new Array();
-  $scope.newUserActivitys = {};
-  $scope.errors.newUserActivitys = {};
+  $scope.newActivity = {};
+  $scope.errors.newActivity = {};
 
-  $scope.createOrUpdateUserActivitys = function() {
+  $scope.createOrUpdateActivity = function() {
     function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.newUserActivitys, dataResponse)) {
+      if(validate(share.alert, $scope.errors.newActivity, dataResponse)) {
         $scope.activitys.push(dataResponse.data);
-
-        if(!($scope.user.activitys instanceof Array))
-          $scope.user.activitys = new Array();
-        $scope.user.activitys.push(dataResponse.data._id);
-
-        $scope.clearUserActivitys();
+        $scope.clearActivity();
         share.windowBack();
       }
     }
-    if($scope.newUserActivitys._id != null)
-      Activity.update($scope.newUserActivitys, save);
+    if($scope.newActivity._id != null)
+      Activity.update($scope.newActivity, save);
     else
-      Activity.save($scope.newUserActivitys, save);
+      Activity.save($scope.newActivity, save);
   }
 
-  $scope.clearUserActivitys = function() {
-    delete $scope.newUserActivitys;
-    $scope.newUserActivitys = {};
+  $scope.clearActivity = function() {
+    delete $scope.newActivity;
+    $scope.newActivity = {};
   }
-
-  $scope.activity = {};
-
-  $scope.activity.activitys = new Array();
-  $scope.newActivityActivitys = {};
-  $scope.errors.newActivityActivitys = {};
-
-  $scope.createOrUpdateActivityActivitys = function() {
-    function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.newActivityActivitys, dataResponse)) {
-        $scope.activitys.push(dataResponse.data);
-
-        if(!($scope.activity.activitys instanceof Array))
-          $scope.activity.activitys = new Array();
-        $scope.activity.activitys.push(dataResponse.data._id);
-
-        $scope.clearActivityActivitys();
-        share.windowBack();
-      }
-    }
-    if($scope.newActivityActivitys._id != null)
-      Activity.update($scope.newActivityActivitys, save);
-    else
-      Activity.save($scope.newActivityActivitys, save);
-  }
-
-  $scope.clearActivityActivitys = function() {
-    delete $scope.newActivityActivitys;
-    $scope.newActivityActivitys = {};
-  }
-
 }

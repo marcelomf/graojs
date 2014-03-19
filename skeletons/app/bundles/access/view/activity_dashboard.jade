@@ -16,17 +16,17 @@ block content
         +form_activity(true)
       .col-md-6.col-md-offset-3(ng-switch-when="show")
         include activity_show
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateActivityActivitys")
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateActivity")
         h3=__('Activitys')
           small=__('Activity')
         form.form-horizontal(role='form')
           include /access/view/activity_fields
-          +form_fields_activity('newActivityActivitys')
+          +form_fields_activity('newActivity')
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateActivityActivitys();')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateActivity();')=__('Save and back')
             | 
-            button.btn.btn.btn-default(type='button', ng-click='clearActivityActivitys(); share.windowBack();')=__('Cancel')
+            button.btn.btn.btn-default(type='button', ng-click='clearActivity(); share.windowBack();')=__('Cancel')
 
     .row
       .col-md-12

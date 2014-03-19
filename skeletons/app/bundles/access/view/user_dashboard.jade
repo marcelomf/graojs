@@ -16,30 +16,17 @@ block content
         +form_user(true)
       .col-md-6.col-md-offset-3(ng-switch-when="show")
         include user_show
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateUserActivitys")
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateActivity")
         h3=__('Activitys')
           small=__('User')
         form.form-horizontal(role='form')
           include /access/view/activity_fields
-          +form_fields_activity('newUserActivitys')
+          +form_fields_activity('newActivity')
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateUserActivitys();')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateActivity();')=__('Save and back')
             | 
-            button.btn.btn.btn-default(type='button', ng-click='clearUserActivitys(); share.windowBack();')=__('Cancel')
-
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateActivityActivitys")
-        h3=__('Activitys')
-          small=__('Activity')
-        form.form-horizontal(role='form')
-          include /access/view/activity_fields
-          +form_fields_activity('newActivityActivitys')
-        .form-horizontal
-          .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateActivityActivitys();')=__('Save and back')
-            | 
-            button.btn.btn.btn-default(type='button', ng-click='clearActivityActivitys(); share.windowBack();')=__('Cancel')
-
+            button.btn.btn.btn-default(type='button', ng-click='clearActivity(); share.windowBack();')=__('Cancel')
     .row
       .col-md-12
         include user_dashboard_actions

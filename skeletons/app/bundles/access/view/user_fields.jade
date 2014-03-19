@@ -37,18 +37,18 @@ mixin form_fields_user(ngModelName)
       select.form-control(ui-select2, ng-model=ngModelName+'.activitys', data-placeholder=__('Activitys'), multiple='true')
         option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
       span.input-group-btn
-        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".activitys}", ng-click='clearUserActivitys(); share.window("createOrUpdateUserActivitys");') + 
+        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".activitys}", ng-click='clearActivity(); share.window("createOrUpdateActivity");') + 
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".activitys")='{{ errors.'+ngModelName+'.activitys }}'  
 
   .form-group(ng-class="{'has-error': errors."+ngModelName+".enabled}")
     label.checkbox-inline
-      input.form-control(type='checkbox', ng-model=ngModelName+'.enabled' value='IS_ENABLED', checked='true') 
+      input(type='checkbox', ng-model=ngModelName+'.enabled' value='IS_ENABLED', checked='true') 
       =__('Enabled')
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".enabled")='{{ errors.'+ngModelName+'.enabled }}'
 
   .form-group(ng-class="{'has-error': errors."+ngModelName+".generatePassword}")
     label.checkbox-inline
-      input.form-control(type='checkbox', ng-model=ngModelName+'.generatePassword' value='IS_GENERATE_PASSWORD') 
+      input(type='checkbox', ng-model=ngModelName+'.generatePassword' value='IS_GENERATE_PASSWORD') 
       =__('Generate password')
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".generatePassword")='{{ errors.'+ngModelName+'.generatePassword }}'
 
@@ -72,7 +72,7 @@ mixin filter_fields_user(ngModelName)
 
   .form-group(ng-class="{'has-error': errors."+ngModelName+".enabled}")
     label.checkbox-inline
-      input.form-control(type='checkbox', ng-model=ngModelName+'.enabled' value='IS_ENABLED', checked='true') 
+      input(type='checkbox', ng-model=ngModelName+'.enabled' value='IS_ENABLED', checked='true') 
       =__('Enabled')
     span.help-block.ng-hide(ng-show="errors."+ngModelName+".enabled")='{{ errors.'+ngModelName+'.enabled }}'
 

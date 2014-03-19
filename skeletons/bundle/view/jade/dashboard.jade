@@ -1,19 +1,16 @@
-{%- macro render_refSelect(schema, fields) %}{%- for fieldName, field in fields %}{%- if field.ref && field.type == 'select' %}
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ field.fullPathCc }}")
-        h3=__('{{ fieldName | capitalize }}')
+{%- macro render_refSelect(schema, fields) %}{%- for ref, bundle in allRefsBundle %}
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ ref | capitalize }}")
+        h3=__('{{ ref | capitalize }}')
           small=__('{{ schema | capitalize }}')
         form.form-horizontal(role='form')
-          include /{{ field.bundle | lower }}/view/{{ field.ref | lower }}_fields
-          +form_fields_{{ field.ref | lower }}('new{{ field.fullPathCc }}')
+          include /{{ bundle | lower }}/view/{{ ref | lower }}_fields
+          +form_fields_{{ ref | lower }}('new{{ ref | capitalize }}')
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ field.fullPathCc }}();')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ ref | capitalize }}();')=__('Save and back')
             | 
-            button.btn.btn.btn-default(type='button', ng-click='clear{{ field.fullPathCc }}(); share.windowBack();')=__('Cancel')
-{%- endif %}
-{%- if field.hasRef && field.fields %}
-  {{ render_refSelect(field.ref, field.fields) }}
-{%- endif %}{%- endfor %}{%- endmacro %}
+            button.btn.btn.btn-default(type='button', ng-click='clear{{ ref | capitalize }}(); share.windowBack();')=__('Cancel')
+{%- endfor %}{%- endmacro %}
 extends /frontend/theme/layout
 block content
   .container(ng-controller='{{ schema | capitalize }}PublicController', ng-init='clear(); share.window("list");')
@@ -42,4 +39,5 @@ block content
 
 
 {%- macro render_refScripts(allRefs, schemaIgnore) %}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schemaIgnore|lower %}
-    script(src='/js/{{ ref | lower }}/{{ ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').{%- endif %}{%- endfor %}{%- endmacro %}
+    script(src='/js/{{ ref | lower }}/{{ ref | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
+    script(src='/js/{{ ref | lower }}/{{ ref | capitalize }}PublicController.js', type='text/javascript', charset='utf-8').{%- endif %}{%- endfor %}{%- endmacro %}

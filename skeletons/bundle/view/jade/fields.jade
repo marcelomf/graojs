@@ -1,91 +1,107 @@
-  {%- macro render_field(schema, fieldName, field, isFilter) %}
+  {%- macro render_field(schema, fieldName, field, isFilter, isSubDocArrayField) %}
       {%- set inputtypes = ['text', 'password' ] %}
       {%- if inputtypes.indexOf(field.type) !== -1 %}
-          {{ input(field.type, schema, fieldName, field) }}
+          {{ input(field.type, schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'date' %}
-          {{ input_date(schema, fieldName, field) }}
+          {{ input_date(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'checkbox' %}
-          {{ input_checkbox(schema, fieldName, field) }}
+          {{ input_checkbox(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'radio' %}
-          {{ input_radio(schema, fieldName, field) }}
+          {{ input_radio(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'textarea' %}
-          {{ textarea(schema, fieldName, field) }}
+          {{ textarea(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'select' %}
-          {{ select(schema, fieldName, field, isFilter) }}
+          {{ select(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'union' %}
-          {{ union(schema, fieldName, field, isFilter) }}
+          {{ union(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.isSubDoc == true %}
-          {{ subDoc(schema, fieldName, field, isFilter) }}
+          {{ subDoc(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- else %}
-          {{ input('text', schema, fieldName, field) }}
+          {{ input('text', schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- endif %}
   {%- endmacro %}
 
-  {%- macro input(type, schema, fieldName, field) %}
-  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
-    input.form-control(type='{{ type }}', ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+  {% macro get_ngmodel(fieldName, isSubDocArrayField) %}{% if !isSubDocArrayField %}ngModelName+".{{ fieldName }}"{% else %}"{{ fieldName }}"{% endif %}{% endmacro %}
+
+  {%- macro input(type, schema, fieldName, field, isFilter, isSubDocArrayField) %}
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}")
+    input.form-control(type='{{ type }}', ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
+    span.help-block.ng-hide(ng-show="errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"")='{{ '{{' }} errors.'+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+' }}'
   {%- endmacro %} 
-  {%- macro input_date(schema, fieldName, field) %}
-  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
-    input.form-control(type='input', ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}
+
+  {%- macro input_date(schema, fieldName, field, isFilter, isSubDocArrayField) %}
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}")
+    input.form-control(type='input', ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}
       show-weeks="false", datepicker-popup=__("yyyy-MM-dd"), day-format="dd", month-format="MM", year-format="yyyy", year-range="20", 
       day-header-format="EEE", day-title-format="MM/yyyy", moth-tittle-format="yyyy", datepicker-options="{ 'starting-day' : '1' }",
       current-text=__('Today'), toggle-weeks-text=__('Weeks'), clear-text=__('Clear'), close-text=__('Close'))
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+    span.help-block.ng-hide(ng-show="errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"")='{{ '{{' }} errors.'+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+' }}'
   {%- endmacro %} 
-  {%- macro input_checkbox(schema, fieldName, field) %}
-  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
+
+  {%- macro input_checkbox(schema, fieldName, field, isFilter, isSubDocArrayField) %}
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}")
     label.checkbox-inline
-      input.form-control(type='checkbox', ng-model=ngModelName+'.{{ fieldName }}' value='{{ field.value }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
+      input(type='checkbox', ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }} value='{{ field.value }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
       =__('{{ field.label }}')
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+    span.help-block.ng-hide(ng-show="errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"")='{{ '{{' }} errors.'+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+' }}'
   {%- endmacro %}
-  {%- macro input_radio(schema, fieldName, field) %}
-  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
+
+  {%- macro input_radio(schema, fieldName, field, isFilter, isSubDocArrayField) %}
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}")
   {%- for option in field.options %}
     label.radio-inline
-      input.form-control(type='radio', ng-model=ngModelName+'.{{ fieldName }}' value='{{ loop.key }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
+      input(type='radio', ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }} value='{{ loop.key }}'{% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %}) 
       =__('{{ option }}'){%- endfor %}
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+    span.help-block.ng-hide(ng-show="errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"")='{{ '{{' }} errors.'+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+' }}'
   {%- endmacro %}
-  {%- macro textarea(schema, fieldName, field) %}
-  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}")
-    textarea.form-control(ng-model=ngModelName+'.{{ fieldName }}', placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+
+  {%- macro textarea(schema, fieldName, field, isFilter, isSubDocArrayField) %}
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}")
+    textarea.form-control(ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+    span.help-block.ng-hide(ng-show="errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"")='{{ '{{' }} errors.'+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+' }}'
   {%- endmacro %}
-  {%- macro select(schema, fieldName, field, isFilter) %}
+
+  {%- macro select(schema, fieldName, field, isFilter, isSubDocArrayField) %}
   {%- set isMultiple = false %}
-  .form-group(ng-class="{'has-error': errors."+ngModelName+".{{ fieldName | lower }}}"){%- if field.ref %}
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}"){%- if field.ref %}
     .input-group
-      select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+      select.form-control(ui-select2, ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
         {% if !isMultiple %}option.form-control(value=''){% endif %}
         option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ field.ref | lower }}s') {{ '{{' }} {{ field.ref | lower }}.{% if field.refLabel %}{{ field.refLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter %}
       span.input-group-btn
-        button.btn.btn-default(ng-class="{'btn-danger': errors."+ngModelName+".{{ fieldName | lower }}}", ng-click='clear{{ field.fullPathCc }}(); share.window("createOrUpdate{{ field.fullPathCc }}");') + {%- endif %}{%- else %}  
-    select.form-control(ui-select2, ng-model=ngModelName+'.{{ fieldName }}', data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
+        button.btn.btn-default(ng-class="{'btn-danger': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}", ng-click='clear{{ field.ref | capitalize }}(); share.window("createOrUpdate{{ field.ref | capitalize }}");') + {%- endif %}{%- else %}  
+    select.form-control(ui-select2, ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
       {% if !isMultiple %}option.form-control(value=''){% endif %}{%- if field.options %}{%- for option in field.options %}
       option.form-control(value='{{ loop.key }}')=__('{{ option }}'){%- endfor %}{%- endif %}{%- endif %}
-    span.help-block.ng-hide(ng-show="errors."+ngModelName+".{{ fieldName | lower }}")='{{ '{{' }} errors.'+ngModelName+'.{{ fieldName | lower }} }}'
+    span.help-block.ng-hide(ng-show="errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"")='{{ '{{' }} errors.'+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+' }}'
   {%- endmacro %}
-  {%- macro union(schema, fieldName, field, isFilter) %}
+
+  {%- macro union(schema, fieldName, field, isFilter, isSubDocArrayField) %}
   {%- if field.ref %}
   .form-group
     include /{{ field.bundle | lower }}/view/{{ field.ref | lower }}_fields
     {%- if isFilter == true %}
-    +filter_fields_{{ field.ref | lower }}(ngModelName+'.{{ fieldName | lower }}')
+    +filter_fields_{{ field.ref | lower }}({{ get_ngmodel(fieldName, isSubDocArrayField) }}+'')
     {%- else %}
-    +form_fields_{{ field.ref | lower }}(ngModelName+'.{{ fieldName | lower }}')
+    +form_fields_{{ field.ref | lower }}({{ get_ngmodel(fieldName, isSubDocArrayField) }}+'')
     {%- endif %}
   {%- endif %}
   {%- endmacro %}
-  {%- macro subDoc(schema, fieldName, field, isFilter) %}
-  {%- if field.isArray == true %}
+
+  {%- macro subDoc(schema, fieldName, field, isFilter, isSubDocArrayField) %}
+  {%- if !field.isArray %}{%- for subFieldName, subField in field.fields %}
+  {{ render_field(schema, fieldName+"."+subFieldName, subField, isFilter, isSubDocArrayField) }}
+  {%- endfor %}{%- endif %}
+  {%- endmacro %}
+
+  {%- macro subDocArray() %}
+  {%- for fieldName, field in fields %}{%- if field.isArray == true %}
+div(ng-controller="{{ fieldName | capitalize }}PublicController", ng-init=""+ngModelName+".{{ fieldName }} = "+ngModelName+".{{ fieldName }} == null ? [] : "+ngModelName+".{{ fieldName }}; new{{ fieldName | capitalize }}Mode = 'create'; new{{ fieldName | capitalize}} = {}; {{ fieldName | lower }} = "+ngModelName+".{{ fieldName }};")
   {%- for subFieldName, subField in field.fields %}
-  {{ render_field(schema, 'new'+field.fullPathCc|capitalize+'.'+subFieldName, subField, isFilter) }}
+  {{ render_field(schema, 'new'+fieldName|capitalize+'.'+subFieldName, subField, isFilter, true) }}
   {%- endfor %}
   .form-group
-    button.btn.btn-default.btn-lg.btn-block(ng-click='createOrUpdate{{ field.fullPathCc }}(); clear{{ field.fullPathCc }}();')=__('Save')
+    button.btn.btn-default.btn-lg.btn-block(ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}();')=__('Save')
     .table-responsive
       table.table.table-striped
         thead
@@ -93,22 +109,20 @@
             th=__('{{ subField.label }}') {%- endfor %}
             th=__('Actions')
         tbody
-          tr(ng-repeat="item in {{ field.fullPath }}"){%- for subFieldName, subField in field.fields %}
+          tr(ng-repeat="item in {{ fieldName | lower }}"){%- for subFieldName, subField in field.fields %}
             td {{ '{{' }} item.{{ subFieldName }} }}{%- endfor %}
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ field.fullPathCc }}ByIndex($index);') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ fieldName | capitalize }}ByIndex($index);') 
               | 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ field.fullPathCc }}($index);') 
-  {%- else %}
-  {%- for subFieldName, subField in field.fields %}
-  {{ render_field(schema, fieldName+"."+subFieldName, subField) }}
-  {%- endfor %}
-  {%- endif %}
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ fieldName | capitalize }}($index);') 
+  
+  {%- endif %}{%- endfor %}
   {%- endmacro %}
 mixin form_fields_{{ schema | lower }}(ngModelName)
   if !ngModelName
     - var ngModelName = '{{ schema | lower }}'
-  {%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field, false) }} {%- endfor %}  
+  {%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field, false) }} {%- endfor %}
+  {{ subDocArray() }}
   
 mixin filter_fields_{{ schema | lower }}(ngModelName)
   if !ngModelName
