@@ -2,7 +2,7 @@
 {%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray == true%}
   $scope.new{{ fieldName | capitalize }} = {};
   $scope.new{{ fieldName | capitalize }}Mode = 'create';
-  $scope.{{ field.fullPath }} = new Array();
+  $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();
 
   $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
     if($scope.{{ field.fullPath }} == null)
@@ -34,7 +34,7 @@
 
 {%- macro render_subDoc(schema, fieldName, field) %}
 {%- if field.isSubDoc == true && !field.isArray %}
-  $scope.{{ field.fullPath }} = {};
+  $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || {};
   //$scope.errors.{{ field.fullPath }} = false;
 {%- elseif field.hasSubDoc == true && !field.ref %}
 {%- for subFieldName, subField in field.fields %}
@@ -42,7 +42,7 @@
 {%- endfor %}{%- endif %}{%- endmacro %}
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | capitalize }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | capitalize }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
-  $scope.{{ schema | lower }} = {};
+  $scope.{{ schema | lower }} = $scope.{{ schema | lower }} || (share.refHistory.{{schema}} != null && share.refHistory.{{schema}}.object != null) ? share.refHistory.{{schema}}.object : {};
   $scope.errors = {};
   $scope.errors.{{ schema | lower }} = {};
   $scope.notFilter = true;
@@ -66,13 +66,15 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
         $scope.count{{ schema | capitalize }}(); 
         $scope.clear{{ schema | capitalize }}();
       } else {
-        share.ref.updateList = (share.ref.updateList instanceof Array) ? share.ref.updateList : new Array();
-        share.ref.updateList.push(dataResponse.data);
+        share.ref.list = (share.ref.list instanceof Array) ? share.ref.list : new Array();
+        share.ref.list.push(dataResponse.data);
         if(dataResponse.data._id) {
-          if(share.ref.updateObject[share.ref.updateField] instanceof Array)
-            share.ref.updateObject[share.ref.updateField].push(dataResponse.data._id);
+          if(!share.ref.objectField[share.ref.field])
+            share.ref.objectField[share.ref.field] = (share.ref.isArray == true) ? new Array() : "";
+          if(share.ref.objectField[share.ref.field] instanceof Array)
+            share.ref.objectField[share.ref.field].push(dataResponse.data._id);
           else
-            share.ref.updateObject[share.ref.updateField] = dataResponse.data._id;
+            share.ref.objectField[share.ref.field] = dataResponse.data._id;
         }
       }
       if(windowCallBack)

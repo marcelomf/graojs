@@ -47,9 +47,32 @@ graoJS.factory('share', ['config', '$timeout', '$http', function(config, $timeou
         this.selectWindow = this.selectWindowBack.pop();
       },
       ref : {
-        updateObject : null,
-        updateField : null,
-        updateList : null
+        schemaObject : null,
+        schemaList : null,
+        isArray: false,
+        object: null,
+        objectField : null,
+        field : null,
+        list : null
+      },
+      refHistory : {},
+      refAdd : function(ref) {
+        this.ref = ref;
+        if(this.ref.schemaObject)
+          this.refHistory[this.ref.schemaObject] = angular.copy(this.ref);
+      },
+      refClean : function() {
+        if(this.ref.schemaObject)
+          this.refHistory[this.ref.schemaObject] = angular.copy(this.ref);
+        this.ref = {
+          schemaObject : null,
+          schemaList : null,
+          isArray: false,
+          object: null,
+          objectField : null,
+          field : null,
+          list : null
+        };
       }
   };
   return share;
