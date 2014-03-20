@@ -1,4 +1,4 @@
 .form-group.pull-right
-  button.btn.btn-default(ng-click='query(); count(); share.window("list");')=__('List')
+  button.btn.btn-default(ng-click='query{{ schema | capitalize }}(); count{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}");')=__('List')
   | 
-  button.btn.btn-success(ng-click='clear(); share.window("createOrUpdate");')=__('New')
+  button.btn.btn-success(ng-click='clear{{ schema | capitalize }}(); share.window("createOrUpdate{{ schema | capitalize }}");')=__('New')

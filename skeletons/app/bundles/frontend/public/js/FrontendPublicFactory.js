@@ -37,12 +37,19 @@ graoJS.factory('share', ['config', '$timeout', '$http', function(config, $timeou
       selectWindow: "",
       selectWindowBack: new Array(),
       window: function(windowName){
-        if(this.selectWindowBack != windowName && this.selectWindowBack != this.selectWindow && this.selectWindow != windowName)
+        if(this.selectWindowBack != windowName && 
+          this.selectWindowBack != this.selectWindow && 
+          this.selectWindow != windowName)
           this.selectWindowBack.push(this.selectWindow);
         this.selectWindow = windowName;
       },
       windowBack: function(){
         this.selectWindow = this.selectWindowBack.pop();
+      },
+      ref : {
+        updateObject : null,
+        updateField : null,
+        updateList : null
       }
   };
   return share;

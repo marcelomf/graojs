@@ -9,8 +9,8 @@ h3=__('{{ schema | capitalize }}')
         span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}._{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }} {% endif %}{% endif %} 
   {%- endfor %}
 .form-group
-  button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdate");')=__('Edit')
+  button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdate{{ schema | capitalize }}");')=__('Edit')
   | 
-  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear{{ schema | capitalize }}(); query{{ schema | capitalize }}(); count{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}");')=__('Remove')
   | 
-  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')
+  button.btn.btn-default(type='button', ng-click='clear{{ schema | capitalize }}(); query{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}")')=__('List')

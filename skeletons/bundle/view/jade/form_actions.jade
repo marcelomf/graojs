@@ -1,10 +1,10 @@
 .form-group
-  button.btn.btn-success(type='button', ng-click='createOrUpdate("list");')=__('Save')
+  button.btn.btn-success(type='button', ng-click='createOrUpdate{{ schema | capitalize }}("list{{ schema | capitalize }}");')=__('Save')
   | 
-  button.btn.btn-warning(type='button', ng-click='createOrUpdate("createOrUpdate");')=__('Save and continue')
+  button.btn.btn-warning(type='button', ng-click='createOrUpdate{{ schema | capitalize }}("createOrUpdate{{ schema | capitalize }}");')=__('Save and continue')
   | 
-  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear{{ schema | capitalize }}(); query{{ schema | capitalize }}(); count{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}");')=__('Remove')
   | 
-  button.btn.btn-info(type='button', ng-click='share.window("show")')=__('Show')
+  button.btn.btn-info(type='button', ng-click='share.window("show{{ schema | capitalize }}")')=__('Show')
   | 
-  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')
+  button.btn.btn-default(type='button', ng-click='clear{{ schema | capitalize }}(); query{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}")')=__('List')

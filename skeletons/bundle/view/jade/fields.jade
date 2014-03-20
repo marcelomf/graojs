@@ -69,7 +69,7 @@
         {% if !isMultiple %}option.form-control(value=''){% endif %}
         option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ field.ref | lower }}s') {{ '{{' }} {{ field.ref | lower }}.{% if field.refLabel %}{{ field.refLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter %}
       span.input-group-btn
-        button.btn.btn-default(ng-class="{'btn-danger': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}", ng-click='clear{{ field.ref | capitalize }}(); share.window("createOrUpdate{{ field.ref | capitalize }}");') + {%- endif %}{%- else %}  
+        button.btn.btn-default(ng-class="{'btn-danger': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}", ng-click='{{ field.fullPath|replace("\.([^\.]*)$", "", "g") }} = {{ field.fullPath|replace("\.([^\.]*)$", "", "g") }} != null ? {{ field.fullPath|replace("\.([^\.]*)$", "", "g") }} : {}; share.ref.updateObject = {{ field.fullPath|replace("\.([^\.]*)$", "", "g") }}; share.ref.updateField = "{{ field.fullPath|replace(".*\.", "", "g") }}"; share.ref.updateList = {{ field.ref | lower }}s; share.window("createOrUpdate{{ field.ref | capitalize }}");') + {%- endif %}{%- else %}  
     select.form-control(ui-select2, ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
       {% if !isMultiple %}option.form-control(value=''){% endif %}{%- if field.options %}{%- for option in field.options %}
       option.form-control(value='{{ loop.key }}')=__('{{ option }}'){%- endfor %}{%- endif %}{%- endif %}
@@ -96,7 +96,6 @@
 
   {%- macro subDocArray() %}
   {%- for fieldName, field in fields %}{%- if field.isArray == true %}
-div(ng-controller="{{ fieldName | capitalize }}PublicController", ng-init=""+ngModelName+".{{ fieldName }} = "+ngModelName+".{{ fieldName }} == null ? [] : "+ngModelName+".{{ fieldName }}; new{{ fieldName | capitalize }}Mode = 'create'; new{{ fieldName | capitalize}} = {}; {{ fieldName | lower }} = "+ngModelName+".{{ fieldName }};")
   {%- for subFieldName, subField in field.fields %}
   {{ render_field(schema, 'new'+fieldName|capitalize+'.'+subFieldName, subField, isFilter, true) }}
   {%- endfor %}
@@ -109,7 +108,7 @@ div(ng-controller="{{ fieldName | capitalize }}PublicController", ng-init=""+ngM
             th=__('{{ subField.label }}') {%- endfor %}
             th=__('Actions')
         tbody
-          tr(ng-repeat="item in {{ fieldName | lower }}"){%- for subFieldName, subField in field.fields %}
+          tr(ng-repeat="item in {{ field.fullPath }}"){%- for subFieldName, subField in field.fields %}
             td {{ '{{' }} item.{{ subFieldName }} }}{%- endfor %}
             td
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ fieldName | capitalize }}ByIndex($index);') 

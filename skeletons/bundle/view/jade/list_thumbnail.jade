@@ -13,13 +13,13 @@
             p {% if !field.ref || !field.refLabel %}{{ '{{' }} {{ schema | lower }}.{{ fieldName }} }}{% else %}{% if field.isArray != true %}{{ '{{' }}{{ schema | lower }}.{{ fieldName }}.{{ field.refLabel }} }}{% else %}
             span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
       {%- endif %}{%- endfor %}
-            button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')=__('Edit')
+            button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("createOrUpdate{{ schema | capitalize }}");')=__('Edit')
             | 
-            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();')=__('Remove')
+            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroy{{ schema | capitalize }}ByIndex($index); query{{ schema | capitalize }}(); count{{ schema | capitalize }}();')=__('Remove')
             | 
-            button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select($index); share.window("show");')=__('Show')
+            button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("show{{ schema | capitalize }}");')=__('Show')
 .row
   .col-md-12.text-right
     p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')
   .col-md-12
-    button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore(); count();')=__('MORE')
+    button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore{{ schema | capitalize }}(); count{{ schema | capitalize }}();')=__('MORE')

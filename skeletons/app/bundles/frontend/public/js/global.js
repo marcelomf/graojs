@@ -20,6 +20,17 @@ function clearObject(obj){
   }
 }
 
+function uniqueTrue(field, newItem, itemArray){
+  if(newItem[field] == true) {
+    if(itemArray.length > 0) {
+      for(var item in itemArray) {
+        if(itemArray[item] != newItem)
+          itemArray[item][field] = false;
+      }
+    }
+  }
+}
+
 function validate(alert, errorObject, responseData, pathsIgnore){
   if(!pathsIgnore)
     pathsIgnore = new Array();
@@ -112,5 +123,11 @@ var DataList = function() {
   this.sortBy = function(fieldName){
     this.sort.field = fieldName; 
     this.sort.type = (this.sort.type == '-') ? '' : '-';
+  }
+
+  this.reset = function(){
+    this.filter = null;
+    this.sort = { field: '_id', type: '-'};
+    this.page = { skip: 0, limit: 10, current: 1 };
   }
 }
