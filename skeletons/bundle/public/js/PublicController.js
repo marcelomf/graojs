@@ -83,18 +83,6 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
     function save() {
       var {{ schema | lower }}Json = $scope.{{ schema | lower }};
-{%- for fieldName, field in fields %}{%- if field.ref %}
-{%- if field.isArray == true %}
-{%- if field.type != 'select' %}
-      var {{ fieldName }}Ids = new Array();
-      angular.forEach({{ schema | lower }}Json.{{ fieldName }}, function({{ field.ref | lower }}){
-        {{ fieldName }}Ids.push({{ field.ref | lower }}._id);
-      });
-      {{ schema | lower }}Json.{{ fieldName }} = {{ fieldName }}Ids;
-{%- endif %}
-{%- else %}
-      {{ schema | lower }}Json.{{ fieldName }} = ({{ schema | lower }}Json.{{ fieldName }} && {{ schema | lower }}Json.{{ fieldName }}._id) ? {{ schema | lower }}Json.{{ fieldName }}._id : null;
-{%- endif %}{%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
         {{ schema | capitalize }}.update({{ schema | lower }}Json, function(dataResponse){ 
           if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse))
