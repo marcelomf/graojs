@@ -33,12 +33,14 @@ service.get = function(req, res) {
 }
 
 service.query = function(req, res) {
-  var dataList = controllers.processDataList({{ schema | capitalize }}, req.query);
+  var dataList = { page: {}, sort: 'field -_id' };
+  if(req.query.filter || req.query.sort || req.query.page)
+    dataList = controllers.processDataList({{ schema | capitalize }}, req.query);
 
-  {{ schema | capitalize }}.find(dataList.filter).
-    sort(dataList.sort).
-    skip(dataList.page.skip).
-    limit(dataList.page.limit).
+  {{ schema | capitalize }}.find(dataList.filter || null).
+    sort(dataList.sort || null).
+    skip(dataList.page.skip || null).
+    limit(dataList.page.limit || null).
     populate('{{ schema | lower }}'){%- for fieldName, field in fields %}{%- if field.ref %}.
     populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.
     exec(function(err, {{ schema | lower }}s) {

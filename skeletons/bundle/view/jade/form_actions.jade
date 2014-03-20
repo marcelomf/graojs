@@ -3,7 +3,7 @@
   | 
   button.btn.btn-warning(type='button', ng-click='createOrUpdate{{ schema | capitalize }}("createOrUpdate{{ schema | capitalize }}");')=__('Save and continue')
   | 
-  button.btn.btn-danger(type='button', ng-click='{{ schema | lower }}.$delete(); clear{{ schema | capitalize }}(); query{{ schema | capitalize }}(); count{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-show="{{ schema | lower }}._id", ng-click='{{ schema | lower }}.$delete(); clear{{ schema | capitalize }}(); query{{ schema | capitalize }}(); count{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}");')=__('Remove')
   | 
   button.btn.btn-info(type='button', ng-click='share.window("show{{ schema | capitalize }}")')=__('Show')
   | 

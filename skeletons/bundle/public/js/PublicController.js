@@ -159,7 +159,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       share.alert.style = dataResponse.event.style;
       share.alert.message = dataResponse.event.message;
     });
-    $scope.dataList.data.splice(index, 1);
+    $scope.dataList.data.splice(index, 1);{%- if isAutoRefered === true %}
+    $scope.query{{ schema | capitalize }}("all");{% endif %}
   }
 
   $scope.query{{ schema | capitalize }} = function(queryMode) {
@@ -168,23 +169,27 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       $scope.dataList.reset();
     
     if(queryMode === "all") {
-      $scope.dataList.data = {{ schema | capitalize }}.query(null, function(dataResponse){ 
+      {{ schema | capitalize }}.query(null, function(dataResponse){ 
         $scope.{{ schema | lower }}s = dataResponse;
+        $scope.dataList.data = dataResponse.slice(0, 10);
         $scope.dataList.status.listing = $scope.dataList.data.length;
         share.alertClean();
       });
     } else {
-      $scope.dataList.data = {{ schema | capitalize }}.query($scope.dataList.toParams(), function(dataResponse){ 
+      {{ schema | capitalize }}.query($scope.dataList.toParams(), function(dataResponse){ 
+        $scope.dataList.data = dataResponse;
         $scope.dataList.status.listing = $scope.dataList.data.length;
         share.alertClean();
       });
     }
     
-  }
-  $scope.query{{ schema | capitalize }}();
+  }{%- if isAutoRefered === true %}
+  $scope.query{{ schema | capitalize }}("all");{% else %}
+  $scope.query{{ schema | capitalize }}();{% endif %}
 
   $scope.count{{ schema | capitalize }} = function() {
-    $scope.dataList.status = {{ schema | capitalize }}.count($scope.dataList.toParams(), function(dataResponse){
+    {{ schema | capitalize }}.count($scope.dataList.toParams(), function(dataResponse){
+      $scope.dataList.status = dataResponse;
       $scope.dataList.status.listing = $scope.dataList.data.length;
     });
   }
@@ -193,9 +198,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   $scope.queryMore{{ schema | capitalize }} = function() {
     share.alertLoad();
     $scope.dataList.page.skip = $scope.dataList.data.length;
-    var more{{ schema | capitalize }}s = {{ schema | capitalize }}.query($scope.dataList.toParams(), function(){
-      angular.forEach(more{{ schema | capitalize }}s, function({{ schema | lower }}){
-        $scope.dataList.data.push({{ schema | lower }});
+    {{ schema | capitalize }}.query($scope.dataList.toParams(), function(dataResponse){
+      angular.forEach(dataResponse, function(data){
+        $scope.dataList.data.push(data);
         $scope.dataList.status.listing++;
       });
       share.alertClean();
@@ -231,9 +236,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
   $scope.query{{ ref | capitalize }} = function(){
     $scope.{{ ref | lower }}s = {{ ref | capitalize }}.query();
   };
-  $scope.query{{ ref | capitalize }}();{% else %}
-  $scope.query{{ ref | capitalize }}("all");{% endif %}
-{%- endfor %}
+  $scope.query{{ ref | capitalize }}();
+{% endif %}{%- endfor %}
 
 {%- for fieldName, field in fields %}{%- if field.ref && field.type != "select" %}
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
@@ -245,8 +249,6 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}
 {{ render_subDoc(schema, fieldName, field) }}
 {%- endfor %}
-
-{{ render_refSelect(schema, fields) }}
 
 {{ render_subDocArray() }}
 
