@@ -58,6 +58,27 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 
   $scope.createOrUpdate{{ schema | capitalize }} = function(windowCallBack, isRefered) {
     share.alertLoad();
+    function finallySaved(dataResponse, windowCallBack, isRefered) {
+      if(!isRefered) {
+        $scope.query{{ schema | capitalize }}(); 
+        $scope.count{{ schema | capitalize }}(); 
+        $scope.clear{{ schema | capitalize }}();
+      } else {
+        share.ref.updateList = (share.ref.updateList instanceof Array) ? share.ref.updateList : new Array();
+        share.ref.updateList.push(dataResponse.data);
+        if(dataResponse.data._id) {
+          if(share.ref.updateObject[share.ref.updateField] instanceof Array)
+            share.ref.updateObject[share.ref.updateField].push(dataResponse.data._id);
+          else
+            share.ref.updateObject[share.ref.updateField] = dataResponse.data._id;
+        }
+      }
+      if(windowCallBack)
+        share.window(windowCallBack); 
+      else
+        share.windowBack();
+    }
+
     function save() {
       var {{ schema | lower }}Json = $scope.{{ schema | lower }};
 {%- for fieldName, field in fields %}{%- if field.ref %}
@@ -74,49 +95,13 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
 {%- endif %}{%- endif %}{%- endfor %}
       if($scope.{{ schema | lower }}._id != null)
         {{ schema | capitalize }}.update({{ schema | lower }}Json, function(dataResponse){ 
-          if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){
-            if(!isRefered) {
-              $scope.query{{ schema | capitalize }}(); 
-              $scope.count{{ schema | capitalize }}(); 
-              $scope.clear{{ schema | capitalize }}();
-            } else {
-              share.ref.updateList = (share.ref.updateList instanceof Array) ? share.ref.updateList : new Array();
-              share.ref.updateList.push(dataResponse.data);
-              if(dataResponse.data._id) {
-                if(share.ref.updateObject[share.ref.updateField] instanceof Array)
-                  share.ref.updateObject[share.ref.updateField].push(dataResponse.data._id);
-                else
-                  share.ref.updateObject[share.ref.updateField] = dataResponse.data._id;
-              }
-            }
-            if(windowCallBack)
-              share.window(windowCallBack); 
-            else
-              share.windowBack();
-          }
+          if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse))
+            finallySaved(dataResponse, windowCallBack, isRefered);
         });
       else
         {{ schema | capitalize }}.save({{ schema | lower }}Json, function(dataResponse){ 
-          if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse)){ 
-            if(!isRefered) {
-              $scope.query{{ schema | capitalize }}(); 
-              $scope.count{{ schema | capitalize }}(); 
-              $scope.clear{{ schema | capitalize }}();
-            } else {
-              share.ref.updateList = (share.ref.updateList instanceof Array) ? share.ref.updateList : new Array();
-              share.ref.updateList.push(dataResponse.data);
-              if(dataResponse.data._id) {
-                if(share.ref.updateObject[share.ref.updateField] instanceof Array)
-                  share.ref.updateObject[share.ref.updateField].push(dataResponse.data._id);
-                else
-                  share.ref.updateObject[share.ref.updateField] = dataResponse.data._id;
-              }
-            }
-            if(windowCallBack)
-              share.window(windowCallBack); 
-            else
-              share.windowBack();
-          }
+          if(validate(share.alert, $scope.errors.{{ schema | lower }}, dataResponse))
+            finallySaved(dataResponse, windowCallBack, isRefered);
         });
     }
 {%- if hasUnion == true %}
