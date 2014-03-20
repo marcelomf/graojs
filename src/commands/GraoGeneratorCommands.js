@@ -154,6 +154,13 @@ var GraoGeneratorCommands = function (di) {
         }
       }
     }
+    resultUi['isAutoRefered'] = false;
+    for(var i in resultUi['allRefs']) {
+      if(resultUi['allRefs'][i].toLowerCase() == resultUi.schema.toLowerCase()) {
+        resultUi['isAutoRefered'] = true;
+        break;
+      }
+    }
     return resultUi;
   }
 

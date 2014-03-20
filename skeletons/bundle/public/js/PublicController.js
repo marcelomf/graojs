@@ -60,7 +60,9 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     share.alertLoad();
     function finallySaved(dataResponse, windowCallBack, isRefered) {
       if(!isRefered) {
-        $scope.query{{ schema | capitalize }}(); 
+        {%- if isAutoRefered === true %}
+        $scope.query{{ schema | capitalize }}("all");{% else %}
+        $scope.query{{ schema | capitalize }}();{% endif %}
         $scope.count{{ schema | capitalize }}(); 
         $scope.clear{{ schema | capitalize }}();
       } else {

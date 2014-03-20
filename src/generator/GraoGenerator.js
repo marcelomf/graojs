@@ -118,7 +118,7 @@ var GraoGenerator = function () {
               fileContent = fs.readFileSync(tpl, 'utf-8');
               if(!self.checkIgnore(self.config.parseIgnores, dist)) {
                 fileContent = self.swigRender(fileContent, args);
-                if(dist.indexOf('fields') > 0) {
+                /*if(dist.indexOf('fields') > 0) {
                   var lines = fileContent.split('\n');
                   var isAppend = false;
                   for(var i in lines){
@@ -133,7 +133,7 @@ var GraoGenerator = function () {
                   }
                   fileContent = lines.join('\n');
                   delete lines;
-                }
+                }*/
               }
                 
               fileType = 'utf-8';

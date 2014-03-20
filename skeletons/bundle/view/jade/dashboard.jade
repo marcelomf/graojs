@@ -1,4 +1,4 @@
-{%- macro render_refSelect(schema, fields) %}{%- for ref, bundle in allRefsBundle %}
+{%- macro render_refSelect(schema, fields) %}{%- for ref, bundle in allRefsBundle %}{%if ref|lower != schema|lower %}
       .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ ref | capitalize }}", ng-controller='{{ ref | capitalize }}PublicController')
         h3=__('{{ ref | capitalize }}')
           small=__('{{ schema | capitalize }}')
@@ -10,7 +10,7 @@
             button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ ref | capitalize }}(null, true);')=__('Save and back')
             | 
             button.btn.btn.btn-default(type='button', ng-click='clear{{ ref | capitalize }}(); share.windowBack();')=__('Cancel')
-{%- endfor %}{%- endmacro %}
+{% endif %}{%- endfor %}{%- endmacro %}
 extends /frontend/theme/layout
 block content
   .container(ng-controller='{{ schema | capitalize }}PublicController', ng-init='clear{{ schema | capitalize }}(); share.window("list{{ schema | capitalize }}");')

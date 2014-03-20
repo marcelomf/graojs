@@ -63,11 +63,11 @@
 
   {%- macro select(schema, fieldName, field, isFilter, isSubDocArrayField) %}
   {%- set isMultiple = false %}
-  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}"){%- if field.ref %}
-    .input-group
+  .form-group(ng-class="{'has-error': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}"){%- if field.ref %}{%- if !isFilter && field.ref|lower != schema|lower %}
+    .input-group{% endif %}
       select.form-control(ui-select2, ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
         {% if !isMultiple %}option.form-control(value=''){% endif %}
-        option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ field.ref | lower }}s') {{ '{{' }} {{ field.ref | lower }}.{% if field.refLabel %}{{ field.refLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter %}
+        option.form-control(value='{{ "{{" }}{{ field.ref | lower }}._id }}', ng-repeat='{{ field.ref | lower }} in {{ field.ref | lower }}s') {{ '{{' }} {{ field.ref | lower }}.{% if field.refLabel %}{{ field.refLabel }}{% else %}{{ '_id' }}{% endif %} }}{%- if !isFilter && field.ref|lower != schema|lower %}
       span.input-group-btn
         button.btn.btn-default(ng-class="{'btn-danger': errors."+{{ get_ngmodel(fieldName, isSubDocArrayField) }}+"}", ng-click='{{ field.fullPath|replace("\.([^\.]*)$", "", "g") }} = {{ field.fullPath|replace("\.([^\.]*)$", "", "g") }} != null ? {{ field.fullPath|replace("\.([^\.]*)$", "", "g") }} : {}; share.ref.updateObject = {{ field.fullPath|replace("\.([^\.]*)$", "", "g") }}; share.ref.updateField = "{{ field.fullPath|replace(".*\.", "", "g") }}"; share.ref.updateList = {{ field.ref | lower }}s; share.window("createOrUpdate{{ field.ref | capitalize }}");') + {%- endif %}{%- else %}  
     select.form-control(ui-select2, ng-model={{ get_ngmodel(fieldName, isSubDocArrayField) }}, data-placeholder=__('{{ field.label }}'){% if field.attr %},{% for attr in field.attr %}{% if loop.key == 'multiple' && attr==true %}{%- set isMultiple = true %}{% endif %} {{ loop.key }}='{{ attr }}'{% endfor %}{% endif %})
@@ -95,13 +95,14 @@
   {%- endmacro %}
 
   {%- macro subDocArray() %}
-  {%- for fieldName, field in fields %}{%- if field.isArray == true %}
+  {%- for fieldName, field in fields %}{%- if field.isArray == true && field.isSubDoc %}
+  h4=__("{{fieldName | capitalize}}")
   {%- for subFieldName, subField in field.fields %}
   {{ render_field(schema, 'new'+fieldName|capitalize+'.'+subFieldName, subField, isFilter, true) }}
   {%- endfor %}
   .form-group
     button.btn.btn-default.btn-lg.btn-block(ng-click='createOrUpdate{{ fieldName | capitalize }}(); clear{{ fieldName | capitalize }}();')=__('Save')
-    .table-responsive
+    .table-responsive(ng-show="{{field.fullPath}} && {{field.fullPath}}.length > 0")
       table.table.table-striped
         thead
           tr {%- for subFieldName, subField in field.fields %}
