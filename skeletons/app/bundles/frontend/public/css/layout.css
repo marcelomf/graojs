@@ -36,3 +36,13 @@ table.table thead .sorting_desc_disabled { background: url('/img/sort_desc_disab
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
 .form-inline div { margin-right: 5px; }
+
+.alert-graojs { 
+	position: fixed !important;
+	top: 50px;
+	z-index: 1029 !important; 
+	max-width: 33%;
+	left: 34%;
+	-webkit-transform: translateZ(0); 
+	-webkit-backface-visibility: hidden; 
+}
