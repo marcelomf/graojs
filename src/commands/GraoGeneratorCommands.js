@@ -77,11 +77,13 @@ var GraoGeneratorCommands = function (di) {
           for(var uiName in uiSchema) {
             varsGenerate[uiName] = uiSchema[uiName];
           }
-          varsGenerate = self.prepareSubDocFields(varsGenerate);
+          varsGenerate = self.preparePaths(varsGenerate);
           varsGenerate = self.prepareRefFields(varsGenerate);         
-          //console.log(varsGenerate['allSubDocFields']);
-          //console.log(varsGenerate['allRefFields']);
-          //console.log(varsGenerate);
+          if(varsGenerate.fields.provider) {
+            //console.log(varsGenerate.fields.individual);
+            //console.log(varsGenerate.fields.provider);
+            //process.exit(1);
+          }
           if(!fs.existsSync("bundles/"+varsGenerate['bundle']))
             fs.mkdirSync("bundles/"+varsGenerate['bundle'], 0755);
           generator.generate(varsGenerate, force);
@@ -98,15 +100,10 @@ var GraoGeneratorCommands = function (di) {
     if(!fields)
       fields = resultUi.fields;
 
-    if(!resultUi['allRefFields'])
-      resultUi['allRefFields'] = {};
-
     if(!resultUi['allRefsBundle'])
       resultUi['allRefsBundle'] = {};
 
     for(fieldName in fields) {
-      //if(fields[fieldName].ref && !resultUi['allRefFields'][fieldName]){
-      var newEntrie = resultUi.schema+'.'+fieldName;
       if(fields[fieldName].ref){
         if(!fields[fieldName].bundle) {
            var schemaRefObj = self.prepareSchema(fields[fieldName].ref, 
@@ -121,37 +118,11 @@ var GraoGeneratorCommands = function (di) {
         } else {
           resultUi['allRefsBundle'][fields[fieldName].ref] = fields[fieldName].bundle;
         }
-        if(fullPath) {
-          newEntrie = fullPath.normal+'.'+fieldName;
-          resultUi['allRefFields'][newEntrie] = fields[fieldName];
-          resultUi['allRefFields'][newEntrie]['fullPath'] = fullPath.normal+'.'+fieldName;
-          resultUi['allRefFields'][newEntrie]['fullPathCc'] = fullPath.cc+self.capitalize(fieldName);
-        } else {
-          newEntrie = resultUi.schema+'.'+fieldName;
-          resultUi['allRefFields'][newEntrie] = fields[fieldName];
-          resultUi['allRefFields'][newEntrie]['fullPath'] = resultUi.schema+'.'+fieldName;
-          resultUi['allRefFields'][newEntrie]['fullPathCc'] = resultUi.schema+self.capitalize(fieldName);
-        }
       }
-      if(fields[fieldName].hasRef && fields[fieldName].fields){
-        if(fields[fieldName].isSubDoc) {
-          this.prepareRefFields(resultUi, fields[fieldName].fields, {normal: fields[fieldName]['fullPath'], 
-                                                                    cc: fields[fieldName]['fullPathCc'] });
-        } else {
-          if(fullPath) {
-            fullPath.normal += '.'+fieldName;
-            fullPath.cc += self.capitalize(fieldName);
-            this.prepareRefFields(resultUi, fields[fieldName].fields, fullPath);  
-          } else {
-            if(resultUi['allRefFields'][newEntrie]) {
-              this.prepareRefFields(resultUi, fields[fieldName].fields, {normal: resultUi['allRefFields'][newEntrie]['fullPath'], 
-                                                                     cc: resultUi['allRefFields'][newEntrie]['fullPathCc'] });
-            } else {
-              this.prepareRefFields(resultUi, fields[fieldName].fields, {normal: resultUi.schema+"."+fieldName, 
-                                                                    cc: resultUi.schema+self.capitalize(fieldName) });
-            }
-          }
-        }
+      if(fields[fieldName].fields){
+        this.prepareRefFields(resultUi, fields[fieldName].fields, {normal: fields[fieldName].fullPath, 
+                                                                    cc: fields[fieldName].fullPathCc });
+
       }
     }
     resultUi['isAutoRefered'] = false;
@@ -164,43 +135,21 @@ var GraoGeneratorCommands = function (di) {
     return resultUi;
   }
 
-  this.prepareSubDocFields = function(resultUi, fields, fullPath) {
+  this.preparePaths = function(resultUi, fields, fullPath) {
     if(!fields)
       fields = resultUi.fields;
 
-    if(!resultUi['allSubDocFields'])
-      resultUi['allSubDocFields'] = {};
-
     for(fieldName in fields) {
-      var newEntrie = resultUi.schema+'.'+fieldName;
-      if(fields[fieldName].isSubDoc){
-        if(fullPath) {
-          newEntrie = fullPath.normal+'.'+fieldName;
-          resultUi['allSubDocFields'][newEntrie] = fields[fieldName];
-          resultUi['allSubDocFields'][newEntrie]['fullPath'] = fullPath.normal+'.'+fieldName;
-          resultUi['allSubDocFields'][newEntrie]['fullPathCc'] = fullPath.cc+self.capitalize(fieldName);
-        } else {
-          newEntrie = resultUi.schema+'.'+fieldName;
-          resultUi['allSubDocFields'][newEntrie] = fields[fieldName];
-          resultUi['allSubDocFields'][newEntrie]['fullPath'] = resultUi.schema+'.'+fieldName;
-          resultUi['allSubDocFields'][newEntrie]['fullPathCc'] = resultUi.schema+self.capitalize(fieldName);
-        }
+      if(fullPath) {
+        fields[fieldName].fullPath = fullPath.normal+'.'+fieldName;
+        fields[fieldName].fullPathCc = fullPath.cc+self.capitalize(fieldName);
+      } else {
+        fields[fieldName].fullPath = resultUi.schema+'.'+fieldName;
+        fields[fieldName].fullPathCc = resultUi.schema+self.capitalize(fieldName);
       }
-      if(fields[fieldName].hasSubDoc && fields[fieldName].fields){
-        if(fullPath) {
-          fullPath.normal += '.'+fieldName;
-          fullPath.cc += self.capitalize(fieldName);
-          this.prepareSubDocFields(resultUi, fields[fieldName].fields, fullPath);
-        } else {
-          if(resultUi['allSubDocFields'][newEntrie]) {
-            this.prepareSubDocFields(resultUi, fields[fieldName].fields, {normal: resultUi['allSubDocFields'][newEntrie]['fullPath'], 
-                                                                    cc: resultUi['allSubDocFields'][newEntrie]['fullPathCc'] });
-          } else {
-            this.prepareSubDocFields(resultUi, fields[fieldName].fields, {normal: resultUi.schema+"."+fieldName, 
-                                                                    cc: resultUi.schema+self.capitalize(fieldName) });
-          }
-        }
-          
+      if(fields[fieldName].fields){
+        this.preparePaths(resultUi, fields[fieldName].fields, {normal: fields[fieldName].fullPath, 
+                                                                    cc: fields[fieldName].fullPathCc });
       }
     }
     return resultUi;
@@ -287,8 +236,8 @@ var GraoGeneratorCommands = function (di) {
           if(jsonFields[fieldName].graoui.type == 'union')
             result.hasUnion = true;
           result.fields[fieldName] = jsonFields[fieldName].graoui;
-          result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
-          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);
+          /*result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
+          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);*/
           result.fields[fieldName].isArray = false;
           if(jsonFields[fieldName].ref != null) {
             self.pushRefField(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName,
@@ -299,8 +248,8 @@ var GraoGeneratorCommands = function (di) {
           if(jsonFields[fieldName][0].graoui.type == 'union')
             result.hasUnion = true;
           result.fields[fieldName] = jsonFields[fieldName][0].graoui;
-          result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
-          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);
+          /*result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
+          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);*/
           result.fields[fieldName].isArray = true;
           if(jsonFields[fieldName][0].ref != null) {
             self.pushRefField(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName,
@@ -311,8 +260,8 @@ var GraoGeneratorCommands = function (di) {
             jsonFields[fieldName][0] != null && 
             self.hasGraoui(jsonFields[fieldName][0]))) {
           result.fields[fieldName] = {};
-          result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
-          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);
+          /*result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
+          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);*/
           result.fields[fieldName].fields = prepareFields((jsonFields[fieldName] instanceof Array) ? 
                                               jsonFields[fieldName][0] : 
                                               jsonFields[fieldName]).fields;

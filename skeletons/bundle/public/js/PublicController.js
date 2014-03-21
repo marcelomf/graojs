@@ -1,44 +1,48 @@
-{%- macro render_subDocArray() %}
-{%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray == true%}
-  $scope.new{{ fieldName | capitalize }} = $scope.new{{ fieldName | capitalize }} || (share.getRefObject("new{{ fieldName | capitalize }}") != null) ? share.getRefObject("new{{ fieldName | capitalize }}") : {};
-  $scope.new{{ fieldName | capitalize }}Mode = 'create';
+{%- macro subDocArray(schema, fieldName, field) %}
+  $scope.new{{ field.fullPathCc | capitalize }} = $scope.new{{ field.fullPathCc | capitalize }} || (share.getRefObject("new{{ field.fullPathCc | capitalize }}") != null) ? share.getRefObject("new{{ field.fullPathCc | capitalize }}") : {};
+  $scope.new{{ field.fullPathCc | capitalize }}Mode = 'create';
   $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();
 
-  $scope.createOrUpdate{{ fieldName | capitalize }} = function(){
+  $scope.createOrUpdate{{ field.fullPathCc | capitalize }} = function(){
     if($scope.{{ field.fullPath }} == null)
-      return share.alertDanger("{{ fieldName | capitalize }} not to be null.");
-    if($scope.new{{ fieldName | capitalize }}Mode == 'create')
-      $scope.{{ field.fullPath }}.push($scope.new{{ fieldName | capitalize }});
-    $scope.clear{{ fieldName | capitalize }}();
+      return share.alertDanger("{{ field.fullPathCc | capitalize }} not to be null.");
+    if($scope.new{{ field.fullPathCc | capitalize }}Mode == 'create')
+      $scope.{{ field.fullPath }}.push($scope.new{{ field.fullPathCc | capitalize }});
+    $scope.clear{{ field.fullPathCc | capitalize }}();
   }
 
-  $scope.clear{{ fieldName | capitalize }} = function() {
-    delete $scope.new{{ fieldName | capitalize }};
-    $scope.new{{ fieldName | capitalize }} = {};
-    $scope.new{{ fieldName | capitalize }}Mode = 'create';
+  $scope.clear{{ field.fullPathCc | capitalize }} = function() {
+    delete $scope.new{{ field.fullPathCc | capitalize }};
+    $scope.new{{ field.fullPathCc | capitalize }} = {};
+    $scope.new{{ field.fullPathCc | capitalize }}Mode = 'create';
   }
 
-  $scope.select{{ fieldName | capitalize}} = function(index) {
+  $scope.select{{ field.fullPathCc | capitalize}} = function(index) {
     if($scope.{{ field.fullPath }} == null || !$scope.{{ field.fullPath }}[index])
-      return share.alertDanger("{{ fieldName | capitalize }} not found!");
-    $scope.new{{ fieldName | capitalize }} = $scope.{{ field.fullPath }}[index];
-    $scope.new{{ fieldName | capitalize }}Mode = 'update';
+      return share.alertDanger("{{ field.fullPathCc | capitalize }} not found!");
+    $scope.new{{ field.fullPathCc | capitalize }} = $scope.{{ field.fullPath }}[index];
+    $scope.new{{ field.fullPathCc | capitalize }}Mode = 'update';
   }
 
-  $scope.destroy{{ fieldName | capitalize }}ByIndex = function(index) {
+  $scope.destroy{{ field.fullPathCc | capitalize }}ByIndex = function(index) {
     if($scope.{{ field.fullPath }} == null || !$scope.{{ field.fullPath }}[index])
-      return share.alertDanger("{{ fieldName | capitalize }} not found!");
+      return share.alertDanger("{{ field.fullPathCc | capitalize }} not found!");
     $scope.{{ field.fullPath }}.splice(index, 1);
   }
-{%- endif %}{%- endfor %}{%- endmacro %}
+{%- endmacro %}
 
-{%- macro render_subDoc(schema, fieldName, field) %}
+{%- macro subDoc(schema, fieldName, field) %}
 {%- if field.isSubDoc == true && !field.isArray %}
   $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || {};
   //$scope.errors.{{ field.fullPath }} = false;
+{% if field.hasSubDoc && !field.ref %}{%- for subFieldName, subField in field.fields %}
+  {{ subDoc(schema, subFieldName, subField) }}
+{%- endfor %}{% endif %}
+{%- elseif field.isSubDoc == true && field.isArray %}
+  {{ subDocArray(schema, fieldName, field) }}
 {%- elseif field.hasSubDoc == true && !field.ref %}
 {%- for subFieldName, subField in field.fields %}
-{{ render_subDoc(schema, subFieldName, subField) }}
+{{ subDoc(schema, subFieldName, subField) }}
 {%- endfor %}{%- endif %}{%- endmacro %}
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | capitalize }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | capitalize }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
@@ -241,10 +245,7 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
     $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
   }
 {%- endif %}
-{{ render_subDoc(schema, fieldName, field) }}
+{{ subDoc(schema, fieldName, field) }}
 {%- endfor %}
-
-{{ render_subDocArray() }}
-
 }
 
