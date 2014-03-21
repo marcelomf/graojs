@@ -1,6 +1,6 @@
 {%- macro render_subDocArray() %}
 {%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray == true%}
-  $scope.new{{ fieldName | capitalize }} = {};
+  $scope.new{{ fieldName | capitalize }} = $scope.new{{ fieldName | capitalize }} || (share.getRefObject("new{{ fieldName | capitalize }}") != null) ? share.getRefObject("new{{ fieldName | capitalize }}") : {};
   $scope.new{{ fieldName | capitalize }}Mode = 'create';
   $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();
 
@@ -42,7 +42,9 @@
 {%- endfor %}{%- endif %}{%- endmacro %}
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | capitalize }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | capitalize }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
-  $scope.{{ schema | lower }} = $scope.{{ schema | lower }} || (share.refHistory.{{schema}} != null && share.refHistory.{{schema}}.object != null) ? share.refHistory.{{schema}}.object : {};
+  //console.log($scope.{{ schema | lower }});
+  $scope.{{ schema | lower }} = $scope.{{ schema | lower }} || (share.getRefObject("{{schema|lower}}") != null) ? share.getRefObject("{{schema|lower}}") : {};
+  //console.log($scope.{{ schema | lower }});
   $scope.errors = {};
   $scope.errors.{{ schema | lower }} = {};
   $scope.notFilter = true;
@@ -66,16 +68,8 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
         $scope.count{{ schema | capitalize }}(); 
         $scope.clear{{ schema | capitalize }}();
       } else {
-        share.ref.list = (share.ref.list instanceof Array) ? share.ref.list : new Array();
-        share.ref.list.push(dataResponse.data);
-        if(dataResponse.data._id) {
-          if(!share.ref.objectField[share.ref.field])
-            share.ref.objectField[share.ref.field] = (share.ref.isArray == true) ? new Array() : "";
-          if(share.ref.objectField[share.ref.field] instanceof Array)
-            share.ref.objectField[share.ref.field].push(dataResponse.data._id);
-          else
-            share.ref.objectField[share.ref.field] = dataResponse.data._id;
-        }
+        if(dataResponse.data && dataResponse.data._id)
+          share.refAddObject("{{schema | lower}}", dataResponse.data);
       }
       if(windowCallBack)
         share.window(windowCallBack); 
