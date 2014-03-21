@@ -42,9 +42,7 @@
 {%- endfor %}{%- endif %}{%- endmacro %}
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | capitalize }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | capitalize }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
-  //console.log($scope.{{ schema | lower }});
   $scope.{{ schema | lower }} = $scope.{{ schema | lower }} || (share.getRefObject("{{schema|lower}}") != null) ? share.getRefObject("{{schema|lower}}") : {};
-  //console.log($scope.{{ schema | lower }});
   $scope.errors = {};
   $scope.errors.{{ schema | lower }} = {};
   $scope.notFilter = true;
