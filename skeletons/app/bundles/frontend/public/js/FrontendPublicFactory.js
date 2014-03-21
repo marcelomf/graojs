@@ -115,9 +115,7 @@ graoJS.factory('share', ['config', '$timeout', '$http', function(config, $timeou
           console.log("Share refs: Schema object not found.");
           return;  
         }
-
-        if(!this.refs[ref.schemaObject])
-          this.refs[ref.schemaObject] = ref;
+        this.refs[ref.schemaObject] = ref;
       },
       refClean : function(schemaObject) {
         if(this.refs[schemaObject]) {
