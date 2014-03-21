@@ -46,33 +46,88 @@ graoJS.factory('share', ['config', '$timeout', '$http', function(config, $timeou
       windowBack: function(){
         this.selectWindow = this.selectWindowBack.pop();
       },
-      ref : {
-        schemaObject : null,
-        schemaList : null,
-        isArray: false,
-        object: null,
-        objectField : null,
-        field : null,
-        list : null
+      refs : {},
+      refsUpdates : {},
+      getRefObject : function(schemaObject) {
+        if(!this.refs[schemaObject])
+          return null;
+        if(!this.refs[schemaObject].object)
+          return null;
+        else
+          return this.refs[schemaObject].object;
       },
-      refHistory : {},
+      refAddObject : function(schemaRef, object) {
+        if(!this.refsUpdates[schemaRef]) {
+          console.log("Share refs: Schema ref update not found.");
+          return;
+        }
+
+        if(!this.refsUpdates[schemaRef] || this.refsUpdates[schemaRef].length <= 0) {
+          console.log("Share refs: Updates not found.");
+          return;
+        }
+
+        var ref = this.refsUpdates[schemaRef].pop();
+
+        if(!ref) {
+          console.log("Share refs: Ref schemaRef not found.");
+          return;
+        }
+
+        if(!object) {
+          console.log("Share refs: Object not found.");
+          return;
+        }
+
+        if(!ref.objectField) {
+          console.log("Share refs: Object field not found.");
+          return; 
+        }
+
+        if(ref.refList && ref.refList instanceof Array)
+          ref.refList.push(object);
+
+        if(object._id) {
+          if(!ref.objectField[ref.field])
+            ref.objectField[ref.field] = (ref.isArray == true) ? new Array() : "";
+
+          if(ref.objectField[ref.field] instanceof Array)
+            ref.objectField[ref.field].push(object._id);
+          else
+            ref.objectField[ref.field] = object._id;
+        }
+      },
       refAdd : function(ref) {
-        this.ref = ref;
-        if(this.ref.schemaObject)
-          this.refHistory[this.ref.schemaObject] = angular.copy(this.ref);
+        if(!ref.schemaObject || !ref.schemaRef) {
+          console.log("Share refs: Schemas not found.");
+          return;  
+        }
+
+        if(!this.refsUpdates[ref.schemaRef] || !(this.refsUpdates[ref.schemaRef] instanceof Array)) {
+          this.refsUpdates[ref.schemaRef] = new Array();
+        }
+
+        this.refsUpdates[ref.schemaRef].push(ref);
+        this.refs[ref.schemaObject] = ref;
       },
-      refClean : function() {
-        if(this.ref.schemaObject)
-          this.refHistory[this.ref.schemaObject] = angular.copy(this.ref);
-        this.ref = {
-          schemaObject : null,
-          schemaList : null,
-          isArray: false,
-          object: null,
-          objectField : null,
-          field : null,
-          list : null
-        };
+      refSaveObject : function(ref) {
+        if(!ref.schemaObject) {
+          console.log("Share refs: Schema object not found.");
+          return;  
+        }
+
+        if(!this.refs[ref.schemaObject])
+          this.refs[ref.schemaObject] = ref;
+      },
+      refClean : function(schemaObject) {
+        if(this.refs[schemaObject]) {
+          this.refs[schemaObject].schemaObject = null;
+          this.refs[schemaObject].schemaRef = null;
+          this.refs[schemaObject].object = null;
+          this.refs[schemaObject].objectField = null;
+          this.refs[schemaObject].refList = null;
+          this.refs[schemaObject].field = null;
+        }
       }
   };
   return share;
