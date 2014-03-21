@@ -1,32 +1,32 @@
 {%- macro subDocArray(schema, fieldName, field) %}
-  $scope.new{{ field.fullPathCc | capitalize }} = $scope.new{{ field.fullPathCc | capitalize }} || (share.getRefObject("new{{ field.fullPathCc | capitalize }}") != null) ? share.getRefObject("new{{ field.fullPathCc | capitalize }}") : {};
-  $scope.new{{ field.fullPathCc | capitalize }}Mode = 'create';
+  $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} = $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} || (share.getRefObject("new{{ field.fullPathCc | replace("^"+schema, "", "g") }}") != null) ? share.getRefObject("new{{ field.fullPathCc | replace("^"+schema, "", "g") }}") : {};
+  $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode = 'create';
   $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();
 
-  $scope.createOrUpdate{{ field.fullPathCc | capitalize }} = function(){
+  $scope.createOrUpdate{{ field.fullPathCc | replace("^"+schema, "", "g") }} = function(){
     if($scope.{{ field.fullPath }} == null)
-      return share.alertDanger("{{ field.fullPathCc | capitalize }} not to be null.");
-    if($scope.new{{ field.fullPathCc | capitalize }}Mode == 'create')
-      $scope.{{ field.fullPath }}.push($scope.new{{ field.fullPathCc | capitalize }});
-    $scope.clear{{ field.fullPathCc | capitalize }}();
+      $scope.{{ field.fullPath }} = new Array();
+    if($scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode == 'create')
+      $scope.{{ field.fullPath }}.push($scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }});
+    $scope.clear{{ field.fullPathCc | replace("^"+schema, "", "g") }}();
   }
 
-  $scope.clear{{ field.fullPathCc | capitalize }} = function() {
-    delete $scope.new{{ field.fullPathCc | capitalize }};
-    $scope.new{{ field.fullPathCc | capitalize }} = {};
-    $scope.new{{ field.fullPathCc | capitalize }}Mode = 'create';
+  $scope.clear{{ field.fullPathCc | replace("^"+schema, "", "g") }} = function() {
+    delete $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }};
+    $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} = {};
+    $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode = 'create';
   }
 
-  $scope.select{{ field.fullPathCc | capitalize}} = function(index) {
+  $scope.select{{ field.fullPathCc | replace("^"+schema, "", "g")}} = function(index) {
     if($scope.{{ field.fullPath }} == null || !$scope.{{ field.fullPath }}[index])
-      return share.alertDanger("{{ field.fullPathCc | capitalize }} not found!");
-    $scope.new{{ field.fullPathCc | capitalize }} = $scope.{{ field.fullPath }}[index];
-    $scope.new{{ field.fullPathCc | capitalize }}Mode = 'update';
+      return share.alertDanger('{{ field.fullPathCc | replace("^"+schema, "", "g") }} not found!');
+    $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} = $scope.{{ field.fullPath }}[index];
+    $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode = 'update';
   }
 
-  $scope.destroy{{ field.fullPathCc | capitalize }}ByIndex = function(index) {
+  $scope.destroy{{ field.fullPathCc | replace("^"+schema, "", "g") }}ByIndex = function(index) {
     if($scope.{{ field.fullPath }} == null || !$scope.{{ field.fullPath }}[index])
-      return share.alertDanger("{{ field.fullPathCc | capitalize }} not found!");
+      return share.alertDanger('{{ field.fullPathCc | replace("^"+schema, "", "g") }} not found!');
     $scope.{{ field.fullPath }}.splice(index, 1);
   }
 {%- endmacro %}
