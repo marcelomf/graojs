@@ -1,10 +1,8 @@
-{%- macro subDocArray(schema, fieldName, field) %}
+{%- macro subDocArray(schema, fields) %}{%- for fieldName, field in fields %}{%- if field.isSubDoc && field.isArray %}
   $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} = $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} || (share.getRefObject('new{{ field.fullPathCc | replace("^"+schema, "", "g") }}') != null) ? share.getRefObject('new{{ field.fullPathCc | replace("^"+schema, "", "g") }}') : {};
   $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode = 'create';
-  $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();
-
   $scope.createOrUpdate{{ field.fullPathCc | replace("^"+schema, "", "g") }} = function(){
-    if($scope.{{ field.fullPath }} == null)
+    if(!($scope.{{ field.fullPath }} instanceof Array))
       $scope.{{ field.fullPath }} = new Array();
     if($scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode == 'create')
       $scope.{{ field.fullPath }}.push($scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }});
@@ -29,28 +27,27 @@
       return share.alertDanger('{{ field.fullPathCc | replace("^"+schema, "", "g") }} not found!');
     $scope.{{ field.fullPath }}.splice(index, 1);
   }
-{%- endmacro %}
+{% elseif field.isSubDoc && field.fields %}
+{{ subDocArray(schema, field.fields) }}
+{% endif %}{%- endfor %}{%- endmacro %}
 
-{%- macro subDoc(schema, fieldName, field) %}
-{%- if field.isSubDoc == true && !field.isArray %}
-  $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || {};
-  //$scope.errors.{{ field.fullPath }} = false;
-{% if field.hasSubDoc && !field.ref %}{%- for subFieldName, subField in field.fields %}
-  {{ subDoc(schema, subFieldName, subField) }}
-{%- endfor %}{% endif %}
-{%- elseif field.isSubDoc == true && field.isArray %}
-  {{ subDocArray(schema, fieldName, field) }}
-{%- elseif field.hasSubDoc == true && !field.ref %}
-{%- for subFieldName, subField in field.fields %}
-{{ subDoc(schema, subFieldName, subField) }}
-{%- endfor %}{%- endif %}{%- endmacro %}
+{%- macro subDocArrayClear(schema, fields) %}{%- for fieldName, field in fields %}{%- if field.isSubDoc && field.isArray %}
+    $scope.clear{{ field.fullPathCc | replace("^"+schema, "", "g") }}();{% elseif field.isSubDoc && field.fields %}{{ subDocArrayClear(schema, field.fields) }}{% endif %}{%- endfor %}{%- endmacro %}
+
+
+{%- macro initSubDocs(schema, fields) %}{%- for fieldName, field in fields %}{%- if field.isSubDoc %}{%- if field.isArray %}
+  $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();{%- else %}
+  $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || {};{%- endif %}
+  $scope.errors.{{ field.fullPath }} = {};{%- if field.fields %}{{ initSubDocs(schema, field.fields) }}{% endif %}{% endif %}{%- endfor %}{%- endmacro %}
+
 function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ schema | capitalize }}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schema|lower %}, {{ ref | capitalize }}{%- endif %}{%- endfor %}) {
   $scope.share = share;
+  $scope.notFilter = true;
+  $scope.dataList = new DataList();
   $scope.{{ schema | lower }} = $scope.{{ schema | lower }} || (share.getRefObject("{{schema|lower}}") != null) ? share.getRefObject("{{schema|lower}}") : {};
   $scope.errors = {};
   $scope.errors.{{ schema | lower }} = {};
-  $scope.notFilter = true;
-  $scope.dataList = new DataList();
+  {{ initSubDocs(schema, fields) }}
 
   $scope.$watch("dataList", function(newDataList, oldDataList) {
     if(oldDataList.page.current != newDataList.page.current || 
@@ -224,32 +221,31 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
         $scope.{{ schema | lower }}.{{ fieldName }} = $scope.{{ schema | lower }}.{{ fieldName }}._id;
 {%- endif %}{%- endif %}{%- endfor %}
   }
-  
+
   $scope.clear{{ schema | capitalize }} = function() {
     delete $scope.{{ schema | lower }};
     $scope.{{ schema | lower }} = {};
-{%- for fieldName, field in fields %}{%- if field.isSubDoc == true && field.isArray != true %}
-    $scope.{{ field.fullPath }} = {};{%- elseif field.ref && field.type == "select" %}
-    //$scope.clear{{ field.ref | capitalize }}();{%- elseif field.isSubDoc == true && field.isArray == true %}
-    $scope.{{ field.fullPath }} = new Array();{%- endif %}{%- endfor %}
+    $scope.errors = {};
+    $scope.errors.{{ schema | lower }} = {};
+    {{ initSubDocs(schema, fields) }}
+    {{ subDocArrayClear(schema, fields) }}
   }
 
 {%- for key, ref in allRefs|uniq %}{% if ref|lower != schema|lower %}
   $scope.query{{ ref | capitalize }} = function(){
     $scope.{{ ref | lower }}s = {{ ref | capitalize }}.query();
   };
-  $scope.query{{ ref | capitalize }}();
-{% endif %}{%- endfor %}
+  $scope.query{{ ref | capitalize }}();{% endif %}{%- endfor %}
 
-{%- for fieldName, field in fields %}{%- if field.ref && field.type != "select" %}
+{%- for fieldName, field in fields %}{%- if field.ref && field.type == "union" %}
   $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
   $scope.errors.{{ schema | lower }}.{{ fieldName | lower }} = {};
   $scope.clear{{ fieldName | capitalize }} = function() {
     delete $scope.{{ schema | lower }}.{{ fieldName | lower }};
     $scope.{{ schema | lower }}.{{ fieldName | lower }} = {};
-  }
-{%- endif %}
-{{ subDoc(schema, fieldName, field) }}
-{%- endfor %}
+  }{%- endif %}{%- endfor %}
+
+  {{ subDocArray(schema, fields) }}
+
 }
 
