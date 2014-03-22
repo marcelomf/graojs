@@ -23,7 +23,7 @@
       {%- endif %}
   {%- endmacro %}
 
-  {% macro get_ngmodel(schema, fieldName, field, isFilter, isSubDocArrayField) %}{% if !isSubDocArrayField %}"{{ field.fullPath }}"{% else %}"new{{ field.fullPathCc|replace("^"+schema, "", "g")|replace(fieldName|capitalize+"$", "", "g")+"."+fieldName }}"{% endif %}{% endmacro %}
+  {% macro get_ngmodel(schema, fieldName, field, isFilter, isSubDocArrayField) %}{% if isFilter %}"dataList.filter.{{fieldName}}"{% elseif isSubDocArrayField %}"new{{ field.fullPathCc|replace("^"+schema, "", "g")|replace(fieldName|capitalize+"$", "", "g")+"."+fieldName }}"{% else %}"{{ field.fullPath }}"{% endif %}{% endmacro %}
 
   {% macro refSaveObject(schema, fields) %}{%- for fieldName, field in fields %}{% if field.isSubDoc && field.isArray %}share.refSaveObject( { schemaObject : "new{{ field.fullPathCc|replace("^"+schema, "", "g") }}", object : new{{ field.fullPathCc|replace("^"+schema, "", "g") }} != null ? new{{ field.fullPathCc|replace("^"+schema, "", "g") }} : {} }); {% elseif field.hasSubDoc && field.fields && !field.ref %}{{refSaveObject(schema, field.fields)}}{% endif %}{% endfor %}{% endmacro %}
 
@@ -120,12 +120,8 @@
               | 
               button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ field.fullPathCc | replace("^"+schema, "", "g") }}($index);') 
   {%- endmacro %}
-mixin form_fields_{{ schema | lower }}(ngModelName)
-  if !ngModelName
-    - var ngModelName = '{{ schema | lower }}'
-  {%- for fieldName, field in fields %} {{ render_field(schema, fieldName, field, false) }} {%- endfor %}
+mixin form_fields_{{ schema | lower }}()
+  {%- for fieldName, field in fields %}{{ render_field(schema, fieldName, field, false) }} {%- endfor %}
   
-mixin filter_fields_{{ schema | lower }}(ngModelName)
-  if !ngModelName
-    - var ngModelName = '{{ schema | lower }}'
+mixin filter_fields_{{ schema | lower }}()
   {%- for fieldName, field in fields %}{%- if field.isFilter %} {{ render_field(schema, fieldName, field, true) }} {%- endif %}{%- endfor %}  

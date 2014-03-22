@@ -1,7 +1,7 @@
 h3=__('Filters')
 form.form-inline(role='form')
   include {{schema}}_fields
-  +filter_fields_{{ schema | lower }}('dataList.filter')
+  +filter_fields_{{ schema | lower }}()
   button.btn.btn-warning(type='button', ng-click='query{{ schema | capitalize }}(); count{{ schema | capitalize }}();')=__('Filter')
   | 
   button.btn.btn-danger(type='button', ng-click='query{{ schema | capitalize }}("reset"); count{{ schema | capitalize }}();')=__('Reset')
