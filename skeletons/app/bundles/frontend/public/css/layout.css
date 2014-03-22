@@ -46,3 +46,7 @@ table.table thead .sorting_desc_disabled { background: url('/img/sort_desc_disab
 	-webkit-transform: translateZ(0); 
 	-webkit-backface-visibility: hidden; 
 }
+
+.table-actions {
+  width: 100px;
+}

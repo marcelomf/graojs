@@ -24,7 +24,7 @@
       {%- for fieldName, field in fields %}{%- if field.isList %}
             th(ng-class="dataList.sortClass('{{ fieldName }}')", ng-click="dataList.sortBy('{{ fieldName }}'); query{{ schema | capitalize }}();")=__('{{ field.label }}')
       {%- endif %}{%- endfor %}
-            th=__('Actions')
+            th(class="table-actions")=__('Actions')
         tbody
           tr(ng-repeat="{{ schema | lower }} in dataList.data")
       {%- for fieldName, field in fields %}{%- if field.isList %}
