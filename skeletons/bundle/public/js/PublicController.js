@@ -1,5 +1,5 @@
 {%- macro subDocArray(schema, fieldName, field) %}
-  $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} = $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} || (share.getRefObject("new{{ field.fullPathCc | replace("^"+schema, "", "g") }}") != null) ? share.getRefObject("new{{ field.fullPathCc | replace("^"+schema, "", "g") }}") : {};
+  $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} = $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }} || (share.getRefObject('new{{ field.fullPathCc | replace("^"+schema, "", "g") }}') != null) ? share.getRefObject('new{{ field.fullPathCc | replace("^"+schema, "", "g") }}') : {};
   $scope.new{{ field.fullPathCc | replace("^"+schema, "", "g") }}Mode = 'create';
   $scope.{{ field.fullPath }} = $scope.{{ field.fullPath }} || new Array();
 
@@ -156,6 +156,10 @@ function {{ schema | capitalize }}PublicController($scope, $http, $q, share, {{ 
       share.alert.show = true;
       share.alert.style = dataResponse.event.style;
       share.alert.message = dataResponse.event.message;
+      if(dataResponse.event.status == true) {
+        $scope.dataList.status.totality = $scope.dataList.status.totality-1;
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+      }
     });
     $scope.dataList.data.splice(index, 1);{%- if isAutoRefered === true %}
     $scope.query{{ schema | capitalize }}("all");{% endif %}

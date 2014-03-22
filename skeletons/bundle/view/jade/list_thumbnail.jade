@@ -15,7 +15,7 @@
       {%- endif %}{%- endfor %}
             button.btn.btn-primary.btn-sm.icon.icon-edit(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("createOrUpdate{{ schema | capitalize }}");')=__('Edit')
             | 
-            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroy{{ schema | capitalize }}ByIndex($index); query{{ schema | capitalize }}(); count{{ schema | capitalize }}();')=__('Remove')
+            button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroy{{ schema | capitalize }}ByIndex($index); query{{ schema | capitalize }}();')=__('Remove')
             | 
             button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("show{{ schema | capitalize }}");')=__('Show')
 .row

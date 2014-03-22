@@ -32,7 +32,7 @@
               span(ng-repeat="{{ field.ref | lower }} in {{ schema | lower }}.{{ fieldName }}"){{ ' {{' }} {{ field.ref | lower }}.{{ field.refLabel }} }}{% endif %}{% endif %} 
       {%- endif %}{%- endfor %}
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ schema | capitalize }}ByIndex($index); query{{ schema | capitalize }}(); count{{ schema | capitalize }}();') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroy{{ schema | capitalize }}ByIndex($index); query{{ schema | capitalize }}();') 
               | 
               button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("createOrUpdate{{ schema | capitalize }}");') 
               | 
