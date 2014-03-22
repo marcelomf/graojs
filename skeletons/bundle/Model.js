@@ -1,9 +1,11 @@
-var methods = {}, $i;
+var methods = {}, statics = {}, mongoose, $i;
 
 var {{ schema | capitalize }} = function(di) {
   $i = di;
-  $i.schemas.{{ schema | lower }}.mongoose.methods = methods;
-  return di.mongoose.model("{{ schema | capitalize }}", di.schemas.{{ schema | lower }}.mongoose, "{{ schema | lower }}");
+  mongoose = $i.schemas.{{ schema | lower }}.mongoose;
+  mongoose.methods = methods;
+  mongoose.statics = statics;
+  return $i.mongoose.model("{{ schema | capitalize }}", mongoose, "{{ schema | lower }}");
 };
 
 module.exports = exports = {{ schema | capitalize }};

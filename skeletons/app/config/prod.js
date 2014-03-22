@@ -54,6 +54,8 @@ module.exports = exports = {
       /*{ name: 'emailTemplates', object: 'email-templates' },*/
       { name: 'nodemailer', object: 'nodemailer' },
       { name: 'fs', object: 'fs-extra' },
+      { name: 'path', object: 'path' },
+      { name: 'url', object: 'url' },
       { name: 'Q', object: 'q' },
       { name: 'crypto', object: 'crypto' }
     ]

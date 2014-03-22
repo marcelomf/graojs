@@ -8,7 +8,14 @@ var FrontendRoute = function (di) {
   di.graoExpress.get('/locale/:locale', function (req, res) {
     res.setLocale(req.params.locale);
     res.cookie('locale', req.params.locale);
-    res.redirect("/");
+    var path = "/";
+    if(req.headers && req.headers.referer) {
+      path = di.url.parse(req.headers.referer);
+      path = (path.path) ? path.path : "/";
+    } else {
+      path = "/";
+    }
+    res.redirect(path);
   });
 };
 
