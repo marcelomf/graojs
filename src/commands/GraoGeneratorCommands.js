@@ -165,7 +165,11 @@ var GraoGeneratorCommands = function (di) {
 
   this.prepareSchema = function (schema, schemaPath) {
     var validators = {};
-    validators[schema] = true;
+    validators["User"] = validators["user"] = { username: function(){return true;}, 
+                                                password: function(){return true;} };
+    if(schema.toLowerCase() != "user")
+      validators[schema] = true;
+    console.log(validators);
     var schemas = {};
     schemas[schema] = {};
     var diSchema = {
