@@ -9,7 +9,7 @@ var walk = function (dir) {
   var results = []
   var list = fs.readdirSync(dir)
   list.forEach(function (file) {
-    file = dir + '/' + file
+    file = path.join(dir, file);
     var stat = fs.statSync(file)
     if (stat && stat.isDirectory()) results = results.concat(walk(file))
     else results.push(file)
@@ -28,15 +28,15 @@ var GraoGenerator = function () {
   this.skelDefaultFilename = 'skeleton.json';
   this.currentDir = process.cwd();
   this.defaultSkels = {
-    "app": "skeletons/app",
-    "bundle": "skeletons/bundle"
+    "app": path.join("skeletons", "app"),
+    "bundle": path.join("skeletons", "bundle")
   };
   this.args = {};
   this.argsSwig = {};
 
   this.init = function (type, skeleton) {
     this.skelPath = skeleton === null
-                  ? path.join(__dirname, '/../../', this.defaultSkels[type])
+                  ? path.join(__dirname, "..", "..", this.defaultSkels[type])
                   : skeleton;
 
     this.skelFilename = path.join(this.skelPath, this.skelDefaultFilename);
@@ -44,7 +44,7 @@ var GraoGenerator = function () {
       fs.readFileSync(this.skelFilename, 'utf8').toString().replace(/\n/g, '')
     );
 
-    var defaultData = path.join(process.cwd(), '/config/default.skeleton.json');
+    var defaultData = path.join(process.cwd(), 'config', 'default.skeleton.json');
     this.defaults = fs.existsSync(defaultData)
                   ? JSON.parse(fs.readFileSync(defaultData))
                   : {};
@@ -89,7 +89,7 @@ var GraoGenerator = function () {
 
           var file = this.rewrite(config.rewrites, sourceFiles[i], sourcePath);
           tpls[ sourceFiles[i] ] = this.swigRender(
-            path.join(config.target, file.replace(sourcePath, '/')),
+            path.join(config.target, file.replace(sourcePath, path.sep)),
             args
           );
         }
@@ -107,7 +107,7 @@ var GraoGenerator = function () {
 
       if (fs.statSync(tpl).isFile()) {
         fs.mkdirsSync(distDir);
-        fs.exists(process.cwd() + '/' + dist, function (exists) {
+        fs.exists(path.join(process.cwd(), dist), function (exists) {
           if (!exists || force) {
             //console.log(( '- ' + './' + dist ).blue);
             var fileContent, fileType;
@@ -139,11 +139,11 @@ var GraoGenerator = function () {
               fileType = 'utf-8';
             }
             fs.writeFileSync(dist, fileContent, fileType);
-            console.log(( '+ ' + './' + dist).green);
+            console.log(( '+ ' + '.' + path.sep + dist).green);
             delete fileContent;
             delete fileType;
           } else {
-            console.log(( '! ' + './' + dist ).red);
+            console.log(( '! ' + '.'+ path.sep + dist ).red);
           }
         });
       } else {
@@ -174,7 +174,7 @@ var GraoGenerator = function () {
 
   this.checkIgnore = function (ignores, file, sourcePath) {
     if(sourcePath)
-      file = file.replace(sourcePath + '/', '');
+      file = file.replace(sourcePath + path.sep, '');
     else
       file = file.replace(/\//g, "");
 
@@ -192,7 +192,7 @@ var GraoGenerator = function () {
   }
 
   this.rewrite = function (rewrites, file, sourcePath) {
-    file = file.replace(sourcePath + '/', '');
+    file = file.replace(sourcePath + path.sep, '');
     if (rewrites.hasOwnProperty(file)) {
         return rewrites[ file ];
     } else {

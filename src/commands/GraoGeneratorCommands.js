@@ -1,7 +1,7 @@
 var path = require('path') ,
   fs = require('fs-extra'),
   prompt = require('prompt'),
-  generator = require('../generator'),
+  generator = require(path.join("..", "generator")),
   mongoose = require('mongoose'),
   validate = require('mongoose-validator').validate;
 
@@ -9,7 +9,7 @@ var walk = function (dir) {
   var results = []
   var list = fs.readdirSync(dir)
   list.forEach(function (file) {
-    file = dir + '/' + file
+    file = dir + path.sep + file
     var stat = fs.statSync(file)
     if (stat && stat.isDirectory()) results = results.concat(walk(file))
     else results.push(file)
@@ -84,10 +84,10 @@ var GraoGeneratorCommands = function (di) {
             //console.log(varsGenerate.fields.provider);
             //process.exit(1);
           }
-          if(!fs.existsSync("bundles/"+varsGenerate['bundle']))
-            fs.mkdirSync("bundles/"+varsGenerate['bundle'], 0755);
+          if(!fs.existsSync(path.join("bundles", varsGenerate['bundle'])))
+            fs.mkdirSync(path.join("bundles", varsGenerate['bundle']), 0755);
           generator.generate(varsGenerate, force);
-          fs.writeFileSync(path.join(process.cwd(), 'bundles/'+varsGenerate['bundle']+'/'+schemaCapitalized+'Schema.js'), 
+          fs.writeFileSync(path.join(process.cwd(), 'bundles', varsGenerate['bundle'], schemaCapitalized+'Schema.js'), 
             fs.readFileSync(fullSchemaPath, 'utf-8'), 'utf-8');
         } else {
           console.log(( 'ERROR: ' + fullSchemaPath + ' doesn\'t exist. Aborting this file').red);
@@ -335,14 +335,14 @@ var GraoGeneratorCommands = function (di) {
     if(!fs.existsSync(appPath))
       fs.mkdirSync(appPath, 0755);
 
-    if(!fs.existsSync(appPath+"/node_modules"))
-      fs.mkdirSync(appPath+"/node_modules", 0755);
+    if(!fs.existsSync(path.join(appPath, "node_modules")))
+      fs.mkdirSync(path.join(appPath, "node_modules"), 0755);
 
-    if(!fs.existsSync(appPath+"/node_modules/graojs") || force)
-      fs.copy(__dirname+"/../..", appPath+"/node_modules/graojs");
+    if(!fs.existsSync(path.join(appPath, "node_modules", "graojs")) || force)
+      fs.copy(path.join(__dirname, "..", ".."), path.join(appPath, "node_modules", "graojs"));
 
-    if(!fs.existsSync(appPath+"/node_modules/passport-local") || force)
-      fs.copy(__dirname+"/../../node_modules/passport-local", appPath+"/node_modules/passport-local");
+    if(!fs.existsSync(path.join(appPath,"node_modules", "passport-local")) || force)
+      fs.copy(path.join(__dirname, "..", "..", "node_modules", "passport-local"), path.join(appPath, "node_modules", "passport-local"));
   }
 }
 
