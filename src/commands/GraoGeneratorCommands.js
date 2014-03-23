@@ -169,7 +169,6 @@ var GraoGeneratorCommands = function (di) {
                                                 password: function(){return true;} };
     if(schema.toLowerCase() != "user")
       validators[schema] = true;
-    console.log(validators);
     var schemas = {};
     schemas[schema] = {};
     var diSchema = {
