@@ -122,11 +122,11 @@ var GraoCommands = function (di) {
         });
       }
 
-      grao.kernel.models.activity.findOne({tag: "admin"}, function(err, activity){
+      grao.kernel.models.activity.findOne({code: "admin"}, function(err, activity){
         if(err || !activity){
           var activity = new grao.kernel.models.activity;
           activity.name = "Administrative";
-          activity.tag = "admin";
+          activity.code = "admin";
           activity.description = "Auto-generate by Grao CLI";
           activity.save(function(err, activity){
             if(err || !activity)
