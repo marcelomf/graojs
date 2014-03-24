@@ -1,9 +1,8 @@
-var validate;
-var methods = {};
-
+var validate, $i;
 var ActivityValidator = function(di) {
-  this.validate = validate = di.validate;
-  return methods;
+  $i = di;
+  validate = $i.validate;
+  return {};
 };
 
 module.exports = exports = ActivityValidator;

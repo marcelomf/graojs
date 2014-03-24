@@ -1,4 +1,14 @@
-var methods = {}, $i;
+var methods = {}, statics = {}, mongooseSchema = { pre: function(){}, post: function(){} }, $i;
+
+mongooseSchema.pre('save', function(next) {
+  this.updatedAt = new Date;
+  if(!this.createdAt)
+    this.createdAt = new Date;
+  if (!this.isModified('password')) 
+    return next();
+  this.password = $i.hash(this.password);
+  next();
+});
 
 methods.randPassword = function() {
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -27,7 +37,7 @@ methods.confirmPassword = function(cleanPassword) {
 
 methods.do = function(activity) {
   for(i in this.activitys) {
-    if(this.activitys[i].tag == activity.toLowerCase())
+    if(this.activitys[i].code == activity.toLowerCase())
       return true;
   }
   return false;
@@ -40,7 +50,7 @@ methods.doAny = function(doActivitys) {
 
   for(i in doActivitys) {
     for(y in this.activitys) {
-      if(this.activitys[y].tag == doActivitys[i].toLowerCase())
+      if(this.activitys[y].code == doActivitys[i].toLowerCase())
         return true;
     }
   }
@@ -55,7 +65,7 @@ methods.doAll = function(doActivitys) {
   for(i in doActivitys) {
     doIt = false;
     for(y in this.activitys) {
-      if(this.activitys[y].tag == doActivitys[i].toLowerCase()) {
+      if(this.activitys[y].code == doActivitys[i].toLowerCase()) {
         doIt = true;
         break;
       }
@@ -68,8 +78,10 @@ methods.doAll = function(doActivitys) {
 
 var User = function(di) {
   $i = di;
-  di.schemas.user.mongoose.methods = methods;
-  return di.mongoose.model("User", di.schemas.user.mongoose, "user");
+  mongooseSchema = $i.schemas.user.mongoose;
+  mongooseSchema.methods = methods;
+  mongooseSchema.statics = statics;
+  return $i.mongoose.model("User", mongooseSchema, "user");
 };
 
 module.exports = exports = User;

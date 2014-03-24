@@ -1,6 +1,4 @@
-var models, controllers, event, config, User, nodemailer, $i;
-var service = {};
-var admin = {};
+var service = {}, admin = {}, models, controllers, event, config, User, nodemailer, $i;
 
 service.count = function(req, res) {
   var dataList = controllers.processDataList(User, req.query);
@@ -26,7 +24,7 @@ service.count = function(req, res) {
 }
 
 service.get = function(req, res) {
-    User.findOne({_id : req.params.id}, "_id username email enabled activitys").populate('activitys').exec(function(err, user) {
+    User.findOne({_id : req.params.id}, "_id username email enabled createdat updatedat activitys").populate('activitys').exec(function(err, user) {
     if (err)
       res.json(event.newError(err).toJson());
     else
@@ -37,7 +35,7 @@ service.get = function(req, res) {
 service.query = function(req, res) {
   var dataList = controllers.processDataList(User, req.query);
 
-  User.find(dataList.filter, "_id username email enabled activitys").
+  User.find(dataList.filter, "_id username email enabled createdat updatedat activitys").
     sort(dataList.sort).
     skip(dataList.page.skip).
     limit(dataList.page.limit).
@@ -197,11 +195,11 @@ admin.profile = function(req, res) {
 
 var UserController = function(di) {
   $i = di;
-  event = new di.event.newSuccess('Instance created');
-  config = di.config;
-  models = di.models;
-  controllers = di.controllers;
-  nodemailer = di.nodemailer;
+  event = new $i.event.newSuccess('Instance created');
+  config = $i.config;
+  models = $i.models;
+  controllers = $i.controllers;
+  nodemailer = $i.nodemailer;
   User = models.user; // object/class
   this.service = service;
   this.admin = admin;

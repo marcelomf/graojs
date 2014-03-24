@@ -1,7 +1,7 @@
 h3=__('Filters')
 form.form-inline(role='form')
   include activity_fields
-  +filter_fields_activity('dataList.filter')
-  button.btn.btn-warning(type='button', ng-click='filter(); count();')=__('Filter')
+  +filter_fields_activity()
+  button.btn.btn-warning(type='button', ng-click='queryActivity(); countActivity();')=__('Filter')
   | 
-  button.btn.btn-danger(type='button', ng-click='dataList.filter = null; query(); count();')=__('Reset')
+  button.btn.btn-danger(type='button', ng-click='queryActivity("reset"); countActivity();')=__('Reset')

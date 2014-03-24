@@ -1,10 +1,10 @@
 .form-group
-  button.btn.btn-success(type='button', ng-click='createOrUpdate("list");')=__('Save')
+  button.btn.btn-success(type='button', ng-click='createOrUpdateActivity("listActivity");')=__('Save')
   | 
-  button.btn.btn-warning(type='button', ng-click='createOrUpdate("createOrUpdate");')=__('Save and continue')
+  button.btn.btn-warning(type='button', ng-click='createOrUpdateActivity("createOrUpdateActivity");')=__('Save and continue')
   | 
-  button.btn.btn-danger(type='button', ng-click='activity.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-show="activity._id", ng-click='activity.$delete(); clearActivity(); queryActivity(); countActivity(); share.window("listActivity");')=__('Remove')
   | 
-  button.btn.btn-info(type='button', ng-click='share.window("show");')=__('Show')
+  button.btn.btn-info(type='button', ng-click='share.window("showActivity")')=__('Show')
   | 
-  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('Cancel')
+  button.btn.btn-default(type='button', ng-click='clearActivity(); queryActivity(); share.window("listActivity")')=__('List')

@@ -23,14 +23,14 @@ var ActivitySchema = function(di) {
         isFilter: true
       }
     },
-    tag : {
+    code : {
       type : String,
       required : true,
       trim : true,
       unique : true,
       lowercase: true,
       graoui: {
-        label: "Tag",
+        label: "Code",
         type: 'input'
       }
     },
@@ -39,7 +39,6 @@ var ActivitySchema = function(di) {
       ref: 'Activity',
       graoui: {
         label: "Context(Sub Activitys)",
-        fieldRefLabel: "name",
         type: "select",
         attr: { multiple: true },
         isList: true,
@@ -50,8 +49,7 @@ var ActivitySchema = function(di) {
       type: String,
       graoui: {
         label: "Description",
-        type: 'textarea',
-        attr: { placeholder: "Description" }
+        type: 'textarea'
       }
     }
   };

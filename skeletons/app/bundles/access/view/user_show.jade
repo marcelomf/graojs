@@ -3,27 +3,24 @@ h3=__('User')
 .table-responsive
   table.table.table-striped
     tr
-      td=__('Username')
+      td=__('User Name')
       td {{ user.username }}
+    tr
+      td=__('Password')
+      td {{ user.password }}
     tr
       td=__('Email')
       td {{ user.email }}
     tr
+      td=__('Activitys')
+      td 
+        span(ng-repeat="activity in user._activitys") {{ activity.name }} 
+    tr
       td=__('Enabled')
       td {{ user.enabled }}
-    tr
-      td=__('Created At')
-      td {{ user.createdAt }}
-    tr
-      td=__('Updated At')
-      td {{ user.updatedAt }}
-    tr
-      td=__('Activitys')
-      td
-        span(ng-repeat="activity in user._activitys") {{ activity.name }} 
 .form-group
-  button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdate");')=__('Edit')
+  button.btn.btn-primary(type='button', ng-click='share.window("createOrUpdateUser");')=__('Edit')
   | 
-  button.btn.btn-danger(type='button', ng-click='user.$delete(); clear(); query(); count(); share.window("list");')=__('Remove')
+  button.btn.btn-danger(type='button', ng-click='user.$delete(); clearUser(); queryUser(); countUser(); share.window("listUser");')=__('Remove')
   | 
-  button.btn.btn-default(type='button', ng-click='clear(); query(); share.window("list")')=__('List')
+  button.btn.btn-default(type='button', ng-click='clearUser(); queryUser(); share.window("listUser")')=__('List')

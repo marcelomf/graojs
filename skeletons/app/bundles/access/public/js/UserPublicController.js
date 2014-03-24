@@ -1,17 +1,17 @@
 
 function UserPublicController($scope, $http, $q, share, User, Activity) {
   $scope.share = share;
-  $scope.user = {generatePassword: true, enabled: true};
-  $scope.errors = {};
-  $scope.errors.user = {};
   $scope.notFilter = true;
   $scope.dataList = new DataList();
+  $scope.user = $scope.user || (share.getRefObject("user") != null) ? share.getRefObject("user") : {generatePassword: true, enabled: true};
+  $scope.errors = {};
+  $scope.errors.user = {};
 
   $scope.$watch("dataList", function(newDataList, oldDataList) {
     if(oldDataList.page.current != newDataList.page.current || 
       oldDataList.page.limit != newDataList.page.limit) {
       newDataList.page.skip = newDataList.page.current * newDataList.page.limit - newDataList.page.limit;
-      $scope.query();
+      $scope.queryUser();
     }
   }, true);
 
@@ -25,80 +25,97 @@ function UserPublicController($scope, $http, $q, share, User, Activity) {
     });
   }
 
-  $scope.createOrUpdate = function(windowCallBack) {
-    console.log($scope.user);
+  $scope.createOrUpdateUser = function(windowCallBack, isRefered) {
     share.alertLoad();
+    function finallySaved(dataResponse, windowCallBack, isRefered) {
+      if(!isRefered) {
+        $scope.queryUser();
+        $scope.countUser(); 
+        $scope.clearUser();
+      } else {
+        if(dataResponse.data && dataResponse.data._id)
+          share.refAddObject("user", dataResponse.data);
+      }
+      if(windowCallBack)
+        share.window(windowCallBack); 
+      else
+        share.windowBack();
+    }
+
     function save() {
       var userJson = $scope.user;
-
       if($scope.user._id != null)
         User.update(userJson, function(dataResponse){ 
-          if(validate(share.alert, $scope.errors.user, dataResponse)){ 
-            $scope.query(); 
-            $scope.count(); 
-            $scope.clear(); 
-            share.window(windowCallBack); 
-          }
+          if(validate(share.alert, $scope.errors.user, dataResponse))
+            finallySaved(dataResponse, windowCallBack, isRefered);
         });
       else
         User.save(userJson, function(dataResponse){ 
-          if(validate(share.alert, $scope.errors.user, dataResponse)){ 
-            $scope.query(); 
-            $scope.count(); 
-            $scope.clear(); 
-            share.window(windowCallBack); 
-          }
+          if(validate(share.alert, $scope.errors.user, dataResponse))
+            finallySaved(dataResponse, windowCallBack, isRefered);
         });
     } 
     save();
   }
 
-  $scope.destroyByIndex = function(index) {
+  $scope.destroyUserByIndex = function(index) {
     share.alertLoad();
     $scope.dataList.data[index].$delete(function(dataResponse){
       share.alert.show = true;
       share.alert.style = dataResponse.event.style;
       share.alert.message = dataResponse.event.message;
+      if(dataResponse.event.status == true) {
+        $scope.dataList.status.totality = $scope.dataList.status.totality-1;
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+      }
     });
     $scope.dataList.data.splice(index, 1);
   }
 
-  $scope.filter = function() {
+  $scope.queryUser = function(queryMode) {
     share.alertLoad();
-    $scope.dataList.data = User.query($scope.dataList.toParams(), function(){
-      share.alertClean();
-    });
-  }
+    if(queryMode === "reset")
+      $scope.dataList.reset();
 
-  $scope.query = function() {
-    share.alertLoad();
-    $scope.dataList.data = User.query($scope.dataList.toParams(), function(){ 
+    if(queryMode === "all") {
+      User.query(null, function(dataResponse){ 
+        $scope.users = dataResponse;
+        $scope.dataList.data = dataResponse.slice(0, 10);
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+        share.alertClean();
+      });
+    } else {
+      User.query($scope.dataList.toParams(), function(dataResponse){ 
+        $scope.dataList.data = dataResponse;
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+        share.alertClean();
+      });
+    }
+
+  }
+  $scope.queryUser();
+
+  $scope.countUser = function() {
+    User.count($scope.dataList.toParams(), function(dataResponse){
+      $scope.dataList.status = dataResponse;
       $scope.dataList.status.listing = $scope.dataList.data.length;
-      share.alertClean();
     });
   }
-  $scope.query();
+  $scope.countUser();
 
-  $scope.count = function() {
-    $scope.dataList.status = User.count($scope.dataList.toParams(), function(dataResponse){
-      $scope.dataList.status.listing = $scope.dataList.data.length;
-    });
-  }
-  $scope.count();
-
-  $scope.queryMore = function() {
+  $scope.queryMoreUser = function() {
     share.alertLoad();
     $scope.dataList.page.skip = $scope.dataList.data.length;
-    var moreUsers = User.query($scope.dataList.toParams(), function(){
-      angular.forEach(moreUsers, function(user){
-        $scope.dataList.data.push(user);
+    User.query($scope.dataList.toParams(), function(dataResponse){
+      angular.forEach(dataResponse, function(data){
+        $scope.dataList.data.push(data);
         $scope.dataList.status.listing++;
       });
       share.alertClean();
     });
   }
 
-  $scope.select = function(index) {
+  $scope.selectUser = function(index) {
     $scope.user = $scope.dataList.data[index];
 
       var activitysIds = new Array();
@@ -110,35 +127,17 @@ function UserPublicController($scope, $http, $q, share, User, Activity) {
 
   }
 
-  $scope.clear = function() {
+  $scope.clearUser = function() {
     delete $scope.user;
-    $scope.user = {generatePassword: true, enabled: true};
-    $scope.clearActivity();
+    $scope.user = {};
+    $scope.errors = {};
+    $scope.errors.user = {};
+
   }
   $scope.queryActivity = function(){
     $scope.activitys = Activity.query();
   };
   $scope.queryActivity();
 
-  $scope.newActivity = {};
-  $scope.errors.newActivity = {};
-
-  $scope.createOrUpdateActivity = function() {
-    function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.newActivity, dataResponse)) {
-        $scope.activitys.push(dataResponse.data);
-        $scope.clearActivity();
-        share.windowBack();
-      }
-    }
-    if($scope.newActivity._id != null)
-      Activity.update($scope.newActivity, save);
-    else
-      Activity.save($scope.newActivity, save);
-  }
-
-  $scope.clearActivity = function() {
-    delete $scope.newActivity;
-    $scope.newActivity = {};
-  }
 }
+

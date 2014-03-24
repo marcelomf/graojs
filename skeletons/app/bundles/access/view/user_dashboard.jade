@@ -1,7 +1,7 @@
 
 extends /frontend/theme/layout
 block content
-  .container(ng-controller='UserPublicController', ng-init='clear(); share.window("list");')
+  .container(ng-controller='UserPublicController', ng-init='clearUser(); share.window("listUser");')
     .row
       .col-md-12
         h2=__('Users')
@@ -9,22 +9,22 @@ block content
       .col-md-12
         include user_dashboard_actions
     .row(ng-switch='share.selectWindow')
-      .col-md-12(ng-switch-when="list")
+      .col-md-12(ng-switch-when="listUser")
         include user_list
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate")
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateUser")
         include user_form
         +form_user(true)
-      .col-md-6.col-md-offset-3(ng-switch-when="show")
+      .col-md-6.col-md-offset-3(ng-switch-when="showUser")
         include user_show
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateActivity")
-        h3=__('Activitys')
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdateActivity", ng-controller='ActivityPublicController')
+        h3=__('Activity')
           small=__('User')
         form.form-horizontal(role='form')
           include /access/view/activity_fields
-          +form_fields_activity('newActivity')
+          +form_fields_activity()
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateActivity();')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdateActivity(null, true);')=__('Save and back')
             | 
             button.btn.btn.btn-default(type='button', ng-click='clearActivity(); share.windowBack();')=__('Cancel')
     .row
@@ -32,5 +32,6 @@ block content
         include user_dashboard_actions
 
     script(src='/js/activity/ActivityPublicFactory.js', type='text/javascript', charset='utf-8').
+    script(src='/js/activity/ActivityPublicController.js', type='text/javascript', charset='utf-8').
     script(src='/js/user/UserPublicFactory.js', type='text/javascript', charset='utf-8').
     script(src='/js/user/UserPublicController.js', type='text/javascript', charset='utf-8').

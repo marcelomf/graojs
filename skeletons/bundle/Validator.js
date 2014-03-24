@@ -1,5 +1,7 @@
+var validate, $i;
 var {{ schema | capitalize }}Validator = function(di) {
-  this.validate = validate = di.validate;
+  $i = di;
+  validate = $i.validate;
   return {};
 };
 

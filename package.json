@@ -1,7 +1,7 @@
 {
   "name": "graojs",
   "description": "graoJS - A full stack MVC NodeJS framework",
-  "version": "0.0.62",
+  "version": "0.0.63",
   "author": "Marcelo M. Fleury <marcelo@synack.com.br>",
   "contributors": [
     {

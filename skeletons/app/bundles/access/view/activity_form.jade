@@ -2,7 +2,7 @@ mixin form_activity(includeActions)
   h3=__('Activity')
     small  {{ activity._id }}
   form.form-horizontal(role='form')
-  include activity_fields
-  +form_fields_activity()
-  if includeActions
-    include activity_form_actions
+    include activity_fields
+    +form_fields_activity()
+    if includeActions
+      include activity_form_actions

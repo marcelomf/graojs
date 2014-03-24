@@ -1,93 +1,112 @@
 
 function ActivityPublicController($scope, $http, $q, share, Activity) {
   $scope.share = share;
-  $scope.activity = {};
-  $scope.errors = {};
-  $scope.errors.activity = {};
   $scope.notFilter = true;
   $scope.dataList = new DataList();
+  $scope.activity = $scope.activity || (share.getRefObject("activity") != null) ? share.getRefObject("activity") : {};
+  $scope.errors = {};
+  $scope.errors.activity = {};
 
   $scope.$watch("dataList", function(newDataList, oldDataList) {
     if(oldDataList.page.current != newDataList.page.current || 
       oldDataList.page.limit != newDataList.page.limit) {
       newDataList.page.skip = newDataList.page.current * newDataList.page.limit - newDataList.page.limit;
-      $scope.query();
+      $scope.queryActivity();
     }
   }, true);
 
-  $scope.createOrUpdate = function(windowCallBack) {
+  $scope.createOrUpdateActivity = function(windowCallBack, isRefered) {
     share.alertLoad();
+    function finallySaved(dataResponse, windowCallBack, isRefered) {
+      if(!isRefered) {
+        $scope.queryActivity("all");
+        $scope.countActivity(); 
+        $scope.clearActivity();
+      } else {
+        if(dataResponse.data && dataResponse.data._id)
+          share.refAddObject("activity", dataResponse.data);
+      }
+      if(windowCallBack)
+        share.window(windowCallBack); 
+      else
+        share.windowBack();
+    }
+
     function save() {
       var activityJson = $scope.activity;
-
       if($scope.activity._id != null)
         Activity.update(activityJson, function(dataResponse){ 
-          if(validate(share.alert, $scope.errors.activity, dataResponse)){ 
-            $scope.query(); 
-            $scope.count(); 
-            $scope.clear(); 
-            share.window(windowCallBack); 
-          }
+          if(validate(share.alert, $scope.errors.activity, dataResponse))
+            finallySaved(dataResponse, windowCallBack, isRefered);
         });
       else
         Activity.save(activityJson, function(dataResponse){ 
-          if(validate(share.alert, $scope.errors.activity, dataResponse)){ 
-            $scope.query(); 
-            $scope.count(); 
-            $scope.clear(); 
-            share.window(windowCallBack); 
-          }
+          if(validate(share.alert, $scope.errors.activity, dataResponse))
+            finallySaved(dataResponse, windowCallBack, isRefered);
         });
     } 
     save();
   }
 
-  $scope.destroyByIndex = function(index) {
+  $scope.destroyActivityByIndex = function(index) {
     share.alertLoad();
     $scope.dataList.data[index].$delete(function(dataResponse){
       share.alert.show = true;
       share.alert.style = dataResponse.event.style;
       share.alert.message = dataResponse.event.message;
+      if(dataResponse.event.status == true) {
+        $scope.dataList.status.totality = $scope.dataList.status.totality-1;
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+      }
     });
     $scope.dataList.data.splice(index, 1);
+    $scope.queryActivity("all");
   }
 
-  $scope.filter = function() {
+  $scope.queryActivity = function(queryMode) {
     share.alertLoad();
-    $scope.dataList.data = Activity.query($scope.dataList.toParams(), function(){
-      share.alertClean();
-    });
-  }
+    if(queryMode === "reset")
+      $scope.dataList.reset();
 
-  $scope.query = function() {
-    share.alertLoad();
-    $scope.dataList.data = Activity.query($scope.dataList.toParams(), function(){ 
+    if(queryMode === "all") {
+      Activity.query(null, function(dataResponse){ 
+        $scope.activitys = dataResponse;
+        $scope.dataList.data = dataResponse.slice(0, 10);
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+        share.alertClean();
+      });
+    } else {
+      Activity.query($scope.dataList.toParams(), function(dataResponse){ 
+        $scope.dataList.data = dataResponse;
+        $scope.dataList.status.listing = $scope.dataList.data.length;
+        share.alertClean();
+      });
+    }
+
+  }
+  $scope.queryActivity("all");
+
+  $scope.countActivity = function() {
+    Activity.count($scope.dataList.toParams(), function(dataResponse){
+      $scope.dataList.status = dataResponse;
       $scope.dataList.status.listing = $scope.dataList.data.length;
-      share.alertClean();
     });
   }
-  $scope.query();
+  $scope.countActivity();
 
-  $scope.count = function() {
-    $scope.dataList.status = Activity.count($scope.dataList.toParams(), function(dataResponse){
-      $scope.dataList.status.listing = $scope.dataList.data.length;
-    });
-  }
-  $scope.count();
-
-  $scope.queryMore = function() {
+  $scope.queryMoreActivity = function() {
     share.alertLoad();
     $scope.dataList.page.skip = $scope.dataList.data.length;
-    var moreActivitys = Activity.query($scope.dataList.toParams(), function(){
-      angular.forEach(moreActivitys, function(activity){
-        $scope.dataList.data.push(activity);
+    Activity.query($scope.dataList.toParams(), function(dataResponse){
+      angular.forEach(dataResponse, function(data){
+        $scope.dataList.data.push(data);
         $scope.dataList.status.listing++;
       });
       share.alertClean();
     });
   }
 
-  $scope.select = function(index) {
+  $scope.selectActivity = function(index) {
     $scope.activity = $scope.dataList.data[index];
 
       var activitysIds = new Array();
@@ -99,36 +118,13 @@ function ActivityPublicController($scope, $http, $q, share, Activity) {
 
   }
 
-  $scope.clear = function() {
+  $scope.clearActivity = function() {
     delete $scope.activity;
     $scope.activity = {};
-    $scope.clearActivity();
-  }
-  $scope.queryActivity = function(){
-    $scope.activitys = Activity.query();
-  };
-  $scope.queryActivity();
+    $scope.errors = {};
+    $scope.errors.activity = {};
 
-  $scope.newActivity = {};
-  $scope.errors.newActivity = {};
-
-  $scope.createOrUpdateActivity = function() {
-    function save(dataResponse) {
-      if(validate(share.alert, $scope.errors.newActivity, dataResponse)) {
-        $scope.activitys.push(dataResponse.data);
-        $scope.clearActivity();
-        share.windowBack();
-      }
-    }
-    if($scope.newActivity._id != null)
-      Activity.update($scope.newActivity, save);
-    else
-      Activity.save($scope.newActivity, save);
-  }
-
-  $scope.clearActivity = function() {
-    delete $scope.newActivity;
-    $scope.newActivity = {};
   }
 
 }
+

@@ -3,7 +3,7 @@ module.exports = exports = {
   	controller: [
       { name: "passport", object: "PassportController.js", di: { Strategy: require('passport-local').Strategy } },
       { name: "user", object: "UserController.js" },
-      { name: "activity", object: "ActivityController.js" }
+      { name: "activity", object: "ActivityController.js" },
     ],
     model: [
       { name: "user", object: "User.js" },

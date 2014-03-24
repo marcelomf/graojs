@@ -1,4 +1,7 @@
+var validate, $i;
 var UserValidator = function(di) {
+  $i = di;
+  validate = $i.validate;
   return {
     password: [function(value){
       if(value.length < 8)
@@ -7,12 +10,12 @@ var UserValidator = function(di) {
       return true;
     }, "Invalid password"],
     username: [
-      di.validate({
+      validate({
         message : "Username need be having between 3 to 100 letters/numbers."
       }, 'len', 3, 100),
 
-      di.validate({
-        message : "Username need to be alpha Numeric."
+      validate({
+        message : "Username need to be alpha numeric."
       }, 'isAlphanumeric')
     ]
   }

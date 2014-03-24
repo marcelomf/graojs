@@ -71,24 +71,24 @@ var UserSchema = function(di) {
         isFilter: true
       }
     },
-    createdAt: { type: Date },
-    updatedAt: { type: Date },
-    retrievePassword: {
+    createdat: { type: Date },
+    updatedat: { type: Date },
+    retrievepassword: {
       token: {
         type : String,
         index : true,
         trim : true,
       },
-      createdToken: { type: Date }
+      createdtoken: { type: Date }
     }
   };
 
   this.mongoose = new di.mongoose.Schema(this.json);
 
   this.mongoose.pre('save', function(next) {
-    this.updatedAt = new Date;
-    if(!this.createdAt)
-      this.createdAt = new Date;
+    this.updatedat = new Date;
+    if(!this.createdat)
+      this.createdat = new Date;
     if (!this.isModified('password')) 
       return next();
     this.password = di.hash(this.password);

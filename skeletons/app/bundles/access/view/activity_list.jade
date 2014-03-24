@@ -21,23 +21,24 @@
       table.table.table-striped
         thead
           tr
-            th(ng-class="dataList.sortClass('name')", ng-click="dataList.sortBy('name'); query();")=__('Name')
+            th(ng-class="dataList.sortClass('name')", ng-click="dataList.sortBy('name'); queryActivity();")=__('Name')
 
-            th(ng-class="dataList.sortClass('activitys')", ng-click="dataList.sortBy('activitys'); query();")=__('Activitys')
+            th(ng-class="dataList.sortClass('activitys')", ng-click="dataList.sortBy('activitys'); queryActivity();")=__('Context(Sub Activitys)')
 
-            th=__('Actions')
+            th(class="table-actions")=__('Actions')
         tbody
           tr(ng-repeat="activity in dataList.data")
             td {{ activity.name }} 
 
-            td {{ activity.activitys }} 
+            td 
+              span(ng-repeat="activity in activity.activitys") {{ activity.name }} 
 
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyByIndex($index); query(); count();') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyActivityByIndex($index); queryActivity();') 
               | 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select($index); share.window("createOrUpdate");')
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='selectActivity($index); share.window("createOrUpdateActivity");') 
               | 
-              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select($index); share.window("show");')
+              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='selectActivity($index); share.window("showActivity");') 
 .row
   .col-md-6.text-left
     p=__('Listing {{ dataList.status.listing }} of {{ dataList.status.filtered }} filtered on {{ dataList.status.totality }} registers')

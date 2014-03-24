@@ -1,33 +1,35 @@
+var $i;
 var ActivityRoute = function(di) {
-  di.graoExpress.get('/service/activity/count',
-    di.controllers.passport.service.validateJson,
-  	di.controllers.activity.service.count);
-  di.graoExpress.get('/service/activity/:id',
-    di.controllers.passport.service.validateJson,
-  	di.controllers.activity.service.get);
-  di.graoExpress.put('/service/activity/:id',
-    di.controllers.passport.service.validateJson,
-  	di.controllers.activity.service.validate, 
-    di.controllers.activity.service.update);
-  di.graoExpress.del('/service/activity/:id',
-    di.controllers.passport.service.validateJson,
-  	di.controllers.activity.service.destroy);
-  di.graoExpress.get('/service/activity', 
-    di.controllers.passport.service.validateJson,
-  	di.controllers.activity.service.query);
-  di.graoExpress.post('/service/activity/validate', 
-    di.controllers.passport.service.validateJson,
-  	di.controllers.activity.service.validate, 
+  $i = di;
+  $i.graoExpress.get('/service/activity/count',
+    $i.controllers.passport.service.validateJson, 
+  	$i.controllers.activity.service.count);
+  $i.graoExpress.get('/service/activity/:id', 
+    $i.controllers.passport.service.validateJson,
+  	$i.controllers.activity.service.get);
+  $i.graoExpress.put('/service/activity/:id', 
+    $i.controllers.passport.service.validateJson,
+  	$i.controllers.activity.service.validate, 
+    $i.controllers.activity.service.update);
+  $i.graoExpress.del('/service/activity/:id', 
+    $i.controllers.passport.service.validateJson,
+  	$i.controllers.activity.service.destroy);
+  $i.graoExpress.get('/service/activity', 
+    $i.controllers.passport.service.validateJson,
+  	$i.controllers.activity.service.query);
+  $i.graoExpress.post('/service/activity/validate', 
+    $i.controllers.passport.service.validateJson,
+  	$i.controllers.activity.service.validate, 
   	function(req, res){ 
-  	  res.json(di.event.newSuccess("Successful validation!").toJson()); 
+  	  res.json($i.event.newSuccess("Successful validation!").toJson()); 
     });
-  di.graoExpress.post('/service/activity',
-    di.controllers.passport.service.validateJson, 
-  	di.controllers.activity.service.validate, 
-  	di.controllers.activity.service.create);
-  di.graoExpress.get('/admin/activity', 
-    di.controllers.passport.service.validateTpl,
-  	di.controllers.activity.admin.dashboard);
+  $i.graoExpress.post('/service/activity', 
+    $i.controllers.passport.service.validateJson,
+  	$i.controllers.activity.service.validate, 
+  	$i.controllers.activity.service.create);
+  $i.graoExpress.get('/admin/activity', 
+    $i.controllers.passport.service.validateTpl,
+  	$i.controllers.activity.admin.dashboard);
 };
 
 module.exports = exports = ActivityRoute;
