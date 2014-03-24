@@ -127,7 +127,7 @@ var GraoCommands = function (di) {
           var activity = new grao.kernel.models.activity;
           activity.name = "Administrative";
           activity.code = "admin";
-          activity.description = "Auto-generate by Grao CLI";
+          activity.description = "Auto-generate by graoJS CLI";
           activity.save(function(err, activity){
             if(err || !activity)
               return exit((err).red);
