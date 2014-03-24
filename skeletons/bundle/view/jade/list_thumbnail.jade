@@ -17,7 +17,7 @@
             | 
             button.btn.btn-danger.btn-sm.icon.icon-trash(type='button', ng-click='destroy{{ schema | capitalize }}ByIndex($index); query{{ schema | capitalize }}();')=__('Remove')
             | 
-            button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("show{{ schema | capitalize }}");')=__('Show')
+            button.btn.btn-info.btn-sm.icon.icon-plus(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("show{{ schema | capitalize }}");')=__('Show')
 .row
   .col-md-12.text-right
     p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')
