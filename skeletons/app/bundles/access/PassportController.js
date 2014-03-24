@@ -61,14 +61,14 @@ var PassportController = function(di) {
 
   passport.use(new Strategy(function(username, password, done) {
     //console.log('strategy');
-    models.user.findOne({ username: username, password: di.hash(password) }).
+    models.user.findOne({ username: username, password: di.hash(password), enabled: true }).
       populate('activitys').
       exec(function(err, user) {
       if(err) 
         return done(err);
-      if(!user) 
+      else if(!user) 
         return done(null, false);
-      if(user) 
+      else
         return done(null, user);
     });
   }));

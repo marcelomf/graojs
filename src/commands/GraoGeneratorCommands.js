@@ -339,10 +339,11 @@ var GraoGeneratorCommands = function (di) {
       fs.mkdirSync(path.join(appPath, "node_modules"), 0755);
 
     if(!fs.existsSync(path.join(appPath, "node_modules", "graojs")) || force)
-      fs.copy(path.join(__dirname, "..", ".."), path.join(appPath, "node_modules", "graojs"));
+      fs.copySync(path.join(__dirname, "..", ".."), path.join(appPath, "node_modules", "graojs"));
 
     if(!fs.existsSync(path.join(appPath,"node_modules", "passport-local")) || force)
-      fs.copy(path.join(__dirname, "..", "..", "node_modules", "passport-local"), path.join(appPath, "node_modules", "passport-local"));
+      fs.copySync(path.join(__dirname, "..", "..", "node_modules", "passport-local"), path.join(appPath, "node_modules", "passport-local"));
+
   }
 }
 
