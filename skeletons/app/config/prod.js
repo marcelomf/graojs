@@ -1,6 +1,6 @@
 var fs = require('fs'), 
   path = require('path'), 
-  rootPath = path.normalize(__dirname + '/..'),
+  rootPath = path.normalize(path.join(__dirname, '..')),
   charset = 'utf-8',
   packageJson = JSON.parse(fs.readFileSync(path.join(rootPath,'package.json'), charset));
 

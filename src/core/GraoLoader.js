@@ -51,6 +51,7 @@ var GraoLoader = function(di) {
 
   this.tryLoad = function(originalLoad, di, loadType) {
     var reload = new Array();
+    var countReload = {};
     function loading(loads) {
       for(loadIndex in loads) {
         try {
@@ -63,7 +64,13 @@ var GraoLoader = function(di) {
             reload.splice(indexReload, 1);
         } catch(err) {
           //throw err;
+          countReload[loadIndex] = (countReload[loadIndex]) ? countReload[loadIndex]+=1 : 1;
           reload.push(loadIndex);
+          if(countReload[loadIndex] >= 100) {
+            di.event.newError("GraoLoader - tryLoad: "+loadType+"/"+loadIndex+" more 100 times");
+            di.event.newError(err);
+            process.exit(1);
+          }
         }
       }
 
