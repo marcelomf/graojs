@@ -18,6 +18,7 @@ service.login = function(req, res, next) {
 
 service.logout = function(req, res, next) {
   req.logout();
+  res.clearCookie("connect.sid");
   res.json(event.newSuccess(res.__("Logout")).toJson());
 }
 
