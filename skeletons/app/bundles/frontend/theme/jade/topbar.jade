@@ -13,10 +13,11 @@
             a(href='/') 
               i.icon-home 
               | Home 
-          li.dropdown
-            a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
-            ul.dropdown-menu
-              include adminmenu
+          if isAuth == true
+            li.dropdown
+              a.dropdown-toggle(href='#', data-toggle='dropdown') Admin
+              ul.dropdown-menu
+                include adminmenu
           if isAuth == true && user && user.do('admin')
             li.dropdown
               a.dropdown-toggle(href='#', data-toggle='dropdown')=__('Access Admin')

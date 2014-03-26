@@ -1,14 +1,6 @@
-var methods = {}, statics = {}, mongooseSchema = { pre: function(){}, post: function(){} }, $i;
+var methods = {}, statics = {}, $i;
 
-mongooseSchema.pre('save', function(next) {
-  this.updatedAt = new Date;
-  if(!this.createdAt)
-    this.createdAt = new Date;
-  if (!this.isModified('password')) 
-    return next();
-  this.password = $i.hash(this.password);
-  next();
-});
+
 
 methods.randPassword = function() {
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -78,10 +70,20 @@ methods.doAll = function(doActivitys) {
 
 var User = function(di) {
   $i = di;
-  mongooseSchema = $i.schemas.user.mongoose;
-  mongooseSchema.methods = methods;
-  mongooseSchema.statics = statics;
-  return $i.mongoose.model("User", mongooseSchema, "user");
+  $i.schemas.user.mongoose.methods = methods;
+  $i.schemas.user.mongoose.statics = statics;
+
+  $i.schemas.user.mongoose.pre('save', function(next) {
+    this.updatedAt = new Date;
+    if(!this.createdAt)
+      this.createdAt = new Date;
+    if (!this.isModified('password')) 
+      return next();
+    this.password = $i.hash(this.password);
+    next();
+  });
+
+  return $i.mongoose.model("User", $i.schemas.user.mongoose, "user");
 };
 
 module.exports = exports = User;

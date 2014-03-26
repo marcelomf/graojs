@@ -1,11 +1,10 @@
-var methods = {}, statics = {}, mongooseSchema = { pre: function(){}, post: function(){} }, $i;
+var methods = {}, statics = {}, $i;
 
 var Activity = function(di) {
   $i = di;
-  mongooseSchema = $i.schemas.activity.mongoose;
-  mongooseSchema.methods = methods;
-  mongooseSchema.statics = statics;
-  return $i.mongoose.model("Activity", mongooseSchema, "activity");
+  $i.schemas.activity.mongoose.methods = methods;
+  $i.schemas.activity.mongoose.statics = statics;
+  return $i.mongoose.model("Activity", $i.schemas.activity.mongoose, "activity");
 };
 
 module.exports = exports = Activity;

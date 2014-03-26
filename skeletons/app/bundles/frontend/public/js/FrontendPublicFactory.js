@@ -1,4 +1,4 @@
-graoJS.factory('share', ['config', '$timeout', '$http', function(config, $timeout, $http) {
+graoJS.factory('share', ['$timeout', '$http', function(config, $timeout, $http) {
   var share = {
       alert: { message: 'graoJS', style: 'info', show: false },
       alertPrimary: function(message){
