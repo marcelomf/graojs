@@ -111,7 +111,7 @@
         thead
           tr {%- for subFieldName, subField in field.fields %}
             th=__('{{ subField.label }}') {%- endfor %}
-            th=__('Actions')
+            th.table-actions=__('Actions')
         tbody
           tr(ng-repeat="item in {{ field.fullPath }} track by $index"){%- for subFieldName, subField in field.fields %}
             td {{ '{{' }} item.{{ subFieldName }} }}{%- endfor %}
