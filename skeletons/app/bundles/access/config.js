@@ -1,7 +1,8 @@
 module.exports = exports = {
   injection : {
-  	controller: [
-      { name: "passport", object: "PassportController.js", di: { Strategy: require('passport-local').Strategy } },
+    controller: [
+      { name: "passport", object: "PassportController.js", di: { Strategy: require('passport-local').Strategy ,
+                                                                 url: require("url") } },
       { name: "user", object: "UserController.js" },
       { name: "activity", object: "ActivityController.js" },
     ],

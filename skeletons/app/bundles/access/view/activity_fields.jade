@@ -9,12 +9,6 @@ mixin form_fields_activity()
     input.form-control(type='text', ng-model="activity.code", placeholder=__('Code')) 
     span.help-block.ng-hide(ng-show="errors.activity.code")='{{ errors.activity.code }}'
 
-  .form-group(ng-class="{'has-error': errors.activity.activitys}")
-      select.form-control(ui-select2, ng-model="activity.activitys", data-placeholder=__('Context(Sub Activitys)'), multiple='true')
-
-        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
-    span.help-block.ng-hide(ng-show="errors.activity.activitys")='{{ errors.activity.activitys }}'
-
   .form-group(ng-class="{'has-error': errors.activity.description}")
     textarea.form-control(ng-model="activity.description", placeholder=__('Description'))
     span.help-block.ng-hide(ng-show="errors.activity.description")='{{ errors.activity.description }}'
@@ -23,11 +17,4 @@ mixin filter_fields_activity()
 
   .form-group(ng-class="{'has-error': errors.dataList.filter.name}")
     input.form-control(type='text', ng-model="dataList.filter.name", placeholder=__('Name')) 
-    span.help-block.ng-hide(ng-show="errors.dataList.filter.name")='{{ errors.dataList.filter.name }}'
-
-  .form-group(ng-class="{'has-error': errors.dataList.filter.activitys}")
-      select.form-control(ui-select2, ng-model="dataList.filter.activitys", data-placeholder=__('Context(Sub Activitys)'), multiple='true')
-
-        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
-    span.help-block.ng-hide(ng-show="errors.dataList.filter.activitys")='{{ errors.dataList.filter.activitys }}'
-         
+    span.help-block.ng-hide(ng-show="errors.dataList.filter.name")='{{ errors.dataList.filter.name }}'         

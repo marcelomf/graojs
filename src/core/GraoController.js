@@ -3,14 +3,26 @@ var GraoController = function(di) {
   di.controllers = this;
 
   this.processDataList = function(model, query){
+    
+    function getPathAndString(obj, result){
+      for(key in obj){
+        result.path = result.path+"."+key;
+        if(typeof obj[key] === 'object'){
+          getPathAndString(obj[key], result);
+        } else {
+          result.value = obj[key];
+          break;
+        }
+      }
+      return result;
+    }
+
     var dataList = { data: null,
                       filter: null,
                       sort: { field: '_id', type: '-'}, 
                       page: { skip: 0, limit: 10 }, 
                       status: { totality: 0, filtered: 0, listing: 0 } };
-    if(query.data)
-      dataList.data = JSON.parse(query.data);
-
+                      
     if(query.page)
       dataList.page = JSON.parse(query.page);
 
@@ -31,8 +43,11 @@ var GraoController = function(di) {
         if(!(model.schema.paths[key] && typeof model.schema.paths[key] === 'object'))
           continue;
 
+        if(model.schema.paths[key].schema) // subdoc
+          continue;
+        //console.log(getPathAndString(dataList.filter[key], { path: key, value: null }));
 
-        if(model.schema.paths[key].instance == 'String') {
+        if(model.schema.paths[key] && model.schema.paths[key].instance == 'String') {
           if(dataList.filter[key].length > 0) {
             dataList.filter[key] = RegExp('.*'+dataList.filter[key]+'.*', "i");
           }

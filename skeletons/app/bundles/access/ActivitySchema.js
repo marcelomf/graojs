@@ -34,17 +34,6 @@ var ActivitySchema = function(di) {
         type: 'input'
       }
     },
-    activitys: [{ 
-      type: di.mongoose.Schema.Types.ObjectId, 
-      ref: 'Activity',
-      graoui: {
-        label: "Context(Sub Activitys)",
-        type: "select",
-        attr: { multiple: true },
-        isList: true,
-        isFilter: true
-      }
-    }],
     description : {
       type: String,
       graoui: {

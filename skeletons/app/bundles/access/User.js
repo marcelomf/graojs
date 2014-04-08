@@ -1,7 +1,5 @@
 var methods = {}, statics = {}, $i;
 
-
-
 methods.randPassword = function() {
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
   var passwordLength = 8;
@@ -74,9 +72,9 @@ var User = function(di) {
   $i.schemas.user.mongoose.statics = statics;
 
   $i.schemas.user.mongoose.pre('save', function(next) {
-    this.updatedAt = new Date;
+    this.updatedAt = new Date();
     if(!this.createdAt)
-      this.createdAt = new Date;
+      this.createdAt = new Date();
     if (!this.isModified('password')) 
       return next();
     this.password = $i.hash(this.password);

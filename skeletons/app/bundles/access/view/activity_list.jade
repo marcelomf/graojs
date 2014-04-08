@@ -22,16 +22,14 @@
         thead
           tr
             th(ng-class="dataList.sortClass('name')", ng-click="dataList.sortBy('name'); queryActivity();")=__('Name')
-
-            th(ng-class="dataList.sortClass('activitys')", ng-click="dataList.sortBy('activitys'); queryActivity();")=__('Context(Sub Activitys)')
-
+            th(ng-class="dataList.sortClass('code')", ng-click="dataList.sortBy('code'); queryActivity();")=__('Code')
+            th=__('Description')
             th(class="table-actions")=__('Actions')
         tbody
           tr(ng-repeat="activity in dataList.data")
             td {{ activity.name }} 
-
-            td 
-              span(ng-repeat="activity in activity.activitys") {{ activity.name }} 
+            td {{ activity.code }} 
+            td {{ activity.description }} 
 
             td
               button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyActivityByIndex($index); queryActivity();') 

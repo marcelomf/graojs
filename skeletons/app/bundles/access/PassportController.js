@@ -55,7 +55,7 @@ var PassportController = function(di) {
 
   passport.deserializeUser(function(id, done) {
     //console.log('deserializa');
-    models.user.findOne({ _id: id }, "_id username email activitys createdat updatedat enabled").populate('activitys').exec(function(err, user) {
+    models.user.findOne({ _id: id }, "-password").populate('activitys').exec(function(err, user) {
       done(err, user);
     });
   });

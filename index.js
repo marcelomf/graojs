@@ -105,5 +105,5 @@ var graoJS = function() {
     kernel.logger.info('Number of servers: '+servers.length);
   };
 };
-
 module.exports = exports = graoJS;
+module.exports.kernel = exports.kernel = kernel;
