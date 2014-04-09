@@ -84,16 +84,6 @@ var UserSchema = function(di) {
   };
 
   this.mongoose = new di.mongoose.Schema(this.json);
-
-  this.mongoose.pre('save', function(next) {
-    this.updatedat = new Date;
-    if(!this.createdat)
-      this.createdat = new Date;
-    if (!this.isModified('password')) 
-      return next();
-    this.password = di.hash(this.password);
-    next();
-  });
 };
 
 module.exports = exports = UserSchema;

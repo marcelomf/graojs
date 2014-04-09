@@ -43,11 +43,13 @@ mixin form_fields_user()
       =__('Enabled')
     span.help-block.ng-hide(ng-show="errors.user.enabled")='{{ errors.user.enabled }}'
 
-  .form-group(ng-class="{'has-error': errors.user.generatePassword}")
-    label.checkbox-inline
-      input(type='checkbox', ng-model="user.generatePassword" value='IS_GENERATE_PASSWORD') 
-      =__('Generate password')
-    span.help-block.ng-hide(ng-show="errors.user.generatePassword")='{{ errors.user.generatePassword }}'
+  .form-group(ng-class="{'has-error': errors.user.newPassword}")
+    input.form-control(type='password', ng-model='user.newPassword', placeholder=__('New password')) 
+    span.help-block.ng-hide(ng-show="errors.user.newPassword")='{{ errors.user.newPassword }}'
+
+  .form-group(ng-class="{'has-error': errors.user.confirmNewPassword}")
+    input.form-control(type='password', ng-model='user.confirmNewPassword', placeholder=__('Confirm new password')) 
+    span.help-block.ng-hide(ng-show="errors.user.confirmNewPassword")='{{ errors.user.confirmNewPassword }}'
 
 mixin filter_fields_user() 
 

@@ -11,14 +11,16 @@ service.login = function(req, res, next) {
       if(err) 
         return res.json(event.newError(res.__("Access Denied.")).toJson());
 
+      res.cookie('accessid', user.accessId());
       res.json(event.newSuccess(res.__("Welcome")).toJson());
     });
   })(req, res, next);
 }
 
 service.logout = function(req, res, next) {
-  req.logout();
   res.clearCookie("connect.sid");
+  res.clearCookie("accessid");
+  req.logout();
   res.json(event.newSuccess(res.__("Logout")).toJson());
 }
 
@@ -62,7 +64,7 @@ var PassportController = function(di) {
 
   passport.use(new Strategy(function(username, password, done) {
     //console.log('strategy');
-    models.user.findOne({ username: username, password: di.hash(password), enabled: true }).
+    models.user.findOne({ username: username, password: models.user.hashPassword(password), enabled: true }).
       populate('activitys').
       exec(function(err, user) {
       if(err) 

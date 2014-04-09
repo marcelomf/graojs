@@ -62,22 +62,32 @@ service.validate = function(req, res, next) {
 }
 
 service.create = function(req, res) {
-  var activity = new Activity(req.body);
-  activity.save(function(err, activity) {
-    if(err)
-      res.json(event.newError(err).toJson());
-    else
-      res.json(event.newSuccess(res.__("Activity")+" "+res.__("created")).data(activity).toJson());
+
+  Activity.buildActivitys(req.body).then(function(activity){
+    activity = new Activity(activity);
+    activity.save(function(err, activity) {
+      if(err)
+        res.json(event.newError(err).toJson());
+      else
+        res.json(event.newSuccess(res.__("Activity")+" "+res.__("created")).data(activity).toJson());
+      });
+  }).catch(function(err){
+    res.json(event.newError(err).toJson());
   });
 }
 
 service.update = function(req, res) {
   delete req.body._id;
-  Activity.findOneAndUpdate({_id : req.params.id }, req.body, { upsert : true }, function(err, activity) {
-    if(err)
-      res.json(event.newError(err).toJson());
-    else
-      res.json(event.newSuccess(res.__("Activity")+" "+res.__("updated")).data(activity).toJson());
+
+  Activity.buildActivitys(req.body).then(function(activity){
+    Activity.findOneAndUpdate({_id : req.params.id }, activity, { upsert : true }, function(err, activity) {
+      if(err)
+        res.json(event.newError(err).toJson());
+      else
+        res.json(event.newSuccess(res.__("Activity")+" "+res.__("updated")).data(activity).toJson());
+    });
+  }).catch(function(err){
+    res.json(event.newError(err).toJson());
   });
 }
 

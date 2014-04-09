@@ -1,4 +1,4 @@
-var service = {}, admin = {}, models, controllers, event, config, User, nodemailer, $i;
+var service = {}, admin = {}, helper = {}, models, controllers, event, config, User, $i;
 
 service.count = function(req, res) {
   var dataList = controllers.processDataList(User, req.query);
@@ -24,7 +24,7 @@ service.count = function(req, res) {
 }
 
 service.get = function(req, res) {
-    User.findOne({_id : req.params.id}, "_id username email enabled createdat updatedat activitys").populate('activitys').exec(function(err, user) {
+    User.findOne({_id : req.params.id}, "-password").populate('activitys').exec(function(err, user) {
     if (err)
       res.json(event.newError(err).toJson());
     else
@@ -35,7 +35,7 @@ service.get = function(req, res) {
 service.query = function(req, res) {
   var dataList = controllers.processDataList(User, req.query);
 
-  User.find(dataList.filter, "_id username email enabled createdat updatedat activitys").
+  User.find(dataList.filter, "-password").
     sort(dataList.sort).
     skip(dataList.page.skip).
     limit(dataList.page.limit).
@@ -50,7 +50,7 @@ service.query = function(req, res) {
 }
 
 service.validate = function(req, res, next) {
-  req.body.password = 'byPasssssss';
+  req.body.password = 'byPass12321';
   var user = new User(req.body);
   user.validate(function(err){
     if(err)
@@ -60,88 +60,101 @@ service.validate = function(req, res, next) {
   });
 }
 
-service.sendNewPassword = function(user, res) {
-  var smtpTransport = nodemailer.createTransport("SMTP", config.smtpOptions);
-
-  var body = "Username: "+user.username+"\n";
-  body += "Password: "+user.password+"\n";
-
-  event.newSuccess(body);
-
-  var mailOptions = {
-    from: "Hostmaster <hostmaster@synack.com.br>", // sender address
-    to: "marcelomf@gmail.com, marcelo@synack.com.br", // list of receivers
-    subject: config.name+" - "+res.__("New password"), // Subject line
-    text: body, // plaintext body
-    html: body // html body
-  };
-
-  smtpTransport.sendMail(mailOptions, function(err, response){
-    if(err){
-      event.newError(err);
-    }else{
-      event.newSuccess("Message sent: " + response.message);
+helper.fixError = function(err) {
+  if(err) {
+    if(err.errors && err.errors && err.errors.password) {
+      err.errors.newPassword = err.errors.password;
+      err.errors.newPassword.path = 'newPassword';
     }
-    smtpTransport.close();
-  });
-
+  }
+  return err;
 }
 
 service.create = function(req, res) {
-  var user = new User(req.body);
-  var randomPassword = user.randPassword();
-  user.save(function(err, user) {
-    if(err)
-      return res.json(event.newError(err).toJson());
-    
-    res.json(event.newSuccess(res.__("User")+" "+res.__("created")).data(user).toJson());
-    if(randomPassword) {
-      user.password = randomPassword;
-      service.sendNewPassword(user, res);
-    }
+  if(req.body.newPassword != req.body.confirmNewPassword)
+    return res.json(event.newError(res.__('Error in the password confirmation.')).toJson());
+
+  req.body.password = req.body.newPassword;
+  delete req.body.newPassword;
+  delete req.body.confirmNewPassword;
+
+  User.buildActivitys(req.body)
+  .then(function(userJson){
+    var user = new User(userJson);
+    user.save(function(err, user){
+      if(err){
+        err = helper.fixError(err);
+        return res.json(event.newError(err).toJson());
+      } 
+      delete user.password;
+      res.json(event.newSuccess(res.__("User")+" "+res.__("created")).data(user).toJson());
+    });
+  }).catch(function(err){
+    res.json(event.newError(err).toJson());
   });
 }
 
 service.update = function(req, res) {
-  delete req.body._id;
-  delete req.body.password;
-  if(req.body.generatePassword == true) {
-    var user = new User(req.body);
-    var randomPassword = user.randPassword();
-    service.sendNewPassword(user, res);
-    req.body.password = user.hashPassword();
-    delete user;
+  function save(userJson){
+    var userId = userJson._id;
+    delete userJson._id;
+    User.findOneAndUpdate({_id : userId }, userJson, function(err, user) {
+      if(err) return res.json(event.newError(err).toJson());
+      delete user.password;
+      res.json(event.newSuccess(res.__("User")+" "+res.__("updated")).data(user).toJson());
+    });
   }
-  User.findOneAndUpdate({_id : req.params.id }, req.body, { upsert : true }, function(err, user) {
-    if(err)
-      return res.json(event.newError(err).toJson());
-    
-    res.json(event.newSuccess(res.__("User") +" "+res.__("updated")).data(user).toJson());
-    if(randomPassword) {
-      user.password = randomPassword;
-      service.sendNewPassword(user, res);
+
+  if(req.body.newPassword != req.body.confirmNewPassword)
+    return res.json(event.newError(res.__('Error in the password confirmation.')).toJson());
+
+  req.body.password = req.body.newPassword;
+  req.body._id = req.params.id;
+  delete req.body.newPassword;
+  delete req.body.confirmNewPassword;
+  
+  User.buildActivitys(req.body)
+  .then(function(userJson){
+    if(userJson.password && userJson.password.length > 0){
+      testNewUser = new User(userJson);
+      testNewUser.validate(function(err){
+        if(err) {
+          err = helper.fixError(err);
+          return res.json(event.newError(err).toJson());
+        } 
+        userJson.password = User.hashPassword(userJson.password);
+        save(userJson);  
+      });
+    } else {
+      delete userJson.password;
+      save(userJson);
     }
+  }).catch(function(err){
+    res.json(event.newError(err).toJson());
   });
 }
 
 service.updateProfile = function(req, res) {
 
   function save(user) {
-    user.username = req.body.username;
-    user.email = req.body.email;
+    delete req.body.password;
+    delete req.body.newPassword;
+    delete req.body.confirmPassword;
+    delete req.body.currentPassword;
+    for(var field in req.body){
+      user[field] = req.body[field];
+    }
+
     user.validate(function(err){
       if(err) {
-        if(err.errors && err.errors && err.errors.password) {
-          err.errors.newPassword = err.errors.password;
-          err.errors.newPassword.path = 'newPassword';
-        }
+        err = helper.fixError(err);
         return res.json(event.newError(err).toJson());
       }
-      user.save(function(err){
+      user.save(function(err, user){
         if(err)
           return res.json(event.newError(err).toJson());
 
-        user.password = '';
+        delete user.password;
         req.user = user;
         return res.json(event.newSuccess(res.__("User profile updated")).toJson());
       });
@@ -163,6 +176,7 @@ service.updateProfile = function(req, res) {
         return res.json(event.newError(res.__('Invalid current password.')).toJson());
 
       userSession.password = req.body.newPassword;
+      userSession.markModified('password');
       save(userSession);
     });
   } else {
@@ -199,7 +213,6 @@ var UserController = function(di) {
   config = $i.config;
   models = $i.models;
   controllers = $i.controllers;
-  nodemailer = $i.nodemailer;
   User = models.user; // object/class
   this.service = service;
   this.admin = admin;

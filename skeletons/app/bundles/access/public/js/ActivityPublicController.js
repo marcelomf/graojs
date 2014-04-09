@@ -84,7 +84,7 @@ function ActivityPublicController($scope, $http, $q, share, Activity) {
     }
 
   }
-  $scope.queryActivity();
+  $scope.queryActivity("all");
 
   $scope.countActivity = function() {
     Activity.count($scope.dataList.toParams(), function(dataResponse){
