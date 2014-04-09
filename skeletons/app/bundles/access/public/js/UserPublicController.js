@@ -3,7 +3,7 @@ function UserPublicController($scope, $http, $q, share, User, Activity) {
   $scope.share = share;
   $scope.notFilter = true;
   $scope.dataList = new DataList();
-  $scope.user = $scope.user || (share.getRefObject("user") != null) ? share.getRefObject("user") : {generatePassword: true, enabled: true};
+  $scope.user = $scope.user || (share.getRefObject("user") != null) ? share.getRefObject("user") : {enabled: true};
   $scope.errors = {};
   $scope.errors.user = {};
 
@@ -129,7 +129,7 @@ function UserPublicController($scope, $http, $q, share, User, Activity) {
 
   $scope.clearUser = function() {
     delete $scope.user;
-    $scope.user = {};
+    $scope.user = {enabled : true};
     $scope.errors = {};
     $scope.errors.user = {};
 
