@@ -115,9 +115,7 @@ var GraoCommands = function (di) {
         user.activitys.push(activity._id);
         user.enabled = true;
         user.save(function(err, user){
-          if(err)
-            return exit((err).red);
-
+          if(err || !user) return exit((err.message ? err.message : err).red);
           exit(("Admin user created successfully").blue);
         });
       }
@@ -129,8 +127,7 @@ var GraoCommands = function (di) {
           activity.code = "admin";
           activity.description = "Auto-generate by graoJS CLI";
           activity.save(function(err, activity){
-            if(err || !activity)
-              return exit((err).red);
+            if(err || !activity) return exit((err.message ? err.message : err).red);
             console.log(("Admin activity created successfully").blue);
             saveUser(activity);
           });

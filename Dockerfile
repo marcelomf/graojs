@@ -39,12 +39,18 @@ RUN npm install -g bson-ext
 RUN npm install -g bson 
 RUN npm install -g mongodb
 RUN npm install -g graojs
+#RUN cd /usr/lib/node_modules/graojs/node_modules/mongodb/node_modules/mongodb-core/ && npm install || echo "error bypass"
+RUN cd /usr/lib/node_modules/graojs/node_modules/mongodb/node_modules/mongodb-core/ && npm install bson || echo "error bypass"
 
-RUN grao generate:app demo --name demo --description demo --author-name Synack --author-email int@synack.com.br --server-ports 8015,8016 --template-engine jade --theme graojs --mongodb-host localhost --mongodb-db grao
+RUN service mongodb start && sleep 3 && grao generate:app demo --name demo --description demo --author-name Synack --author-email int@synack.com.br --server-ports 8015,8016 --template-engine jade --theme graojs --mongodb-host localhost --mongodb-db grao
+
+WORKDIR demo
+
+RUN service mongodb start && sleep 3 && grao main:create:admin --username marcelo --name Marcelo --email marcelomf@gmail.com --password admin123
 
 RUN groupadd -r $SERVICE_NAME
 RUN useradd -r -s /bin/sh -d /opt/$SERVICE_NAME -c 'service user' -g $SERVICE_NAME $SERVICE_NAME
 
 EXPOSE 8015
 EXPOSE 8016
-ENTRYPOINT /usr/bin/node /opt/demo/index.js
+ENTRYPOINT /usr/bin/node index.js
