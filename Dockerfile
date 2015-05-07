@@ -53,4 +53,4 @@ RUN useradd -r -s /bin/sh -d /opt/$SERVICE_NAME -c 'service user' -g $SERVICE_NA
 
 EXPOSE 8015
 EXPOSE 8016
-ENTRYPOINT /usr/bin/node index.js
+ENTRYPOINT dockerized.sh
