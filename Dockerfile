@@ -17,6 +17,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -yq \
     vim \
     python-software-properties \
     software-properties-common \
+    g++ \
     build-essential \
     make
 
@@ -24,6 +25,7 @@ RUN add-apt-repository -y ppa:chris-lea/node.js
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -yq \
     nodejs \
+    node-gyp \
 #    npm \
     mongodb
 
