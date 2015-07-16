@@ -21,22 +21,25 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -yq \
     build-essential \
     make
 
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+RUN echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.0.list
+
 RUN add-apt-repository -y ppa:chris-lea/node.js
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -yq \
     nodejs \
     node-gyp \
 #    npm \
-    mongodb
+    mongodb-org
 
 RUN mkdir -p /opt/$SERVICE_NAME
 ADD . /opt/$SERVICE_NAME
 WORKDIR /opt
 
 RUN npm update
-RUN npm install -g node-pre-gyp
-RUN npm install -g node-gyp 
-RUN node-gyp configure || echo "error bypass"
+#RUN npm install -g node-pre-gyp
+#RUN npm install -g node-gyp 
+#RUN node-gyp configure || echo "error bypass"
 RUN npm install -g bson-ext
 RUN npm install -g bson 
 RUN npm install -g mongodb
