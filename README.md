@@ -30,17 +30,24 @@ If you like this project, put your hands in the code and evaluate somethings
 #### RoadMap
 -	Fork and tell to us :).
 
-#### INSTALL
+#### INSTALL DEPENDS
+- https://nodejs.org/en/download/package-manager/
+- https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
-##### Debian like:
--	aptitude install nodejs mongodb npm 
+##### Ubuntu like:
+NodeJS:
+- curl --silent --location https://deb.nodesource.com/setup_4.x | sudo bash -
 
-##### RedHat like:
--	yum install nodejs mongodb npm
+MongoDB:
+- sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+- (+14.04) echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list 
+- sudo apt-get update
+- sudo apt-get install -y mongodb-org
 
-##### Install FIX
-You need last version of NodeJS, so if you are having problems, go to:
-https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager
+Other toys:
+https://drill.apache.org/docs/install-drill-introduction/
+https://www.elastic.co/products/kibana
+https://hadoop.apache.org/
 
 ##### graoJS install and run:
 -	sudo npm install -g graojs
