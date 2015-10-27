@@ -44,10 +44,10 @@ MongoDB:
 - sudo apt-get update
 - sudo apt-get install -y mongodb-org
 
-Other toys:
-https://drill.apache.org/docs/install-drill-introduction/
-https://www.elastic.co/products/kibana
-https://hadoop.apache.org/
+- Other toys:
+- - https://drill.apache.org/docs/install-drill-introduction/
+- - https://www.elastic.co/products/kibana
+- - https://hadoop.apache.org/
 
 ##### graoJS install and run:
 -	sudo npm install -g graojs
