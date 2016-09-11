@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+  <!--<meta charset="UTF-8">-->
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+  <title>Núcleo de Sistemas</title>
+  <link href="assets/css/goSamples.css" rel="stylesheet" type="text/css" />  <!-- you don't need to use this -->
+  <link href="menu.css" rel="stylesheet" type="text/css" /> 
+  <script src="go.js"></script>
+  <script src="goSamples.js"></script>  <!-- this is only for the GoJS Samples framework -->
+  <script id="code" src="model.js"></script>
+</head>
+<body onload="init()">
+  <div style="display: inline-block;">
+  <h3>Núcleo de sistemas</h3>
+  <p>Crie e versione os seus MERs/DERs. Tipos de dados:</p>
+  <pre>checkbox boolean currency number primary_key date radio email input password select textarea url sub_document</pre>
+  <button onclick="add()">Add</button>
+  <button id="SaveButton" onclick="save()">Save</button>
+  <button onclick="load()">Load</button>
+  <button onclick="clear()">Clear</button>
+  <!-- We make a div to contain both the Diagram div and the context menu (such that they are siblings)
+       so that absolute positioning works easily.
+       This DIV containing both MUST have a non-static CSS position (we use position: relative)
+       so that our context menu's absolute coordinates work correctly. -->
+  <div style="position: relative;">
+    <div id="myDiagram" style="border: solid 1px black; width:920px; height:500px"></div>
+    <div id="contextMenu">
+      <ul>
+        <li><a href="#" id="cut" onclick="cxcommand(this.textContent)">Recortar</a></li>
+        <li><a href="#" id="copy" onclick="cxcommand(this.textContent)">Copiar</a></li>
+        <li><a href="#" id="paste" onclick="cxcommand(this.textContent)">Colar</a></li>
+        <li><a href="#" id="delete" onclick="cxcommand(this.textContent)">Deletar</a></li>
+        <li><a href="#" id="color" onclick="cxcommand('Color')">Cor</a></li>
+      </ul>
+    </div>
+  </div>
+
+
+  <textarea id="mySavedModel" style="width:100%;height:300px">
+{ "class": "go.GraphLinksModel",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "modelData": {"position":"-415 -5"},
+  "nodeDataArray": [ 
+{
+"key":"Entidade", 
+"fields":
+[ 
+       {"name":"id", "data_type":"primary_key", "color":"#FFB900", "figure":"Square"},
+       {"name":"nome", "data_type":"input", "color":"#F25022", "figure":"Rectangle"},
+       {"name":"valor", "data_type":"currency", "color":"#7FBA00", "figure":"Diamond"}
+], "loc":"250 0"}
+ ],
+  "linkDataArray": []}
+  </textarea>
+
+</div>
+</body>
+</html>

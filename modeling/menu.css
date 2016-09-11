@@ -1,0 +1,38 @@
+  /* CSS for the traditional context menu */
+  #contextMenu {
+    z-index: 300;
+    position: absolute;
+    left: 5px;
+    border: 1px solid #444;
+    background-color: #F5F5F5;
+    display: none;
+    box-shadow: 0 0 10px rgba( 0, 0, 0, .4 );
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight:bold;
+  }
+
+  #contextMenu ul {
+    list-style: none;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  #contextMenu li {
+    position: relative;
+    min-width: 60px;
+  }
+
+  #contextMenu a {
+    color: #444;
+    display: inline-block;
+    padding: 6px;
+    text-decoration: none;
+  }
+  
+  #contextMenu li:hover { background: #444; }
+  
+  #contextMenu li:hover a { color: #EEE; }
+
