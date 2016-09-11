@@ -56,6 +56,29 @@ MongoDB:
 - - http://foundation.zurb.com/apps/page-templates.html
 - - http://purecss.io/
 - - https://onsen.io/v2/
+- Improve DOC:
+- - swagger.io
+- - http://www.fusioncharts.com/blog/2013/12/jsdoc-vs-yuidoc-vs-doxx-vs-docco-choosing-a-javascript-documentation-generator/
+- - https://github.com/rtfd/readthedocs.org
+- - http://tech.rgou.net/tag/sphinx-pocoo-tag/
+- - http://johnmacfarlane.net/pandoc/
+- Profiling
+- - https://nodesource.com/products/nsolid
+- - https://developer.atlassian.com/blog/2015/10/profiling-node-apps/
+- - https://www.npmjs.com/package/v8-profiler
+- - https://www.codementor.io/nodejs/tutorial/nodejs-profiling
+- - https://strongloop.com/strongblog/studio-arc-and-demo/
+- - https://nodejs.org/en/docs/guides/simple-profiling/
+- - https://nodejs.org/en/blog/uncategorized/profiling-node-js/
+- - https://nodesource.com/blog/profiling-node-js-applications/
+- - https://www.dynatrace.com/technologies/nodejs-monitoring/
+- Passwords
+- - https://github.com/florianheinemann/passwordless
+- - https://medium.com/@ninjudd/passwords-are-obsolete-9ed56d483eb#.owf2p82oa
+- - https://stormpath.com/blog/making-expressjs-authentication-fun-again
+- - https://github.com/jaredhanson/passport
+- - https://github.com/simov/grant
+- - https://github.com/jwtk/njwt
 
 ##### graoJS install and run:
 -	sudo npm install -g graojs
