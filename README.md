@@ -48,6 +48,14 @@ MongoDB:
 - - https://drill.apache.org/docs/install-drill-introduction/
 - - https://www.elastic.co/products/kibana
 - - https://hadoop.apache.org/
+- Views:
+- - http://getbootstrap.com/
+- - http://getuikit.com/index.html
+- - http://metroui.org.ua/
+- - http://materializecss.com/mobile.html
+- - http://foundation.zurb.com/apps/page-templates.html
+- - http://purecss.io/
+- - https://onsen.io/v2/
 
 ##### graoJS install and run:
 -	sudo npm install -g graojs
