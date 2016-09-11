@@ -73,12 +73,15 @@ MongoDB:
 - - https://nodesource.com/blog/profiling-node-js-applications/
 - - https://www.dynatrace.com/technologies/nodejs-monitoring/
 - Passwords
+- - https://auth0.com/
 - - https://github.com/florianheinemann/passwordless
 - - https://medium.com/@ninjudd/passwords-are-obsolete-9ed56d483eb#.owf2p82oa
 - - https://stormpath.com/blog/making-expressjs-authentication-fun-again
 - - https://github.com/jaredhanson/passport
 - - https://github.com/simov/grant
 - - https://github.com/jwtk/njwt
+- Battle
+- - https://github.com/strongloop/loopback-example-relations
 
 ##### graoJS install and run:
 -	sudo npm install -g graojs
