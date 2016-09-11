@@ -4,7 +4,8 @@ var path = require('path'),
   config = require(path.resolve(dirProject, 'config', 'prod')),
   passport = require('passport'),
   express = require('express'),
-  MongoStore = require('connect-mongo')(express),
+  session = require('express-session'),
+  MongoStore = require('connect-mongo')(session),
   graoExpress = express(),
   di = {  path: path,
           config: config, 
@@ -41,7 +42,7 @@ var graoJS = function() {
     graoExpress.use(express.methodOverride());
     graoExpress.use(express.json());
     graoExpress.use(i18n.init); // need after cookieParser, methodOverride and before graoExpress.router
-    graoExpress.use(express.session({
+    graoExpress.use(session({
       secret: kernel.config.secretSession,
       store: new MongoStore({ url: kernel.config.db })
     }));
