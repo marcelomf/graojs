@@ -5,6 +5,10 @@ var path = require('path'),
   passport = require('passport'),
   express = require('express'),
   session = require('express-session'),
+  //bodyParser = require('body-parser'),
+  cookieParser = require('cookie-parser'),
+  methodOverride = require('method-override'),
+  json = require('express-json'),
   MongoStore = require('connect-mongo')(session),
   graoExpress = express(),
   di = {  path: path,
@@ -27,37 +31,41 @@ var graoJS = function() {
       cookie: 'locale'
   });
 
-  graoExpress.configure(function(){
-    graoExpress.set('views', kernel.config.bundles);
-    graoExpress.set('view engine', kernel.config.templateEngine);
-    graoExpress.enable('jsonp callback');
-    //graoExpress.use(express.compress());
-    // https://github.com/evilpacket/helmet
-    // https://blog.liftsecurity.io/2012/12/07/writing-secure-express-js-apps
-    //graoExpress.use(express.logger('dev'));
-    //graoExpress.use(express.bodyParser()); // Insecure and deprecated 
-    //graoExpress.use(express.urlencoded());
-    //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
-    graoExpress.use(express.cookieParser());
-    graoExpress.use(express.methodOverride());
-    graoExpress.use(express.json());
-    graoExpress.use(i18n.init); // need after cookieParser, methodOverride and before graoExpress.router
-    graoExpress.use(session({
-      secret: kernel.config.secretSession,
-      store: new MongoStore({ url: kernel.config.db })
-    }));
-    graoExpress.use(passport.initialize());
-    graoExpress.use(passport.session());
+//  var env = process.env.NODE_ENV || 'development';
+//  if ('development' == env) {
+     // configure stuff here
+// }}
 
-    kernel.publics.enable({
-      express: express, 
-      graoExpress: graoExpress, 
-      event: kernel.event, 
-      config: kernel.config,
-      loader: kernel.loader
-    });
-    
-    graoExpress.use(graoExpress.router);
+
+  graoExpress.set('views', kernel.config.bundles);
+  graoExpress.set('view engine', kernel.config.templateEngine);
+  graoExpress.enable('jsonp callback');
+  //graoExpress.use(express.compress());
+  // https://github.com/evilpacket/helmet
+  // https://blog.liftsecurity.io/2012/12/07/writing-secure-express-js-apps
+  //graoExpress.use(express.logger('dev'));
+  //graoExpress.use(bodyParser()); // I dont need this
+  //graoExpress.use(express.urlencoded());
+  //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
+  graoExpress.use(cookieParser());
+  graoExpress.use(methodOverride());
+  graoExpress.use(json());
+  graoExpress.use(i18n.init);
+  graoExpress.use(session({
+    secret: kernel.config.secretSession,
+    store: new MongoStore({ url: kernel.config.db }),
+    resave: false,
+    saveUninitialized: true
+  }));
+  graoExpress.use(passport.initialize());
+  graoExpress.use(passport.session());
+
+  kernel.publics.enable({
+    express: express, 
+    graoExpress: graoExpress, 
+    event: kernel.event, 
+    config: kernel.config,
+    loader: kernel.loader
   });
   
   graoExpress.locals.basedir = kernel.config.bundles; // For absolute templates
