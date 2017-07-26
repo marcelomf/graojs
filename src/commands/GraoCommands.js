@@ -93,8 +93,7 @@ var GraoCommands = function (di) {
   }
 
   this.createAdmin = function(argv, prompt, schema) {
-
-    var GraoJS = require("graojs");
+    var GraoJS = require("../../index.js"); // require("graojs");
     var grao = new GraoJS();
 
     prompt.get(schema, function (err, args) {

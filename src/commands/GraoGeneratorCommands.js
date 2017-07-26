@@ -49,7 +49,7 @@ var GraoGeneratorCommands = function (di) {
         : false;
       generator.generate(result, force, self.copyGraoDeps(path.join(process.cwd(), result['name']), force));
     });
-  }
+  };
 
   this.runGenerateBundle = function (argv, prompt, schema) {
     this.prepareGenerator('bundle', argv);
@@ -63,7 +63,7 @@ var GraoGeneratorCommands = function (di) {
       else
         schemas.push(options['schemas']);
 
-      for(i in schemas) {
+      for(var i in schemas) {
         var varsGenerate = {};
         /* @FIXME BUG when generateBundle with divergent schemas of different bundles */
         varsGenerate['allSchemas'] = schemas;
@@ -103,7 +103,7 @@ var GraoGeneratorCommands = function (di) {
     if(!resultUi['allRefsBundle'])
       resultUi['allRefsBundle'] = {};
 
-    for(fieldName in fields) {
+    for(var fieldName in fields) {
       if(fields[fieldName].ref){
         if(!fields[fieldName].bundle) {
            var schemaRefObj = self.prepareSchema(fields[fieldName].ref, 
@@ -139,7 +139,7 @@ var GraoGeneratorCommands = function (di) {
     if(!fields)
       fields = resultUi.fields;
 
-    for(fieldName in fields) {
+    for(var fieldName in fields) {
       if(fullPath) {
         fields[fieldName].fullPath = fullPath.normal+'.'+fieldName;
         fields[fieldName].fullPathCc = fullPath.cc+self.capitalize(fieldName);
@@ -343,6 +343,9 @@ var GraoGeneratorCommands = function (di) {
 
     if(!fs.existsSync(path.join(appPath,"node_modules", "passport-local")) || force)
       fs.copySync(path.join(__dirname, "..", "..", "node_modules", "passport-local"), path.join(appPath, "node_modules", "passport-local"));
+    
+    if(!fs.existsSync(path.join(appPath,"node_modules", "passport-strategy")) || force)
+      fs.copySync(path.join(__dirname, "..", "..", "node_modules", "passport-strategy"), path.join(appPath, "node_modules", "passport-strategy"));
 
   }
 }

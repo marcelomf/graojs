@@ -5,8 +5,8 @@ var path = require('path'),
   passport = require('passport'),
   express = require('express'),
   session = require('express-session'),
-  //bodyParser = require('body-parser'),
   cookieParser = require('cookie-parser'),
+  bodyParser = require('body-parser'),
   methodOverride = require('method-override'),
   json = require('express-json'),
   MongoStore = require('connect-mongo')(session),
@@ -44,12 +44,12 @@ var graoJS = function() {
   // https://github.com/evilpacket/helmet
   // https://blog.liftsecurity.io/2012/12/07/writing-secure-express-js-apps
   //graoExpress.use(express.logger('dev'));
-  //graoExpress.use(bodyParser()); // I dont need this
   //graoExpress.use(express.urlencoded());
   //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
   graoExpress.use(cookieParser());
+  graoExpress.use(bodyParser.json());
+  graoExpress.use(bodyParser.urlencoded({ extended: true }));
   graoExpress.use(methodOverride());
-  graoExpress.use(json());
   graoExpress.use(i18n.init);
   graoExpress.use(session({
     secret: kernel.config.secretSession,
