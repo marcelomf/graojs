@@ -13,29 +13,29 @@
   "target": "./",
   "ignores": [
     "skeleton.json",
-    "view/jade/select.jade",
-    "view/jade/textarea.jade",
-    "view/jade/input_text.jade",
-    "view/jade/input_number.jade",
-    "view/jade/input_radio.jade",
-    "view/jade/input_email.jade",
-    "view/jade/date.jade",
-    "view/jade/input_checkbox.jade",
-    "view/jade/input_url.jade",
-    "view/jade/input_password.jade",
-    "view/jade/field_macros.jade",
-    "view/jade/currency.jade"
+    "view/pug/select.pug",
+    "view/pug/textarea.pug",
+    "view/pug/input_text.pug",
+    "view/pug/input_number.pug",
+    "view/pug/input_radio.pug",
+    "view/pug/input_email.pug",
+    "view/pug/date.pug",
+    "view/pug/input_checkbox.pug",
+    "view/pug/input_url.pug",
+    "view/pug/input_password.pug",
+    "view/pug/field_macros.pug",
+    "view/pug/currency.pug"
   ],
   "rewrites": {
-    "view/jade/dashboard.jade": "bundles/{{bundle}}/view/{{schema}}_dashboard.jade",
-    "view/jade/dashboard_actions.jade": "bundles/{{bundle}}/view/{{schema}}_dashboard_actions.jade",
-    "view/jade/filter.jade": "bundles/{{bundle}}/view/{{schema}}_filter.jade",
-    "view/jade/list.jade": "bundles/{{bundle}}/view/{{schema}}_list.jade",
-    "view/jade/list_thumbnail.jade": "bundles/{{bundle}}/view/{{schema}}_list_thumbnail.jade",
-    "view/jade/form.jade": "bundles/{{bundle}}/view/{{schema}}_form.jade",
-    "view/jade/show.jade": "bundles/{{bundle}}/view/{{schema}}_show.jade",
-    "view/jade/fields.jade": "bundles/{{bundle}}/view/{{schema}}_fields.jade",
-    "view/jade/form_actions.jade": "bundles/{{bundle}}/view/{{schema}}_form_actions.jade",
+    "view/pug/dashboard.pug": "bundles/{{bundle}}/view/{{schema}}_dashboard.pug",
+    "view/pug/dashboard_actions.pug": "bundles/{{bundle}}/view/{{schema}}_dashboard_actions.pug",
+    "view/pug/filter.pug": "bundles/{{bundle}}/view/{{schema}}_filter.pug",
+    "view/pug/list.pug": "bundles/{{bundle}}/view/{{schema}}_list.pug",
+    "view/pug/list_thumbnail.pug": "bundles/{{bundle}}/view/{{schema}}_list_thumbnail.pug",
+    "view/pug/form.pug": "bundles/{{bundle}}/view/{{schema}}_form.pug",
+    "view/pug/show.pug": "bundles/{{bundle}}/view/{{schema}}_show.pug",
+    "view/pug/fields.pug": "bundles/{{bundle}}/view/{{schema}}_fields.pug",
+    "view/pug/form_actions.pug": "bundles/{{bundle}}/view/{{schema}}_form_actions.pug",
     "Controller.js": "bundles/{{bundle}}/{{schema | capitalize}}Controller.js",
     "public/js/PublicController.js": "bundles/{{bundle}}/public/js/{{schema | capitalize}}PublicController.js",
     "public/js/PublicFactory.js": "bundles/{{bundle}}/public/js/{{schema | capitalize}}PublicFactory.js",
@@ -55,10 +55,10 @@
     },
     {
       "matches": [
-        "view/jade"
+        "view/pug"
       ],
       "rules": [
-        { "arg": "template-engine", "value": "jade" }
+        { "arg": "template-engine", "value": "pug" }
       ]
     }
   ]

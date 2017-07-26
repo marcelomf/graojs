@@ -14,7 +14,7 @@ module.exports = exports = {
   locales: ['pt-br', 'es', 'en'],
   defaultLocale: 'en',
   bundles: path.join(rootPath, "bundles"),
-  templateEngine : 'jade',
+  templateEngine : 'pug',
   name : packageJson.name,
   description : packageJson.description,
   smtpOptions: {

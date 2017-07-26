@@ -26,14 +26,14 @@
       "required": true,
       "pattern": "^([0-9]{4,5})+(,([0-9]{4,5})+)*$",
       "message": "Must be a comma separated list of port numbers > 1024",
-      "default": "8015,8016,8017,8018,8019,8020,8021,8022"
+      "default": "8015,8016"
     },
     "template-engine": {
-      "description": "Template Engine (jade)",
-      "pattern": "^jade$",
-      "message": "Must be jade",
+      "description": "Template Engine (pug)",
+      "pattern": "^pug$",
+      "message": "Must be pug",
       "required": true,
-      "default": "jade"
+      "default": "pug"
     },
     "theme": {
       "description": "Bootstrap Theme => graojs (default), bootstrap (original) or Bootswatch's options",
@@ -64,22 +64,22 @@
   ],
   "rewrites": {
     "log/app.log": "log/{{name}}.log",
-    "bundles/frontend/view/jade/home.jade": "bundles/frontend/view/home.jade",
-    "bundles/frontend/view/jade/index.jade": "bundles/frontend/view/index.jade",
-    "bundles/frontend/view/jade/explore.jade": "bundles/frontend/view/explore.jade",
-    "bundles/frontend/view/jade/manifest.jade": "bundles/frontend/view/manifest.jade",
-    "bundles/frontend/view/jade/pricing.jade": "bundles/frontend/view/pricing.jade",
-    "bundles/frontend/theme/jade/layout_home.jade": "bundles/frontend/theme/layout_home.jade",
-    "bundles/frontend/theme/jade/head.jade": "bundles/frontend/theme/head.jade",
-    "bundles/frontend/theme/jade/app.jade": "bundles/frontend/theme/app.jade",
-    "bundles/frontend/theme/jade/foot.jade": "bundles/frontend/theme/foot.jade",
-    "bundles/frontend/theme/jade/topbar.jade": "bundles/frontend/theme/topbar.jade",
-    "bundles/frontend/theme/jade/css.jade": "bundles/frontend/theme/css.jade",
-    "bundles/frontend/theme/jade/adminmenu.jade": "bundles/frontend/theme/adminmenu.jade",
-    "bundles/frontend/theme/jade/layout.jade": "bundles/frontend/theme/layout.jade",
-    "bundles/frontend/theme/jade/javascript.jade": "bundles/frontend/theme/javascript.jade",
-    "bundles/frontend/theme/jade/404.jade": "bundles/frontend/theme/404.jade",
-    "bundles/frontend/theme/jade/500.jade": "bundles/frontend/theme/500.jade"
+    "bundles/frontend/view/pug/home.pug": "bundles/frontend/view/home.pug",
+    "bundles/frontend/view/pug/index.pug": "bundles/frontend/view/index.pug",
+    "bundles/frontend/view/pug/explore.pug": "bundles/frontend/view/explore.pug",
+    "bundles/frontend/view/pug/manifest.pug": "bundles/frontend/view/manifest.pug",
+    "bundles/frontend/view/pug/pricing.pug": "bundles/frontend/view/pricing.pug",
+    "bundles/frontend/theme/pug/layout_home.pug": "bundles/frontend/theme/layout_home.pug",
+    "bundles/frontend/theme/pug/head.pug": "bundles/frontend/theme/head.pug",
+    "bundles/frontend/theme/pug/app.pug": "bundles/frontend/theme/app.pug",
+    "bundles/frontend/theme/pug/foot.pug": "bundles/frontend/theme/foot.pug",
+    "bundles/frontend/theme/pug/topbar.pug": "bundles/frontend/theme/topbar.pug",
+    "bundles/frontend/theme/pug/css.pug": "bundles/frontend/theme/css.pug",
+    "bundles/frontend/theme/pug/adminmenu.pug": "bundles/frontend/theme/adminmenu.pug",
+    "bundles/frontend/theme/pug/layout.pug": "bundles/frontend/theme/layout.pug",
+    "bundles/frontend/theme/pug/javascript.pug": "bundles/frontend/theme/javascript.pug",
+    "bundles/frontend/theme/pug/404.pug": "bundles/frontend/theme/404.pug",
+    "bundles/frontend/theme/pug/500.pug": "bundles/frontend/theme/500.pug"
   },
   "conditions": [
     {
@@ -93,11 +93,11 @@
     },
     {
       "matches": [
-        "bundles/frontend/theme/jade",
-        "bundles/frontend/view/jade"
+        "bundles/frontend/theme/pug",
+        "bundles/frontend/view/pug"
       ],
       "rules": [
-        { "arg": "template-engine", "value": "jade" }
+        { "arg": "template-engine", "value": "pug" }
       ]
     }
   ]

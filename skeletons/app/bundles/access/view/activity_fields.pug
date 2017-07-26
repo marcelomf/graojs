@@ -10,8 +10,8 @@ mixin form_fields_activity()
     span.help-block.ng-hide(ng-show="errors.activity.code")='{{ errors.activity.code }}'
 
   .form-group(ng-class="{'has-error': errors.activity.activitys}")
-      select.form-control(ui-select2, ng-model="activity.activitys", data-placeholder=__('Context(Sub Activitys)'), multiple='true')
-        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
+    select.form-control(ui-select2, ng-model="activity.activitys", data-placeholder=__('Context(Sub Activitys)'), multiple='true')
+      option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
     span.help-block.ng-hide(ng-show="errors.activity.activitys")='{{ errors.activity.activitys }}'
 
   .form-group(ng-class="{'has-error': errors.activity.description}")

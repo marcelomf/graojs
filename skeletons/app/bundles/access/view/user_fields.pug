@@ -62,9 +62,8 @@ mixin filter_fields_user()
     span.help-block.ng-hide(ng-show="errors.dataList.filter.email")='{{ errors.dataList.filter.email }}'
 
   .form-group(ng-class="{'has-error': errors.dataList.filter.activitys}")
-      select.form-control(ui-select2, ng-model="dataList.filter.activitys", data-placeholder=__('Activitys'), multiple='true')
-
-        option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
+    select.form-control(ui-select2, ng-model="dataList.filter.activitys", data-placeholder=__('Activitys'), multiple='true')
+      option.form-control(value='{{activity._id }}', ng-repeat='activity in activitys') {{ activity.name }}
     span.help-block.ng-hide(ng-show="errors.dataList.filter.activitys")='{{ errors.dataList.filter.activitys }}'
 
   .form-group(ng-class="{'has-error': errors.dataList.filter.enabled}")

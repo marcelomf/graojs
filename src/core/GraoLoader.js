@@ -21,6 +21,7 @@ var GraoLoader = function(di) {
             var config = require(path.join(this.dirBundles, bundle, 'config.js'));
             if(config.injection && config.injection[loadType]){
               for(var i in config.injection[loadType]){
+                //console.log(loadType+" - "+i+" - "+config.injection[loadType][i].name);
                 load[config.injection[loadType][i].name] = { 
                   object: path.join(this.dirBundles, bundle, config.injection[loadType][i].object), 
                   di: (config.injection[loadType][i].di) ? config.injection[loadType][i].di : {}

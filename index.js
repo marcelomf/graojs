@@ -75,7 +75,20 @@ var graoJS = function() {
   app.use(express.errorHandler());
 }
 */
+  setTimeout(function(){
+    
+  }, 10000);
   kernel.routes();
+  
+    
+  for(var i in graoExpress._router.stack) {
+    //console.log(graoExpress._router.stack[i].regexp);
+    //if(graoExpress._router.stack[i].route != null && graoExpress._router.stack[i].route.path != null)
+      //console.log(graoExpress._router.stack[i].route.path);
+    //if(graoExpress._router.stack[i].route.path != null)
+      //console.log(graoExpress._router.stack[i].route.path);
+  }
+  
   this.kernel = kernel;
   this.servers = servers;
   

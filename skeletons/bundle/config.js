@@ -1,6 +1,6 @@
 module.exports = exports = {
   injection : {
-  	controller: [{%if bundle == schema %}
+    controller: [{%if bundle == schema %}
       { name: "{{schema | lower}}", object: "{{schema | capitalize}}Controller.js" },{% else %}{% for key, bundleSchema in allSchemas %}
       { name: "{{bundleSchema | lower}}", object: "{{bundleSchema | capitalize}}Controller.js" },{% endfor %}{% endif %}
     ],
