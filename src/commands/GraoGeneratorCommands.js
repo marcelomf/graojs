@@ -63,6 +63,9 @@ var GraoGeneratorCommands = function (di) {
       else
         schemas.push(options['schemas']);
 
+      console.log(schemas);
+      process.exit();
+
       for(var i in schemas) {
         var varsGenerate = {};
         /* @FIXME BUG when generateBundle with divergent schemas of different bundles */
@@ -79,11 +82,6 @@ var GraoGeneratorCommands = function (di) {
           }
           varsGenerate = self.preparePaths(varsGenerate);
           varsGenerate = self.prepareRefFields(varsGenerate);         
-          if(varsGenerate.fields.provider) {
-            //console.log(varsGenerate.fields.individual);
-            //console.log(varsGenerate.fields.provider);
-            //process.exit(1);
-          }
           if(!fs.existsSync(path.join("bundles", varsGenerate['bundle'])))
             fs.mkdirSync(path.join("bundles", varsGenerate['bundle']), 0755);
           generator.generate(varsGenerate, force);

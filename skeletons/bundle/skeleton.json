@@ -4,9 +4,7 @@
   },
   "properties": {
     "schemas": {
-      "description": "Schemas (lowercase letters)",
-      "pattern": "^[a-z,]+$",
-      "message": "Must be only lowercase letters - no uppercase letters, spaces, numbers, special chars",
+      "description": "Schemas",
       "required": true
     }
   },
