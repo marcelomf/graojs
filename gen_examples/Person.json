@@ -1,0 +1,64 @@
+{
+    "bundle": "cadastre",
+    "label": "Persons",
+    "description": "All people",
+    "refLabel": "name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "name": {
+            "label": "Name",
+            "type": "input",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "email": {
+            "label": "Email",
+            "type": "email",
+            "unique": true,
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "url": {
+            "label": "Url",
+            "type": "url"
+        },
+        "born": {
+            "label": "Born",
+            "type": "date"
+        },
+        "sex": {
+            "label": "Sex",
+            "type": "radio",
+            "options": { "marculine": "Masculine", "feminine": "Feminine" }
+        },
+        "news": {
+            "label": "Receive newsletter ?",
+            "type": "checkbox",
+            "value": "IS_NEWS",
+            "attr": {"multiple": true}
+        },
+        "address": [{
+            "type": {
+               "label": "Type",
+               "type": "select",
+               "options": { "residence": "Residence", "comercial": "comercial" },
+               "required": "true"
+            },
+            "principal": {
+               "label": "Principal",
+               "type": "checkbox",
+               "required": "true"
+            },
+            "address": {
+               "label": "Address",
+               "type": "textarea",
+               "required": "true"
+            }
+        }]
+    }
+}

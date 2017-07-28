@@ -1,0 +1,34 @@
+{
+    "bundle": "customer",
+    "label": "Customers",
+    "description": "All customers",
+    "refLabel": "person.name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "person": {
+            "label": "Person",
+            "ref": "Person",
+            "type": "select",
+            "isList": true,
+            "isFilter": true
+        },
+        "situation": {
+            "label": "Situation",
+            "ref": "CustomerSituation",
+            "type": "select",
+            "isList": true,
+            "isFilter": true
+        },
+        "budget_services": [{
+            "label": "Budget services",
+            "ref": "Service",
+            "type": "select",
+            "attr": {"multiple": true},
+            "isList": true,
+            "isFilter": true
+        }]
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "bundle": "service",
+    "label": "Service category",
+    "description": "All services category",
+    "refLabel": "name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "name": {
+            "label": "Name",
+            "type": "input",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "code": {
+            "label": "Code",
+            "type": "input",
+            "unique": true,
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "description": {
+            "label": "Description",
+            "type": "textarea"
+        },
+        "subcategorys": [{
+            "label": "Sub Categorys",
+            "ref": "ServiceCategory",
+            "type": "select",
+            "attr": {"multiple": true},
+            "isList": true,
+            "isFilter": true
+        }]
+    }
+}

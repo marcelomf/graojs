@@ -1,0 +1,31 @@
+{
+    "bundle": "customer",
+    "label": "Customer Situation",
+    "description": "All customers situations",
+    "refLabel": "name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "name": {
+            "label": "Name",
+            "type": "input",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "code": {
+            "label": "Code",
+            "type": "input",
+            "unique": true,
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "description": {
+            "label": "Description",
+            "type": "textarea"
+        }
+    }
+}

@@ -1,0 +1,60 @@
+{
+    "bundle": "sale",
+    "label": "Sales",
+    "description": "All sales",
+    "refLabel": "name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "customer": {
+            "label": "Customer",
+            "ref": "Customer",
+            "required": true,
+            "type": "select",
+            "isList": true,
+            "isFilter": true
+        },
+        "type": {
+            "label": "Type",
+            "ref": "SaleType",
+            "required": true,
+            "type": "select",
+            "isList": true,
+            "isFilter": true
+        },
+        "celebration_date": {
+            "label": "Celebration Date",
+            "type": "date",
+            "isList": true,
+            "isFilter": true
+        },
+        "services": [{
+            "service": {
+                "label": "Service",
+                "ref": "Service",
+                "type": "select"
+            },
+            "expiration_date": {
+                "label": "Expiration Date",
+                "type": "date"
+            },
+            "pay_day": {
+                "label": "Pay Day",
+                "type": "date"
+            },
+            "sale_value": {
+                "label": "Sale value",
+                "type": "number",
+                "required": true,
+                "isList": true,
+                "isFilter": true
+            }
+         }],
+        "observation": {
+            "label": "Observation",
+            "type": "textarea"
+        }
+    }
+}

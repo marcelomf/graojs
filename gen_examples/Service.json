@@ -1,0 +1,64 @@
+{
+    "bundle": "service",
+    "label": "Services",
+    "description": "All services",
+    "refLabel": "name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "name": {
+            "label": "Name",
+            "type": "input",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "code": {
+            "label": "Code",
+            "type": "input",
+            "unique": true,
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "description": {
+            "label": "Description",
+            "type": "textarea"
+        },
+        "category": {
+            "label": "Category",
+            "ref": "ServiceCategory",
+            "type": "select",
+            "attr": {"multiple": true},
+            "isList": true,
+            "isFilter": true
+        },
+        "properties":[{
+            "propertie": {
+                "label": "Propertie",
+                "ref": "ServicePropertie",
+                "type": "select"
+            },
+            "value": {
+                "label": "Value",
+                "type": "number"
+            }
+         }],
+         "cost_value": {
+            "label": "Cost value",
+            "type": "number",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "sale_value": {
+            "label": "Sale value",
+            "type": "number",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        }
+    }
+}
