@@ -39,6 +39,7 @@
     "public/js/PublicFactory.js": "bundles/{{bundle}}/public/js/{{schema | capitalize}}PublicFactory.js",
     "Validator.js": "bundles/{{bundle}}/{{schema | capitalize}}Validator.js",
     "Model.js": "bundles/{{bundle}}/{{schema | capitalize}}.js",
+    "Schema.js": "bundles/{{bundle}}/{{schema | capitalize}}.js",
     "Route.js": "bundles/{{bundle}}/{{schema | capitalize}}Route.js",
     "config.js": "bundles/{{bundle}}/config.js"
   },
