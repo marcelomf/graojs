@@ -63,20 +63,19 @@ var GraoGeneratorCommands = function (di) {
       else
         schemas.push(options['schemas']);
 
-      console.log(schemas);
-      process.exit();
-
       for(var i in schemas) {
         var varsGenerate = {};
         /* @FIXME BUG when generateBundle with divergent schemas of different bundles */
         varsGenerate['allSchemas'] = schemas;
         varsGenerate['schema'] = schemas[i];
-        var schemaCapitalized = self.capitalize(varsGenerate['schema']);
-        var schemaPath = self.prepareSchemaPath(schemaCapitalized);
+        var schemaName = varsGenerate['schema'];
+        var schemaPath = self.prepareSchemaPath(schemaName);
         var fullSchemaPath = path.join(process.cwd(), schemaPath);
         //console.log(fullSchemaPath);
         if(fs.existsSync(fullSchemaPath)){
-          var uiSchema = self.prepareSchemaUi(schemaCapitalized, self.prepareSchema(varsGenerate['schema'], fullSchemaPath));
+          //console.log(require(fullSchemaPath));
+          //process.exit();
+          var uiSchema = self.prepareSchemaUi(schemaName, require(fullSchemaPath));
           for(var uiName in uiSchema) {
             varsGenerate[uiName] = uiSchema[uiName];
           }
@@ -85,13 +84,96 @@ var GraoGeneratorCommands = function (di) {
           if(!fs.existsSync(path.join("bundles", varsGenerate['bundle'])))
             fs.mkdirSync(path.join("bundles", varsGenerate['bundle']), 0755);
           generator.generate(varsGenerate, force);
-          fs.writeFileSync(path.join(process.cwd(), 'bundles', varsGenerate['bundle'], schemaCapitalized+'Schema.js'), 
+          fs.writeFileSync(path.join(process.cwd(), 'bundles', varsGenerate['bundle'], schemaName+'.json'), 
             fs.readFileSync(fullSchemaPath, 'utf-8'), 'utf-8');
         } else {
           console.log(( 'ERROR: ' + fullSchemaPath + ' doesn\'t exist. Aborting this file').red);
         }
       }
     });
+  }
+
+  this.prepareSchemaUi = function(schemaName, schemaObj, schemaRoot) {
+    var rootGraoui = {};
+    var resultUi;
+    var autoRefsFieldName = new Array();
+    var allRefs = new Array();
+    var allRefsFieldName = new Array();
+
+    function prepareFields(fields){
+      var result = {  name: schemaName, 
+                    bundle: (schemaObj.bundle != null) ? schemaObj.bundle : schemaName.toLowerCase(), 
+                    label: (schemaObj.label != null) ? schemaObj.label : schemaName, 
+                    description: (schemaObj.description != null) ? schemaObj.description : schemaName, 
+                    refLabel: (schemaObj.refLabel != null) ? schemaObj.refLabel : null, 
+                    hasUnion: false, 
+                    isSubDoc: false, 
+                    hasSubDoc: false, 
+                    hasRef: false, 
+                    fields: {} 
+      };
+      for(var fieldName in fields) {
+        // Verify if is subDoc of array type
+        if (fields[fieldName] instanceof Array && 
+                (fields[fieldName][0].label === undefined || 
+                fields[fieldName][0].type === undefined)) {
+          result.fields[fieldName] = {};
+          result.fields[fieldName].fields = prepareFields((fields[fieldName] instanceof Array) ? 
+                                              fields[fieldName][0] : 
+                                              fields[fieldName]).fields;
+          result.fields[fieldName].isSubDoc = true;
+          if(fields[fieldName] instanceof Array)
+              result.fields[fieldName].isArray = true;
+          else
+              result.fields[fieldName].isArray = false;
+          result.hasSubDoc = true;
+          if(self.hasSubDoc(result.fields[fieldName].fields)){
+            result.fields[fieldName].hasSubDoc = true;
+          }
+          if(self.hasRef(result.fields[fieldName].fields)) {
+            result.hasRef = true;
+            result.fields[fieldName].hasRef = true;
+          }
+        // Possible array of ref tpye  
+        } else if (fields[fieldName] instanceof Array && fields[fieldName][0] != null) {
+          if(fields[fieldName][0].type == 'union')
+            result.hasUnion = true;
+          result.fields[fieldName] = fields[fieldName][0];
+          result.fields[fieldName].isArray = true;
+          if(fields[fieldName][0].ref != null) {
+            self.pushRefField(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName,
+                                fieldName, result.fields[fieldName], fields[fieldName][0]);
+          }
+        } else {
+          if(fields[fieldName].type == 'union')
+            result.hasUnion = true;
+          result.fields[fieldName] = fields[fieldName];
+          result.fields[fieldName].isArray = false;
+          if(fields[fieldName].ref != null) {
+            self.pushRefField(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName,
+                                fieldName, result.fields[fieldName], fields[fieldName]);
+          }          
+        } 
+      }
+      return result;
+    }
+
+    //console.log(schemaObj.fields);
+    //process.exit();
+
+    resultUi = prepareFields(schemaObj.fields);
+    resultUi.allRefs = allRefs;
+    resultUi.allRefsFieldName = allRefsFieldName;
+
+    if(autoRefsFieldName.length > 0) {
+      for(var i in autoRefsFieldName) {
+        if(resultUi.fields[autoRefsFieldName[i]] != null){
+          resultUi.fields[autoRefsFieldName[i]].refLabel = resultUi.refLabel;
+        }
+      }
+      autoRefsFieldName = new Array();
+    }
+    return resultUi;
   }
 
   this.prepareRefFields = function(resultUi, fields, fullPath) {
@@ -104,14 +186,14 @@ var GraoGeneratorCommands = function (di) {
     for(var fieldName in fields) {
       if(fields[fieldName].ref){
         if(!fields[fieldName].bundle) {
-           var schemaRefObj = self.prepareSchema(fields[fieldName].ref, 
-            path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(fields[fieldName].ref))));
-           if(schemaRefObj.graoui != null && schemaRefObj.graoui.bundle != null) {
-            fields[fieldName].bundle = schemaRefObj.graoui.bundle;
-            resultUi['allRefsBundle'][fields[fieldName].ref] = schemaRefObj.graoui.bundle;
+           var fullSchemaPath = path.join(process.cwd(), self.prepareSchemaPath(fields[fieldName].ref));
+           var schemaRefObj = require(fullSchemaPath);  
+           if(schemaRefObj.bundle != null) {
+            fields[fieldName].bundle = schemaRefObj.bundle;
+            resultUi['allRefsBundle'][fields[fieldName].ref] = schemaRefObj.bundle;
            } else {
             fields[fieldName].bundle = fields[fieldName].ref.toLowerCase();
-            resultUi['allRefsBundle'][fields[fieldName].ref] = schemaRefObj.graoui.bundle;
+            resultUi['allRefsBundle'][fields[fieldName].ref] = schemaRefObj.bundle;
            }
         } else {
           resultUi['allRefsBundle'][fields[fieldName].ref] = fields[fieldName].bundle;
@@ -131,6 +213,33 @@ var GraoGeneratorCommands = function (di) {
       }
     }
     return resultUi;
+  }
+
+  this.pushRefField = function(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName, fieldName, refField, field) {
+    //console.log(schemaRoot,schemaName,fieldName);
+    result.hasRef = true;
+    refField.ref = field.ref;
+    allRefs.push(refField.ref);
+    allRefsFieldName.push(fieldName);
+    if(refField.ref == result.name || refField.ref == schemaRoot) {
+      autoRefsFieldName.push(fieldName);
+    } else {
+      var fullSchemaPath = path.join(process.cwd(), self.prepareSchemaPath(refField.ref));
+      var schemaRef = self.prepareSchemaUi(field.ref, require(fullSchemaPath), schemaName);
+      for(var i in schemaRef.allRefs) {
+        allRefs.push(schemaRef.allRefs[i]);
+      }
+      for(var i in schemaRef.allRefsFieldName) {
+        allRefsFieldName.push(schemaRef.allRefsFieldName[i]);
+      }
+      for(var nameObj in schemaRef) {
+        if(nameObj == "label" && refField[nameObj]) // label bypass
+          continue;
+
+        refField[nameObj] = schemaRef[nameObj];
+      }
+    }
+    return result;
   }
 
   this.preparePaths = function(resultUi, fields, fullPath) {
@@ -157,25 +266,8 @@ var GraoGeneratorCommands = function (di) {
     return string.charAt(0).toUpperCase() + string.substring(1);
   }
 
-  this.prepareSchemaPath = function(schemaCapitalized) {
-    return 'gen/' + schemaCapitalized + 'Schema.js';
-  }
-
-  this.prepareSchema = function (schema, schemaPath) {
-    var validators = {};
-    validators["User"] = validators["user"] = { username: function(){return true;}, 
-                                                password: function(){return true;} };
-    if(schema.toLowerCase() != "user")
-      validators[schema] = true;
-    var schemas = {};
-    schemas[schema] = {};
-    var diSchema = {
-      mongoose: mongoose,
-      validate: validate,
-      validators: validators,
-      schemas: schemas
-    }
-    return new (require(schemaPath))(diSchema);
+  this.prepareSchemaPath = function(schemaName) {
+    return 'gen/' + schemaName + '.json';
   }
 
   this.prepareGenerator = function (type, argv) {
@@ -184,119 +276,6 @@ var GraoGeneratorCommands = function (di) {
       ? argv.skeleton
       : null;
     generator.init(type, skeleton);
-  }
-
-  this.pushRefField = function(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName, fieldName, refField, jsonField) {
-    //console.log(schemaRoot,schemaName,fieldName);
-    result.hasRef = true;
-    refField.ref = jsonField.ref;
-    allRefs.push(refField.ref);
-    allRefsFieldName.push(fieldName);
-    if(refField.ref == result.name || refField.ref == schemaRoot) {
-      autoRefsFieldName.push(fieldName);
-    } else {
-      var schemaRef = self.prepareSchemaUi(jsonField.ref, self.prepareSchema(jsonField.ref, 
-                                path.join(process.cwd(), self.prepareSchemaPath(self.capitalize(jsonField.ref)))), schemaName);
-      for(var i in schemaRef.allRefs) {
-        allRefs.push(schemaRef.allRefs[i]);
-      }
-      for(var i in schemaRef.allRefsFieldName) {
-        allRefsFieldName.push(schemaRef.allRefsFieldName[i]);
-      }
-      for(var nameObj in schemaRef) {
-        if(nameObj == "label" && refField[nameObj]) // label bypass
-          continue;
-
-        refField[nameObj] = schemaRef[nameObj];
-      }
-    }
-    return result;
-  }
-
-  this.prepareSchemaUi = function (schemaName, schemaObj, schemaRoot) {
-    var rootGraoui = (schemaObj.graoui != null) ? schemaObj.graoui : {};
-    var resultUi;
-    var autoRefsFieldName = new Array();
-    var allRefs = new Array();
-    var allRefsFieldName = new Array();
-
-    function prepareFields(jsonFields){
-      var result = {  name: schemaName, 
-                    bundle: (rootGraoui.bundle != null) ? rootGraoui.bundle : schemaName.toLowerCase(), 
-                    label: (rootGraoui.label != null) ? rootGraoui.label : schemaName, 
-                    description: (rootGraoui.description != null) ? rootGraoui.description : schemaName, 
-                    refLabel: (rootGraoui.refLabel != null) ? rootGraoui.refLabel : null, 
-                    hasUnion: false, 
-                    isSubDoc: false, 
-                    hasSubDoc: false, 
-                    hasRef: false, 
-                    fields: {} 
-      };
-      for(var fieldName in jsonFields) {
-        if (jsonFields[fieldName].graoui != undefined) {
-          if(jsonFields[fieldName].graoui.type == 'union')
-            result.hasUnion = true;
-          result.fields[fieldName] = jsonFields[fieldName].graoui;
-          /*result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
-          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);*/
-          result.fields[fieldName].isArray = false;
-          if(jsonFields[fieldName].ref != null) {
-            self.pushRefField(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName,
-                                fieldName, result.fields[fieldName], jsonFields[fieldName]);
-          }
-        } else if (jsonFields[fieldName] instanceof Array && jsonFields[fieldName][0] != null && 
-          (jsonFields[fieldName][0].graoui != undefined)) {
-          if(jsonFields[fieldName][0].graoui.type == 'union')
-            result.hasUnion = true;
-          result.fields[fieldName] = jsonFields[fieldName][0].graoui;
-          /*result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
-          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);*/
-          result.fields[fieldName].isArray = true;
-          if(jsonFields[fieldName][0].ref != null) {
-            self.pushRefField(result, schemaRoot, schemaName, allRefsFieldName, allRefs, autoRefsFieldName,
-                                fieldName, result.fields[fieldName], jsonFields[fieldName][0]);
-          }
-        } else if(self.hasGraoui(jsonFields[fieldName]) || 
-          (jsonFields[fieldName] instanceof Array && 
-            jsonFields[fieldName][0] != null && 
-            self.hasGraoui(jsonFields[fieldName][0]))) {
-          result.fields[fieldName] = {};
-          /*result.fields[fieldName].fullPath = schemaName.toLowerCase()+'.'+fieldName;
-          result.fields[fieldName].fullPathCc = schemaName.toLowerCase()+self.capitalize(fieldName);*/
-          result.fields[fieldName].fields = prepareFields((jsonFields[fieldName] instanceof Array) ? 
-                                              jsonFields[fieldName][0] : 
-                                              jsonFields[fieldName]).fields;
-          result.fields[fieldName].isSubDoc = true;
-          if(jsonFields[fieldName] instanceof Array)
-              result.fields[fieldName].isArray = true;
-          else
-              result.fields[fieldName].isArray = false;
-          result.hasSubDoc = true;
-          if(self.hasSubDoc(result.fields[fieldName].fields)){
-            result.fields[fieldName].hasSubDoc = true;
-          }
-          if(self.hasRef(result.fields[fieldName].fields)) {
-            result.hasRef = true;
-            result.fields[fieldName].hasRef = true;
-          }
-        } 
-      }
-      return result;
-    }
-
-    resultUi = prepareFields(schemaObj.json);
-    resultUi.allRefs = allRefs;
-    resultUi.allRefsFieldName = allRefsFieldName;
-
-    if(autoRefsFieldName.length > 0) {
-      for(var i in autoRefsFieldName) {
-        if(resultUi.fields[autoRefsFieldName[i]] != null){
-          resultUi.fields[autoRefsFieldName[i]].refLabel = resultUi.refLabel;
-        }
-      }
-      autoRefsFieldName = new Array();
-    }
-    return resultUi;
   }
 
   this.hasSubDoc = function (object) {
