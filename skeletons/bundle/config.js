@@ -1,24 +1,24 @@
 module.exports = exports = {
   injection : {
     controller: [{%if bundle == schema %}
-      { name: "{{schema | lower}}", object: "{{schema | capitalize}}Controller.js" },{% else %}{% for key, bundleSchema in allSchemas %}
-      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema | capitalize}}Controller.js" },{% endfor %}{% endif %}
+      { name: "{{schema | lower}}", object: "{{schema}}Controller.js" },{% else %}{% for key, bundleSchema in allSchemas %}
+      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema}}Controller.js" },{% endfor %}{% endif %}
     ],
     model: [{%if bundle == schema %}
-      { name: "{{schema | lower}}", object: "{{schema | capitalize}}.js" },{% else %}{% for key, bundleSchema in allSchemas %}
-      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema | capitalize}}.js" },{% endfor %}{% endif %}
+      { name: "{{schema | lower}}", object: "{{schema}}.js" },{% else %}{% for key, bundleSchema in allSchemas %}
+      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema}}.js" },{% endfor %}{% endif %}
     ],
     route: [{%if bundle == schema %}
-      { name: "{{schema | lower}}", object: "{{schema | capitalize}}Route.js" },{% else %}{% for key, bundleSchema in allSchemas %}
-      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema | capitalize}}Route.js" },{% endfor %}{% endif %}
+      { name: "{{schema | lower}}", object: "{{schema}}Route.js" },{% else %}{% for key, bundleSchema in allSchemas %}
+      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema}}Route.js" },{% endfor %}{% endif %}
     ],
     validator: [{%if bundle == schema %}
-      { name: "{{schema | lower}}", object: "{{schema | capitalize}}Validator.js" },{% else %}{% for key, bundleSchema in allSchemas %}
-      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema | capitalize}}Validator.js" },{% endfor %}{% endif %}
+      { name: "{{schema | lower}}", object: "{{schema}}Validator.js" },{% else %}{% for key, bundleSchema in allSchemas %}
+      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema}}Validator.js" },{% endfor %}{% endif %}
     ],
     schema: [{%if bundle == schema %}
-      { name: "{{schema | lower}}", object: "{{schema | capitalize}}Schema.js" },{% else %}{% for key, bundleSchema in allSchemas %}
-      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema | capitalize}}Schema.js" },{% endfor %}{% endif %}
+      { name: "{{schema | lower}}", object: "{{schema}}Schema.js" },{% else %}{% for key, bundleSchema in allSchemas %}
+      { name: "{{bundleSchema | lower}}", object: "{{bundleSchema}}Schema.js" },{% endfor %}{% endif %}
     ],
   },
   publicRoutes : [{%if bundle == schema %}

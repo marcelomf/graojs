@@ -158,9 +158,8 @@ var GraoGeneratorCommands = function (di) {
       return result;
     }
 
-    //console.log(schemaObj.fields);
     //process.exit();
-
+    //console.log("AQUI");
     resultUi = prepareFields(schemaObj.fields);
     resultUi.allRefs = allRefs;
     resultUi.allRefsFieldName = allRefsFieldName;

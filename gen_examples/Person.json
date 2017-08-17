@@ -40,24 +40,24 @@
             "label": "Receive newsletter ?",
             "type": "checkbox",
             "value": "IS_NEWS",
-            "attr": {"multiple": true}
+            "attr": { "checked": true }
         },
         "address": [{
             "type": {
                "label": "Type",
                "type": "select",
                "options": { "residence": "Residence", "comercial": "comercial" },
-               "required": "true"
+               "required": true
             },
             "principal": {
                "label": "Principal",
                "type": "checkbox",
-               "required": "true"
+               "required": true
             },
             "address": {
                "label": "Address",
                "type": "textarea",
-               "required": "true"
+               "required": true
             }
         }]
     }

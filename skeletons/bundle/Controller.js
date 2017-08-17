@@ -1,9 +1,9 @@
-var service = {}, admin = {}, models, controllers, event, config, {{ schema | capitalize }}, $i;
+var service = {}, admin = {}, models, controllers, event, config, {{ schema }}, $i;
 
 service.count = function(req, res) {
-  var dataList = controllers.processDataList({{ schema | capitalize }}, req.query);
+  var dataList = controllers.processDataList({{ schema }}, req.query);
 
-  {{ schema | capitalize }}.count({}, function(err, totality) {
+  {{ schema }}.count({}, function(err, totality) {
     if(err) {
       res.json(event.newError(err).toJson());
       return;
@@ -14,7 +14,7 @@ service.count = function(req, res) {
       return;
     }
 
-    {{ schema | capitalize }}.count(dataList.filter, function(err, filtered) {
+    {{ schema }}.count(dataList.filter, function(err, filtered) {
       if(err)
         res.json(event.newError(err).toJson());
       else
@@ -24,7 +24,7 @@ service.count = function(req, res) {
 }
 
 service.get = function(req, res) {
-    {{ schema | capitalize }}.findOne({_id : req.params.id}){%- for fieldName, field in fields %}{%- if field.ref %}.populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.exec(function(err, {{ schema | lower }}) {
+    {{ schema }}.findOne({_id : req.params.id}){%- for fieldName, field in fields %}{%- if field.ref %}.populate('{{ fieldName | lower }}'){%- endif %}{%- endfor %}.exec(function(err, {{ schema | lower }}) {
     if (err)
       res.json(event.newError(err).toJson());
     else
@@ -35,9 +35,9 @@ service.get = function(req, res) {
 service.query = function(req, res) {
   var dataList = { page: {}, sort: 'field -_id' };
   if(req.query.filter || req.query.sort || req.query.page)
-    dataList = controllers.processDataList({{ schema | capitalize }}, req.query);
+    dataList = controllers.processDataList({{ schema }}, req.query);
 
-  {{ schema | capitalize }}.find(dataList.filter || null).
+  {{ schema }}.find(dataList.filter || null).
     sort(dataList.sort || null).
     skip(dataList.page.skip || null).
     limit(dataList.page.limit || null).
@@ -52,7 +52,7 @@ service.query = function(req, res) {
 }
 
 service.validate = function(req, res, next) {
-  var {{ schema | lower }} = new {{ schema | capitalize }}(req.body);
+  var {{ schema | lower }} = new {{ schema }}(req.body);
   {{ schema | lower }}.validate(function(err){
     if(err)
       res.json(event.newError(err).toJson());
@@ -62,27 +62,27 @@ service.validate = function(req, res, next) {
 }
 
 service.create = function(req, res) {
-  var {{ schema | lower }} = new {{ schema | capitalize }}(req.body);
+  var {{ schema | lower }} = new {{ schema }}(req.body);
   {{ schema | lower }}.save(function(err, {{ schema | lower }}) {
     if(err)
       res.json(event.newError(err).toJson());
     else
-      res.json(event.newSuccess(res.__("{{ schema | capitalize }}")+" "+res.__("created")).data({{ schema | lower }}).toJson());
+      res.json(event.newSuccess(res.__("{{ schema }}")+" "+res.__("created")).data({{ schema | lower }}).toJson());
   });
 }
 
 service.update = function(req, res) {
   delete req.body._id;
-  {{ schema | capitalize }}.findOneAndUpdate({_id : req.params.id }, req.body, { upsert : true }, function(err, {{ schema | lower }}) {
+  {{ schema }}.findOneAndUpdate({_id : req.params.id }, req.body, { upsert : true }, function(err, {{ schema | lower }}) {
     if(err)
       res.json(event.newError(err).toJson());
     else
-      res.json(event.newSuccess(res.__("{{ schema | capitalize }}")+" "+res.__("updated")).data({{ schema | lower }}).toJson());
+      res.json(event.newSuccess(res.__("{{ schema }}")+" "+res.__("updated")).data({{ schema | lower }}).toJson());
   });
 }
 
 service.destroy = function(req, res) {  
-  {{ schema | capitalize }}.remove({_id : req.params.id}, function(err) {
+  {{ schema }}.remove({_id : req.params.id}, function(err) {
     if(err)
       res.json(event.newError(err).toJson());
     else
@@ -92,18 +92,18 @@ service.destroy = function(req, res) {
 
 admin.dashboard = function(req, res) {
   var locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
-  res.render('{{ bundle | lower }}/view/{{ schema | lower }}_dashboard', { isAuth: req.isAuthenticated(), locale: locale, user: req.user});
+  res.render('{{ bundle | lower }}/view/{{ schema }}_dashboard', { isAuth: req.isAuthenticated(), locale: locale, user: req.user});
 }
 
-var {{ schema | capitalize }}Controller = function(di) {
+var {{ schema }}Controller = function(di) {
   $i = di;
   event = new $i.event.newSuccess('Instance created');
   config = $i.config;
   models = $i.models;
   controllers = $i.controllers;
-  {{ schema | capitalize }} = models.{{ schema | lower }}; // object/class
+  {{ schema }} = models.{{ schema | lower }}; // object/class
   this.service = service;
   this.admin = admin;
 };
 
-module.exports = exports = {{ schema | capitalize }}Controller;
+module.exports = exports = {{ schema }}Controller;
