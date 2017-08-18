@@ -17,7 +17,7 @@
         },
         "situation": {
             "label": "Situation",
-            "ref": "CustomerSituation",
+            "ref": "Customersituation",
             "type": "select",
             "isList": true,
             "isFilter": true

@@ -29,7 +29,7 @@
         },
         "category": {
             "label": "Category",
-            "ref": "ServiceCategory",
+            "ref": "Servicecategory",
             "type": "select",
             "attr": {"multiple": true},
             "isList": true,
@@ -38,7 +38,7 @@
         "properties":[{
             "propertie": {
                 "label": "Propertie",
-                "ref": "ServicePropertie",
+                "ref": "Servicepropertie",
                 "type": "select"
             },
             "value": {

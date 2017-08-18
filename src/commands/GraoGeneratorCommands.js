@@ -307,7 +307,9 @@ var GraoGeneratorCommands = function (di) {
   }
   
   this.capitalize = function(string) {
-    return string.charAt(0).toUpperCase() + string.substring(1);
+//    string = string.toLowerCase();
+    string = string.charAt(0).toUpperCase() + string.substring(1);
+    return string;
   }
 
   this.copyGraoDeps = function (appPath, force) {

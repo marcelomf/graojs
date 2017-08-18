@@ -18,7 +18,7 @@
         },
         "type": {
             "label": "Type",
-            "ref": "SaleType",
+            "ref": "Saletype",
             "required": true,
             "type": "select",
             "isList": true,

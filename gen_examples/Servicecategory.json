@@ -29,7 +29,7 @@
         },
         "subcategorys": [{
             "label": "Sub Categorys",
-            "ref": "ServiceCategory",
+            "ref": "Servicecategory",
             "type": "select",
             "attr": {"multiple": true},
             "isList": true,
