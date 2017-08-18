@@ -1,6 +1,6 @@
 h3=__('Filters')
 form.form-inline(role='form')
-  include {{schema}}_fields
+  include {{schema | lower}}_fields
   +filter_fields_{{ schema | lower }}()
   button.btn.btn-warning(type='button', ng-click='query{{ schema | capitalize }}(); count{{ schema | capitalize }}();')=__('Filter')
   | 

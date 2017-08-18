@@ -1,5 +1,5 @@
 {%- macro render_refSelect(schema, fields) %}{%- for ref, bundle in allRefsBundle %}{%if ref|lower != schema|lower %}
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ ref }}", ng-controller='{{ ref }}PublicController')
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ ref | capitalize }}", ng-controller='{{ ref | capitalize  }}PublicController')
         h3=__('{{ ref }}')
           small=__('{{ schema }}')
         form.form-horizontal(role='form')
@@ -7,35 +7,35 @@
           +form_fields_{{ ref | lower }}()
         .form-horizontal
           .form-group
-            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ ref }}(null, true);')=__('Save and back')
+            button.btn.btn.btn-success(type='button', ng-click='createOrUpdate{{ ref | capitalize  }}(null, true);')=__('Save and back')
             | 
-            button.btn.btn.btn-default(type='button', ng-click='clear{{ ref }}(); share.windowBack();')=__('Cancel')
+            button.btn.btn.btn-default(type='button', ng-click='clear{{ ref | capitalize  }}(); share.windowBack();')=__('Cancel')
 {% endif %}{%- endfor %}{%- endmacro %}
 extends /frontend/theme/layout
 block content
-  .container(ng-controller='{{ schema }}PublicController', ng-init='clear{{ schema }}(); share.window("list{{ schema }}");')
+  .container(ng-controller='{{ schema | capitalize  }}PublicController', ng-init='clear{{ schema | capitalize  }}(); share.window("list{{ schema }}");')
     .row
       .col-md-12
         h2=__('{{ schema }}s')
     .row
       .col-md-12
-        include {{ schema }}_dashboard_actions
+        include {{ schema | lower }}_dashboard_actions
     .row(ng-switch='share.selectWindow')
-      .col-md-12(ng-switch-when="list{{ schema }}")
-        include {{ schema }}_list
-      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ schema }}")
-        include {{ schema }}_form
+      .col-md-12(ng-switch-when="list{{ schema | capitalize  }}")
+        include {{ schema | lower }}_list
+      .col-md-6.col-md-offset-3(ng-switch-when="createOrUpdate{{ schema | capitalize  }}")
+        include {{ schema | lower }}_form
         +form_{{ schema | lower }}(true)
-      .col-md-6.col-md-offset-3(ng-switch-when="show{{ schema }}")
-        include {{ schema }}_show
+      .col-md-6.col-md-offset-3(ng-switch-when="show{{ schema | capitalize  }}")
+        include {{ schema | lower }}_show
 {{ render_refSelect(schema, fields) }}
     .row
       .col-md-12
-        include {{ schema }}_dashboard_actions
+        include {{ schema | lower }}_dashboard_actions
 {{ render_refScripts(allRefs, schema) }}
-    script(src='/js/{{ schema | lower }}/{{ schema }}PublicFactory.js', type='text/javascript', charset='utf-8').
-    script(src='/js/{{ schema | lower }}/{{ schema }}PublicController.js', type='text/javascript', charset='utf-8').
+    script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicFactory.js', type='text/javascript', charset='utf-8').
+    script(src='/js/{{ schema | lower }}/{{ schema | capitalize }}PublicController.js', type='text/javascript', charset='utf-8').
 
 {%- macro render_refScripts(allRefs, schemaIgnore) %}{%- for key, ref in allRefs|uniq %}{%- if ref|lower != schemaIgnore|lower %}
-    script(src='/js/{{ ref | lower }}/{{ ref }}PublicFactory.js', type='text/javascript', charset='utf-8').
-    script(src='/js/{{ ref | lower }}/{{ ref }}PublicController.js', type='text/javascript', charset='utf-8').{%- endif %}{%- endfor %}{%- endmacro %}
+    script(src='/js/{{ ref | lower }}/{{ ref | capitalize  }}PublicFactory.js', type='text/javascript', charset='utf-8').
+    script(src='/js/{{ ref | lower }}/{{ ref | capitalize  }}PublicController.js', type='text/javascript', charset='utf-8').{%- endif %}{%- endfor %}{%- endmacro %}

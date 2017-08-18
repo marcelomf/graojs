@@ -12,7 +12,7 @@
       button.btn.btn-default Txt
 .row
   .col-md-12(collapse="notFilter")
-    include {{schema}}_filter
+    include {{schema | lower }}_filter
   .col-md-12
     button.btn.btn-default.btn-block.btn-xs(ng-click="notFilter = !notFilter")=__('FILTER')
 .row

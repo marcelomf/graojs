@@ -59,6 +59,7 @@ var GraoLoader = function(di) {
           for(iDi in loads[loadIndex].di) {
             di[iDi] = loads[loadIndex].di[iDi];
           }
+          //console.log(loads[loadIndex].object);
           di[loadType][loadIndex] = new (require(loads[loadIndex].object))(di);
           var indexReload = reload.indexOf(loadIndex);
           if(indexReload >= 0)
@@ -70,6 +71,7 @@ var GraoLoader = function(di) {
           if(countReload[loadIndex] >= 100) {
             di.event.newError("GraoLoader - tryLoad: "+loadType+"/"+loadIndex+" more 100 times");
             di.event.newError(err);
+            di.event.newError(err.stack);
             process.exit(1);
           }
         }

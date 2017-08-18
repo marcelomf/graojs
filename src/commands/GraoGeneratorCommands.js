@@ -68,6 +68,7 @@ var GraoGeneratorCommands = function (di) {
         /* @FIXME BUG when generateBundle with divergent schemas of different bundles */
         varsGenerate['allSchemas'] = schemas;
         varsGenerate['schema'] = schemas[i];
+        var schemaCapitalized = self.capitalize(varsGenerate['schema']);
         var schemaName = varsGenerate['schema'];
         var schemaPath = self.prepareSchemaPath(schemaName);
         var fullSchemaPath = path.join(process.cwd(), schemaPath);
@@ -75,7 +76,9 @@ var GraoGeneratorCommands = function (di) {
         if(fs.existsSync(fullSchemaPath)){
           //console.log(require(fullSchemaPath));
           //process.exit();
-          var uiSchema = self.prepareSchemaUi(schemaName, require(fullSchemaPath));
+          var uiSchema = self.prepareSchemaUi(schemaCapitalized, require(fullSchemaPath));
+          varsGenerate['schemaOriginal'] = varsGenerate['schema'];
+          varsGenerate['schema'] = varsGenerate['schema'].toLowerCase();
           for(var uiName in uiSchema) {
             varsGenerate[uiName] = uiSchema[uiName];
           }
@@ -261,10 +264,6 @@ var GraoGeneratorCommands = function (di) {
     return resultUi;
   }
 
-  this.capitalize = function(string) {
-    return string.charAt(0).toUpperCase() + string.substring(1);
-  }
-
   this.prepareSchemaPath = function(schemaName) {
     return 'gen/' + schemaName + '.json';
   }
@@ -305,6 +304,10 @@ var GraoGeneratorCommands = function (di) {
         return true;
     }
     return false;
+  }
+  
+  this.capitalize = function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1);
   }
 
   this.copyGraoDeps = function (appPath, force) {
