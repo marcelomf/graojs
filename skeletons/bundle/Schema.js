@@ -78,7 +78,7 @@
     {%- endfor %}
   }],
   {%- endmacro %}
-var {{ schema }}Schema = function(di) {
+var {{ schema | capitalize }}Schema = function(di) {
   var validate = di.validate;
   var validator = di.validators.{{ schema | lower}};
   
@@ -89,4 +89,4 @@ var {{ schema }}Schema = function(di) {
   this.mongoose = new di.mongoose.Schema(this.fields);
 };
 
-module.exports = exports = {{ schema }}Schema;
+module.exports = exports = {{ schema | capitalize }}Schema;

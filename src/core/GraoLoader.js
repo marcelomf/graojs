@@ -71,7 +71,6 @@ var GraoLoader = function(di) {
           if(countReload[loadIndex] >= 100) {
             di.event.newError("GraoLoader - tryLoad: "+loadType+"/"+loadIndex+" more 100 times");
             di.event.newError(err);
-            di.event.newError(err.stack);
             process.exit(1);
           }
         }

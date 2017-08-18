@@ -158,6 +158,9 @@ var GraoEvent = function(di) {
       this.payload = {};
       this.message = (this.message) ? this.message : 'Unexpected Error';
     }
+
+    if(this.message.stack)
+      console.error(this.message.stack);
     $.stateTime();
     return this;
   };
