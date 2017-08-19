@@ -11,12 +11,16 @@ var UserValidator = function(di) {
     }, "Invalid password"],
     username: [
       validate({
+	validator: 'isLength',
+	arguments: [3,100],
         message : "Username need be having between 3 to 100 letters/numbers."
-      }, 'len', 3, 100),
+      }),
 
       validate({
+	validator: 'isAlphanumeric',
+	passIfEmpty: false,
         message : "Username need to be alpha numeric."
-      }, 'isAlphanumeric')
+      })
     ]
   }
 };

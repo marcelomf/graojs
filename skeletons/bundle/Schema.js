@@ -32,8 +32,7 @@
 
   {%- macro date(schema, fieldName, field, isFilter, isSubDocArrayField) %}
     {{ fieldName }} : {%- if field.isArray %}[{%- endif %}{
-        type : Date,
-        validate : validate('isDate'){%- if field.required %},
+        type : Date{%- if field.required %},
         required: true{%- endif %}
     }{%- if field.isArray %}]{%- endif %},
   {%- endmacro %} 

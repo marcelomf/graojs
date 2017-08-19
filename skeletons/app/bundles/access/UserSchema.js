@@ -41,7 +41,7 @@ var UserSchema = function(di) {
       index : true,
       unique : true,
       trim : true,
-      validate : validate('isEmail'),
+      validate : validate({validator: 'isEmail'}),
       graoui: {
         label: "Email",
         type: 'email',
