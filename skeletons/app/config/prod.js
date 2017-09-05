@@ -43,7 +43,7 @@ module.exports = exports = {
     kernel: [
       { name: 'mongoose', object: 'mongoose' },
       { name: 'mongooseValidator', object: 'mongoose-validator' },
-      { name: 'validate', object: 'kernel.mongooseValidator.validate' },
+      { name: 'validate', object: 'kernel.mongooseValidator' },
       { name: 'styles', object: './styles' },
       { name: 'states', object: './states' },
       { name: 'stackTrace', object: 'stack-trace' },
