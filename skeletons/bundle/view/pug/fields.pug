@@ -2,6 +2,7 @@
       {%- set inputtypes = ['text', 'password' ] %}
       {%- if inputtypes.indexOf(field.type) !== -1 %}
           {{ input(field.type, schema, fieldName, field, isFilter, isSubDocArrayField) }}
+      {%- elseif field.type == 'primary' %}
       {%- elseif field.type == 'date' %}
           {{ input_date(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'checkbox' %}

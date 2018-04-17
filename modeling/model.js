@@ -48,10 +48,25 @@ function init() {
           row: 0, alignment: go.Spot.TopRight,
           "ButtonBorder.stroke": null,
           click: function(e, but) {
+            console.log(but);
+            console.log(but.part);
+            console.log(but.part.data);
             var list = but.part.findObject("LIST");
             if (list !== null) {
               var shape = but.findObject("DSHAPE");
+              
             }
+            
+            
+//            var list = but.part.findObject("LIST");
+//              if (list !== null) {
+//                var shape = but.part.findObject("KEY");
+//                list.itemArray.push(item_sample);
+//                refresh();
+//              }
+            
+            
+            //alert('oi');
           } 
         },
         $(go.Shape, { geometry: D_geometry, strokeWidth: 2 },
@@ -79,23 +94,6 @@ function init() {
       $(go.Panel, "Table",
         { margin: 8, stretch: go.GraphObject.Fill },
         $(go.RowColumnDefinition, { row: 0, sizing: go.RowColumnDefinition.None }),
-      $("Button",
-        {
-          row: 0, 
-          alignment: go.Spot.TopLeft,
-          "ButtonBorder.stroke": null,
-          click: function(e, but) {
-            var list = but.part.findObject("LIST");
-            if (list !== null) {
-              var shape = but.part.findObject("KEY");
-              list.itemArray.push(item_sample);
-              refresh();
-            }
-          } 
-        },
-        $(go.Shape, { geometry: V_geometry, strokeWidth: 2 },
-          { name: "ASHAPE", width: 6, height: 4 })),
-
         $(go.TextBlock,
           {
             name: "KEY",
@@ -133,7 +131,23 @@ function init() {
             stretch: go.GraphObject.Horizontal,
             itemTemplate: fieldTemplate
           },
-          new go.Binding("itemArray", "fields"))
+          new go.Binding("itemArray", "fields")),
+        $("Button",
+          {
+            row: 10, 
+            alignment: go.Spot.Center,
+            "ButtonBorder.stroke": null,
+            click: function(e, but) {
+              var list = but.part.findObject("LIST");
+              if (list !== null) {
+                var shape = but.part.findObject("KEY");
+                list.itemArray.push(item_sample);
+                refresh();
+              }
+            } 
+          },
+          $(go.Shape, "ThickCross",
+            { name: "SHAPE", width: 10, height: 10 }))
       )  // end Table Panel
     );  // end Node
 

@@ -13,7 +13,7 @@
 {% endif %}{%- endfor %}{%- endmacro %}
 extends /frontend/theme/layout
 block content
-  .container(ng-controller='{{ schema | capitalize  }}PublicController', ng-init='clear{{ schema | capitalize  }}(); share.window("list{{ schema }}");')
+  .container(ng-controller='{{ schema | capitalize  }}PublicController', ng-init='clear{{ schema | capitalize  }}(); share.window("list{{ schema | capitalize }}");')
     .row
       .col-md-12
         h2=__('{{ schema }}s')
