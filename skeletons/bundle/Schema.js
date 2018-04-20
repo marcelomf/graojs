@@ -1,5 +1,3 @@
-// checkbox boolean currency number primary date radio email text password select textarea url sub_document
-// boolean currency number primary date sub_document
   {%- macro render_field(schema, fieldName, field, isFilter, isSubDocArrayField) %}
       {%- set stringtypes = ['input', 'text', 'password', 'email', 'url', 'number', 'currency', 'radio', 'textarea'] %}
       {%- if stringtypes.indexOf(field.type) !== -1 %}
