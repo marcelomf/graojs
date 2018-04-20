@@ -21,6 +21,7 @@ Today, this project is a scaffolding generator, based on angularjs, twitter boot
 #### Create your schemas
 
 - Create gen/Person.json
+```json
 {
     "bundle": "cadastre",
     "label": "Persons",
@@ -81,7 +82,7 @@ Today, this project is a scaffolding generator, based on angularjs, twitter boot
         }]
     }
 }
-
+```
 - Others examples(with relashionships): https://github.com/marcelomf/graojs/tree/master/gen_examples
 
 - Generate scaffolding(CRUD):
