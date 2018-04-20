@@ -6,16 +6,13 @@ service.count = async (req, res) => {
     let totality = await User.count();
     
     if(dataList.filter == null) {
-      res.json({totality: totality, filtered: 0});
-      return;
+      return res.json({totality: totality, filtered: 0});
     }
     
     let filtered = await User.count(dataList.filter);
-    res.json({totality: totality, filtered: filtered});
-    return;
+    return res.json({totality: totality, filtered: filtered});
   } catch(err) {
-    res.json(event.newError(err).toJson());
-    return;
+    return res.json(event.newError(err).toJson());
   }
 }
 
@@ -23,11 +20,9 @@ service.get = async (req, res) => {
   try {
     let user = await User.findOne({_id : req.params.id}, "-password").
                       populate('activitys').exec(); 
-    res.json(user);
-    return;
+    return res.json(user);
   } catch(err) {
-    res.json(event.newError(err).toJson());
-    return;
+    return res.json(event.newError(err).toJson());
   }        
 }
 
@@ -44,8 +39,7 @@ service.query = async (req, res) => {
       exec();
     return res.json(users);  
   } catch(err) {
-    res.json(event.newError(err).toJson());
-    return;
+    return res.json(event.newError(err).toJson());
   }
 }
 
@@ -70,7 +64,7 @@ helper.fixError = (err) => {
   return err;
 }
 
-service.create = (req, res) => {
+service.create = async (req, res) => {
   if(req.body.newPassword != req.body.confirmNewPassword)
     return res.json(event.newError(res.__('Error in the password confirmation.')).toJson());
 
@@ -78,9 +72,9 @@ service.create = (req, res) => {
   delete req.body.newPassword;
   delete req.body.confirmNewPassword;
 
-  User.buildActivitys(req.body)
-  .then(function(userJson){
-    var user = new User(userJson);
+  try {
+    let UserJson = await User.buildActivitys(req.body);
+    let user = new User(UserJson);
     user.save(function(err, user){
       if(err){
         err = helper.fixError(err);
@@ -89,12 +83,12 @@ service.create = (req, res) => {
       delete user.password;
       res.json(event.newSuccess(res.__("User")+" "+res.__("created")).data(user).toJson());
     });
-  }).catch(function(err){
-    res.json(event.newError(err).toJson());
-  });
+  } catch(err) {
+    return res.json(event.newError(err).toJson());
+  }
 }
 
-service.update = (req, res) => {
+service.update = async (req, res) => {
   function save(userJson){
     var userId = userJson._id;
     delete userJson._id;
@@ -113,8 +107,8 @@ service.update = (req, res) => {
   delete req.body.newPassword;
   delete req.body.confirmNewPassword;
   
-  User.buildActivitys(req.body)
-  .then(function(userJson){
+  try {
+    let userJson = await User.buildActivitys(req.body);
     if(userJson.password && userJson.password.length > 0){
       testNewUser = new User(userJson);
       testNewUser.validate(function(err){
@@ -129,9 +123,9 @@ service.update = (req, res) => {
       delete userJson.password;
       save(userJson);
     }
-  }).catch(function(err){
-    res.json(event.newError(err).toJson());
-  });
+  } catch(err) {
+    return res.json(event.newError(err).toJson());
+  }
 }
 
 service.updateProfile = (req, res) => {
@@ -194,14 +188,14 @@ service.destroy = (req, res) => {
 }
 
 admin.dashboard = (req, res) => {
-  var locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
+  let locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
   res.render('access/view/user_dashboard', { isAuth: req.isAuthenticated(), 
                                              locale: locale, 
                                              user: req.user });
 }
 
 admin.profile = (req, res) => {
-  var locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
+  let locale = (config.locales.indexOf(req.cookies.locale) >= 0) ? req.cookies.locale : config.defaultLocale;
   res.render('access/view/user_profile', { isAuth: req.isAuthenticated(), 
                                              locale: locale, 
                                              user: req.user });
@@ -213,7 +207,7 @@ var UserController = function(di) {
   config = $i.config;
   models = $i.models;
   controllers = $i.controllers;
-  User = models.user; // object/class
+  User = models.user;
   this.service = service;
   this.admin = admin;
 };
