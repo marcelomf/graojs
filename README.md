@@ -11,12 +11,14 @@ Today, this project is a scaffolding generator, based on angularjs, twitter boot
 - https://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 
 #### graoJS install and run:
-- sudo npm install -g graojs
-- service mongodb start
-- grao generate:app demo --name demo --description demo --author-name Marcelo --author-email marcelomf@gmail.com --server-ports 8015,8016 --template-engine pug --theme graojs --mongodb-host localhost --mongodb-db grao
-- cd demo
-- grao main:create:admin --username admin --name Admin --email admin@admin.localhost --password admin123
-- node index.js
+```
+sudo npm install -g graojs
+service mongodb start
+grao generate:app demo --name demo --description demo --author-name Marcelo --author-email marcelomf@gmail.com --server-ports 8015,8016 --template-engine pug --theme graojs --mongodb-host localhost --mongodb-db grao
+cd demo
+grao main:create:admin --username admin --name Admin --email admin@admin.localhost --password admin123
+node index.js
+```
 
 #### Create your schemas
 
