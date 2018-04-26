@@ -5,7 +5,7 @@
   "author": "{{author_name}} <{{author_email}}>",
   "readme" : "README.md",
   "dependencies": {
-      "graojs": "0.0.x",
+      "graojs": "1.x",
       "passport-local": "1.0.0",
       "passport-strategy": "x"
   },

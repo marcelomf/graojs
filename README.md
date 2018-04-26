@@ -82,11 +82,19 @@ Today, this project is a scaffolding generator, based on angularjs, twitter boot
         }]
     }
 }
-```
-- Others examples(with relashionships): https://github.com/marcelomf/graojs/tree/master/gen_examples
-
 - Generate scaffolding(CRUD):
-- grao generate:bundle --schemas Person --force
-
-- RUN:
-- node index.js
+```
+grao generate:bundle --schemas Person --force
+```
+- Start graojs:
+```
+node index.js
+```
+- Access Person in your browser:
+```
+http://localhost:8015/admin/person
+```
+- Others examples(with relashionships) of schemas: 
+```
+https://github.com/marcelomf/graojs/tree/master/gen_examples
+```
