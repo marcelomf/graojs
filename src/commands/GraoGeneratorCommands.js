@@ -87,8 +87,8 @@ var GraoGeneratorCommands = function (di) {
           if(!fs.existsSync(path.join("bundles", varsGenerate['bundle'])))
             fs.mkdirSync(path.join("bundles", varsGenerate['bundle']), 0755);
           generator.generate(varsGenerate, force);
-          fs.writeFileSync(path.join(process.cwd(), 'bundles', varsGenerate['bundle'], schemaName+'.json'), 
-            fs.readFileSync(fullSchemaPath, 'utf-8'), 'utf-8');
+          //fs.writeFileSync(path.join(process.cwd(), 'bundles', varsGenerate['bundle'], schemaName+'.json'), 
+            //fs.readFileSync(fullSchemaPath, 'utf-8'), 'utf-8');
         } else {
           console.log(( 'ERROR: ' + fullSchemaPath + ' doesn\'t exist. Aborting this file').red);
         }
