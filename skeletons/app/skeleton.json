@@ -5,8 +5,8 @@
   "properties": {
     "name": {
       "description": "Application Name (lowercase letters)",
-      "pattern": "^[a-z]+$",
-      "message": "Must be only lowercase letters - no uppercase letters, spaces, numbers, special chars",
+      "pattern": "^[a-zA-Z0-9]+$",
+      "message": "No spaces or special chars",
       "required": true
     },
     "description": {

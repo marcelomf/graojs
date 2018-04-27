@@ -129,7 +129,9 @@
               button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='select{{ field.fullPathCc | replace("^"+schema, "", "g") }}($index);') 
   {%- endmacro %}
 mixin form_fields_{{ schema | lower }}()
+  |
   {%- for fieldName, field in fields %}{{ render_field(schema, fieldName, field, false) }} {%- endfor %}
   
 mixin filter_fields_{{ schema | lower }}()
+  |
   {%- for fieldName, field in fields %}{%- if field.isFilter %} {{ render_field(schema, fieldName, field, true) }} {%- endif %}{%- endfor %}  
