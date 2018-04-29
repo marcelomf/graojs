@@ -31,5 +31,22 @@
 	"Remove": "Remover",
 	"Cancel": "Cancelar",
 	"Save and back": "Salvar e voltar",
-	"Activity": "Atividade"
+	"Activity": "Atividade",
+	"Your brand": "Your brand",
+	"Username": "Username",
+	"Your app": "Your app",
+	"Automatic generated": "Automatic generated",
+	"Used top technologies": "Used top technologies",
+	" Your brand 2018": " Your brand 2018",
+	"Welcome": "Welcome",
+	"Access Admin": "Access Admin",
+	"Enabled": "Enabled",
+	"New password": "New password",
+	"Confirm new password": "Confirm new password",
+	"Save": "Save",
+	"Show": "Show",
+	"Edit": "Edit",
+	"Code": "Code",
+	"Context(Sub Activitys)": "Context(Sub Activitys)",
+	"Description": "Description"
 }

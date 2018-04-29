@@ -2,29 +2,18 @@
   .container
     .row
       .col-md-8
-        h1 graoJS!
+        h1=__("Your app")
         blockquote
-          p O graoJS....
-          em Havendo olhos suficientes, todos os erros são óbvios.
-          small Por
-            |  
-            cite(title='The Cathedral and the Bazaar') Eric Steven Raymond
-          p 
-            a.btn.btn-lg.btn-info= __('Learn more')
+          p=__("Automatic generated")
+          em=__("Used top technologies")
 .container
   .row
     .col-md-4
-      h3 A Framework
-      p ...
-      p 
-        a.btn.btn-primary(href='/')= __('Read more')
+      a(href="https://www.mongodb.com/", target="_blank")
+        img(src="/img/mongodb.png")
     .col-md-4
-      h3 Scaffolding
-      p ...
-      p 
-        a.btn.btn-primary(href='/')= __('Read more')
+      a(href="https://www.nodejs.org/", target="_blank")
+        img(src="/img/nodejs.png")
     .col-md-4
-      h3 Segurança
-      p ... 
-      p 
-        a.btn.btn-primary(href='/')= __('Read more')
+      a(href="https://www.angularjs.org/", target="_blank")
+        img(src="/img/angularjs.png")
