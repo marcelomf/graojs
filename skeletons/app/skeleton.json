@@ -36,11 +36,11 @@
       "default": "pug"
     },
     "theme": {
-      "description": "Bootstrap Theme => graojs (default), bootstrap (original) or Bootswatch's options",
-      "pattern": "^graojs|bootstrap|amelia|cerulean|cosmo|cyborg|flatly|journal|readable|simplex|slate|spacelab|united$",
-      "message": "Must be one of: graojs|bootstrap|amelia|cerulean|cosmo|cyborg|flatly|journal|readable|simplex|slate|spacelab|united",
+      "description": "Bootstrap Theme => bootstrap (default), graojs or Bootswatch's options",
+      "pattern": "^graojs|bootstrap|cerulean|cosmo|cyborg|flatly|journal|readable|simplex|slate|spacelab|united|darkly|lumen|paper|sandstone|superhero|yeti$",
+      "message": "Must be one of: graojs|bootstrap|cerulean|cosmo|cyborg|flatly|journal|readable|simplex|slate|spacelab|united|darkly|lumen|paper|sandstone|superhero|yeti",
       "required": true,
-      "default": "graojs"
+      "default": "bootstrap"
     },
     "mongodb-host":{
       "description": "MongoDB Host",
