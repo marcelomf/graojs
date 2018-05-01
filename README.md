@@ -4,7 +4,7 @@ graoJS
 graoJS - A full stack MVC NodeJS framework
 ------------------------------------------
 
-Today, this project is a scaffolding generator, based on angularjs, twitter bootstrap, pug, express, mongoose and mongoose-validator.
+This project is a scaffolding generator code, based on angularjs, twitter bootstrap, pug, express, mongoose and mongoose-validator.
 
 #### INSTALL DEPENDS
 - https://nodejs.org/en/download/package-manager/
@@ -14,7 +14,7 @@ Today, this project is a scaffolding generator, based on angularjs, twitter boot
 ```
 sudo npm install -g graojs
 service mongodb start
-grao generate:app demo --name demo --description demo --author-name Marcelo --author-email marcelomf@gmail.com --server-ports 8015,8016 --template-engine pug --theme graojs --mongodb-host localhost --mongodb-db grao
+grao generate:app demo --name demo --description demo --author-name Marcelo --author-email marcelomf@gmail.com --server-ports 8015,8016 --template-engine pug --theme bootstrap --mongodb-host localhost --mongodb-db grao
 cd demo
 grao main:create:admin --username admin --name Admin --email admin@admin.localhost --password admin123
 node index.js
