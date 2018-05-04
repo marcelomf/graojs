@@ -9,7 +9,7 @@
           {{ input_checkbox(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'radio' %}
           {{ input_radio(schema, fieldName, field, isFilter, isSubDocArrayField) }}
-      {%- elseif field.type == 'textarea' %}
+      {%- elseif field.type == 'textarea' && isFilter == false %}
           {{ textarea(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'select' %}
           {{ select(schema, fieldName, field, isFilter, isSubDocArrayField) }}
