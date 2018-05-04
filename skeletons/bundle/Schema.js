@@ -4,7 +4,7 @@
       {%- if stringtypes.indexOf(field.type) !== -1 %}
           {{ string(field.type, schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif numbertypes.indexOf(field.type) !== -1 %}
-          {{ number(schema, fieldName, field, isFilter, isSubDocArrayField) }}
+          {{ number(field.type, schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'primary' %}
           {{ primary(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'date' %}
