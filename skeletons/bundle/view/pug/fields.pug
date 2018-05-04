@@ -1,5 +1,5 @@
   {%- macro render_field(schema, fieldName, field, isFilter, isSubDocArrayField) %}
-      {%- set inputtypes = ['text', 'password' ] %}
+      {%- set inputtypes = ['text', 'password', 'url', 'email', 'number' ] %}
       {%- if inputtypes.indexOf(field.type) !== -1 %}
           {{ input(field.type, schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'primary' %}

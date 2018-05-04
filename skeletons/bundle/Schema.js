@@ -1,7 +1,10 @@
   {%- macro render_field(schema, fieldName, field, isFilter, isSubDocArrayField) %}
-      {%- set stringtypes = ['input', 'text', 'password', 'email', 'url', 'number', 'currency', 'radio', 'textarea'] %}
+      {%- set stringtypes = ['input', 'text', 'password', 'email', 'url', 'radio', 'textarea'] %}
+      {%- set numbertypes = ['number', 'currency'] %}
       {%- if stringtypes.indexOf(field.type) !== -1 %}
           {{ string(field.type, schema, fieldName, field, isFilter, isSubDocArrayField) }}
+      {%- elseif numbertypes.indexOf(field.type) !== -1 %}
+          {{ number(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'primary' %}
           {{ primary(schema, fieldName, field, isFilter, isSubDocArrayField) }}
       {%- elseif field.type == 'date' %}
@@ -24,6 +27,13 @@
   {%- macro string(type, schema, fieldName, field, isFilter, isSubDocArrayField) %}
     {{ fieldName }} : {%- if field.isArray %}[{%- endif %}{
         type : String{%- if field.required %},
+        required: true{%- endif %}
+    }{%- if field.isArray %}]{%- endif %},
+  {%- endmacro %} 
+
+  {%- macro number(type, schema, fieldName, field, isFilter, isSubDocArrayField) %}
+    {{ fieldName }} : {%- if field.isArray %}[{%- endif %}{
+        type : Number{%- if field.required %},
         required: true{%- endif %}
     }{%- if field.isArray %}]{%- endif %},
   {%- endmacro %} 

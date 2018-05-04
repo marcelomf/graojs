@@ -36,7 +36,7 @@ node index.js
         },
         "name": {
             "label": "Name",
-            "type": "input",
+            "type": "text",
             "required": true,
             "isList": true,
             "isFilter": true

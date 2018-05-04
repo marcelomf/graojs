@@ -10,14 +10,14 @@
         },
         "name": {
             "label": "Name",
-            "type": "input",
+            "type": "text",
             "required": true,
             "isList": true,
             "isFilter": true
         },
         "code": {
             "label": "Code",
-            "type": "input",
+            "type": "text",
             "unique": true,
             "required": true,
             "isList": true,
