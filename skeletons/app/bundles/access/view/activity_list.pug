@@ -34,11 +34,11 @@
               span(ng-repeat="activity in activity.activitys") {{ activity.name }} 
             td {{ activity.description }} 
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyActivityByIndex($index); queryActivity();') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyActivityByIndex($index); queryActivity();', title=__("Destroy")) 
               | 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='selectActivity($index); share.window("createOrUpdateActivity");') 
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='selectActivity($index); share.window("createOrUpdateActivity");', title=__("Edit")) 
               | 
-              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='selectActivity($index); share.window("showActivity");') 
+              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='selectActivity($index); share.window("showActivity");', title=__("Show")) 
 .row
   .col-md-6.text-left
     p=__('Listing {{ dataList.status.listing }} of {{ dataList.status.filtered }} filtered on {{ dataList.status.totality }} registers')

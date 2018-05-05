@@ -42,11 +42,11 @@
             td {{ user.enabled }} 
 
             td
-              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyUserByIndex($index); queryUser();') 
+              button.btn.btn-danger.btn-xs.icon.icon-trash(type='button', ng-click='destroyUserByIndex($index); queryUser();', title=__("Destroy")) 
               | 
-              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='selectUser($index); share.window("createOrUpdateUser");') 
+              button.btn.btn-primary.btn-xs.icon.icon-edit(type='button', ng-click='selectUser($index); share.window("createOrUpdateUser");', title=__("Edit")) 
               | 
-              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='selectUser($index); share.window("showUser");') 
+              button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='selectUser($index); share.window("showUser");', title=__("Show")) 
 .row
   .col-md-6.text-left
     p=__('Listing {{ dataList.status.listing }} of {{ dataList.status.filtered }} filtered on {{ dataList.status.totality }} registers')
