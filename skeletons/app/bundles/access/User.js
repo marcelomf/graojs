@@ -1,34 +1,63 @@
 var methods = {}, statics = {}, $i;
 
-statics.sendNewPassword = function(userJson) {
+statics.sendNewPassword = function(username, password, email) {
   var def = $i.Q.defer();
-  var smtpTransport = $i.nodemailer.createTransport("SMTP", $i.config.smtpOptions);
+  var smtpTransport = $i.nodemailer.createTransport($i.config.smtpOptions, 
+    { from: "Contact <"+$i.config.smtpOptions.auth.user+">" });
 
-  var body = "Username: "+user.username+"\n";
-  body += "Password: "+user.password+"\n";
-
-  $i.event.newSuccess(body);
+  var body = "Username: "+username+"\n";
+  body += "Password: "+password+"\n";
 
   var mailOptions = {
-    from: "Hostmaster <hostmaster@synack.com.br>", // sender address
-    to: "marcelomf@gmail.com, marcelo@synack.com.br", // list of receivers
-    subject: $i.config.name+" - "+i18n.__("New password"), // Subject line
+    from: $i.config.smtpOptions.auth.user,
+    to: email, // list of receivers
+    subject: i18n.__("New password"), // Subject line
     text: body, // plaintext body
     html: body // html body
   };
 
   smtpTransport.sendMail(mailOptions, function(err, response){
     if(err){
-      $i.event.newError(err);
+      console.log("Email not sended: "+err);
       def.reject(new Error(err));
-    }else{
-      $i.event.newSuccess("Message sent: " + response.message);
-      def.resolve(userJson);
+    } else { 
+      def.resolve(true);
     }
     smtpTransport.close();
   });
 
   return def.promise;
+}
+
+statics.randPasswordAndSaveAndMail = function(user, sendMail) {
+  var def = $i.Q.defer();
+
+  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+  var passwordLength = 8;
+  var randomPass = '';
+  for (var i=0; i < passwordLength; i++) {
+    var num = Math.floor(Math.random() * chars.length);
+    randomPass += chars.substring(num, num+1);
+  }
+
+  user.password = randomPass;
+  user.save(function(err, user){
+    if(err) return def.reject(new Error(err));
+    if(sendMail == true) {
+      statics.sendNewPassword(user.username, randomPass, user.email).then(function(status){
+        def.resolve(user);
+      }).catch(function(err){
+        def.reject(new Error(err));
+      });
+    } else {
+      def.resolve(user);
+    }
+  });
+  return def.promise;
+}
+
+statics.hashPassword = function(password) {
+  return $i.hash(password);
 }
 
 statics.buildActivitys = function(userJson) {
@@ -48,47 +77,6 @@ statics.buildActivitys = function(userJson) {
   });
 
   return def.promise;
-}
-
-statics.randPasswordAndSave = function(userJson) {
-  var def = $i.Q.defer();
-
-  var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
-  var passwordLength = 8;
-  var randomPass = '';
-  for (var i=0; i < passwordLength; i++) {
-    var num = Math.floor(Math.random() * chars.length);
-    randomPass += chars.substring(num, num+1);
-  }
-
-  userJson.password = randomPass;
-
-  if(userJson._id) {
-    var userId = user._id;
-    delete userJson._id;
-    if(userJson.generatePassword == true)
-      userJson.password = User.hashPassword(randomPass);
-
-    User.findOneAndUpdate({_id : userId }, userJson, function(err, user) {
-      if(err) return def.reject(new Error(err));
-      if(userJson.generatePassword == true)
-        user.cleanPassword = randomPass;
-      def.resolve(user);
-    });
-  } else {
-    var user = new User(userJson);
-    user.save(function(err, user){
-      if(err) return def.reject(new Error(err));
-      user.cleanPassword = randomPass;
-      def.resolve(user);
-    });
-  }
-
-  return def.promise;
-}
-
-statics.hashPassword = function(password) {
-  return $i.hash(password);
 }
 
 methods.accessId = function() {
