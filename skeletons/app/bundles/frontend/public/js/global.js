@@ -1,5 +1,36 @@
 graoJS = angular.module('graoJS', ['ngResource', 'ui.bootstrap', 'ui.select2']);
 
+graoJS.factory('fileService', function() {
+  var files = [];
+  return files;
+})
+
+graoJS.directive('fileModel', ['$parse', 'fileService', function ($parse, fileService) {
+  return {
+      restrict: 'A',
+      link: function(scope, element) {
+          element.bind('change', function(){
+              scope.$apply(function(){
+                  if (element[0].files != undefined) {
+                      fileService.push(element[0].files[0]);
+                  }
+              });
+          });
+      }
+  };
+}])
+
+graoJS.service('fileUpload', ['$http', function ($http) {
+  this.uploadFileToUrl = function(file, uploadUrl){
+     var fd = new FormData();
+     fd.append('file', file);
+     return $http.post(uploadUrl, fd, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
+     });
+  }
+}]);
+
 function clearObject(obj){
   for (var o in obj) {
     if (isNaN(parseInt(o))) {
