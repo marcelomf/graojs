@@ -1,0 +1,50 @@
+{
+    "bundle": "access",
+    "label": "Users",
+    "description": "All users",
+    "refLabel": "username",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "username": {
+            "label": "Name",
+            "type": "text",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "password": {
+            "label": "Password",
+            "type": "password",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "email": {
+            "label": "Name",
+            "type": "email",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "activitys": [{
+	    "ref": "Activity",
+            "label": "Activitys",
+            "type": "select",
+	    "attr": { "multiple": true },
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        }],
+        "enabled": {
+            "label": "Enabled",
+            "type": "checkbox",
+	    "value": "IS_ENABLED",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        }
+    }
+}

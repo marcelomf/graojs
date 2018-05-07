@@ -1,0 +1,42 @@
+{
+    "bundle": "access",
+    "label": "Activitys",
+    "description": "All activitys",
+    "refLabel": "name",
+    "fields": {
+        "id": {
+            "label": "Id",
+            "type": "primary"
+        },
+        "name": {
+            "label": "Name",
+            "type": "text",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "code": {
+            "label": "Code",
+            "type": "text",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "description": {
+            "label": "Description",
+            "type": "textarea",
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        },
+        "activitys": [{
+	    "ref": "Activity",
+            "label": "Context(Sub Activitys)",
+            "type": "select",
+	    "attr": { "multiple": true },
+            "required": true,
+            "isList": true,
+            "isFilter": true
+        }]
+    }
+}
