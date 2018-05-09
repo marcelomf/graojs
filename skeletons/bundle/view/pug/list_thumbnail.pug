@@ -20,6 +20,12 @@
             button.btn.btn-info.btn-sm.icon.icon-plus(type='button', ng-click='select{{ schema | capitalize }}($index); share.window("show{{ schema | capitalize }}");')=__('Show')
 .row
   .col-md-12.text-right
-    p=__('Listing {{ '{{' }} dataList.status.listing }} of {{ '{{' }} dataList.status.filtered }} filtered on {{ '{{' }} dataList.status.totality }} registers')
+    p=__('Listing ') 
+      | {{ ' {{' }} dataList.status.listing }} 
+      =__('of ') 
+      | {{ ' {{' }} dataList.status.filtered }} 
+      =__('filtered on ') 
+      | {{ ' {{' }} dataList.status.totality }}
+      =__(' registers')
   .col-md-12
     button.btn.btn-default.btn-lg.btn-block(ng-click='queryMore{{ schema | capitalize }}(); count{{ schema | capitalize }}();')=__('MORE')

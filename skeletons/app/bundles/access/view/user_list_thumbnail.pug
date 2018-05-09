@@ -25,6 +25,12 @@
             button.btn.btn-info.btn-xs.icon.icon-plus(type='button', ng-click='selectUser($index); share.window("showUser");')=__('Show')
 .row
   .col-md-12.text-right
-    p=__('Listing {{ dataList.status.listing }} of {{ dataList.status.filtered }} filtered on {{ dataList.status.totality }} registers')
+    p=__('Listing ') 
+      | {{ dataList.status.listing }} 
+      =__('of ') 
+      | {{ dataList.status.filtered }} 
+      =__('filtered on ') 
+      | {{ dataList.status.totality }}
+      =__(' registers')
   .col-md-12
     button.btn.btn-default.btn-lg.btn-block(ng-click='queryMoreUser(); countUser();')=__('MORE')
