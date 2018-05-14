@@ -46,6 +46,11 @@ var graoJS = function() {
   //graoExpress.use(express.logger('dev'));
   //graoExpress.use(express.urlencoded());
   //graoExpress.use(express.multipart({defer: true})); // https://github.com/andrewrk/node-multiparty
+  graoExpress.use(function (req, res, next) {
+    if (req.get('x-amz-sns-message-type')) 
+      req.headers['content-type'] = 'application/json';
+    next();
+  }); 
   graoExpress.use(cookieParser());
   graoExpress.use(bodyParser.json({limit: '50mb'}));
   graoExpress.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
